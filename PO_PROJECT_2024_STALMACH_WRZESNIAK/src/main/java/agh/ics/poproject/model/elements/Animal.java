@@ -11,16 +11,16 @@ public class Animal implements WorldElement {
     private Vector2d position;
     private Genome genome;
     private int remainingEnergy;
-    private int consumedPlants = 0;
-    private int age = 0;
-    private int amountOfChildren = 0;
+    private int consumedPlants;
+    private int age;
+    private int amountOfChildren;
 
 
-    public Animal(Vector2d position, Genome genome, int AmountOfEnergy) {
+    public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
         this.direction = MapDirection.getRandomDirection();
         this.genome = genome;
         this.position = position;
-        this.remainingEnergy = AmountOfEnergy;
+        this.remainingEnergy = amountOfEnergy;
     }
 
     public MapDirection getDirection() {
@@ -58,7 +58,7 @@ public class Animal implements WorldElement {
         return direction.getDirection();
     }
 
-    void rotateAndMove(int steps, MoveValidator validator) {
+    public void rotateAndMove(int steps, MoveValidator validator) {
         this.direction = direction.rotate(steps);
         Vector2d newPosition = this.position.add(this.direction.toUnitVector());
         if (validator.canMoveTo(newPosition)) {
