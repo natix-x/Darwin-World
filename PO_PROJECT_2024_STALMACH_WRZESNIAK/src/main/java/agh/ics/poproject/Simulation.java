@@ -1,6 +1,8 @@
 package agh.ics.poproject;
 
 import agh.ics.poproject.model.*;
+import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.map.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;

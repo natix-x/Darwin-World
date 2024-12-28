@@ -3,6 +3,7 @@ package agh.ics.poproject.presenter;
 import agh.ics.poproject.OptionsParser;
 import agh.ics.poproject.Simulation;
 import agh.ics.poproject.model.*;
+import agh.ics.poproject.model.map.WorldMap;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

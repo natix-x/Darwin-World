@@ -1,5 +1,7 @@
 package agh.ics.poproject.model;
 
+import agh.ics.poproject.model.map.WorldMap;
+
 /**
  * The interface responsible for handling operations connected with listeners for changes in Map.
  * Assumes that worldMap interface is defined.

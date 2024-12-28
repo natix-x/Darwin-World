@@ -1,5 +1,9 @@
-package agh.ics.poproject.model;
+package agh.ics.poproject.model.map;
 
+import agh.ics.poproject.model.IncorrectPositionException;
+import agh.ics.poproject.model.MapChangeListener;
+import agh.ics.poproject.model.Vector2d;
+import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.util.MapVisualizer;
 
 import java.util.*;

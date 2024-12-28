@@ -1,7 +1,7 @@
 package agh.ics.poproject.model.util;
 
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.WorldMap;
+import agh.ics.poproject.model.map.WorldMap;
 
 /**
  * The map visualizer converts the {@link WorldMap} map into a string

@@ -1,6 +1,7 @@
-package agh.ics.poproject.model;
+package agh.ics.poproject.model.map;
 
 
+import agh.ics.poproject.model.Vector2d;
 
 public class RectangularMap extends AbstractWorldMap {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);

@@ -25,7 +25,7 @@ test {
 }
 
 application {
-    getMainClass().set('agh.ics.poproject.World')
+    getMainClass().set('agh.ics.poproject.WorldGUI')
 }
 
 java {
