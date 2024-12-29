@@ -52,7 +52,6 @@ public class Animal implements WorldElement {
         return genome;
     }
 
-
     @Override
     public String toString() {
         return direction.getDirection();

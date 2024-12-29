@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Button?>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40"
+            xmlns:fx="http://javafx.com/fxml/1"
+            minHeight="550.0" minWidth="850.0" stylesheets="configuration.css"
+            fx:controller="agh.ics.poproject.presenters.NewConfigurationPresenter">
+    <top>
+        <Label text="New configuration: " BorderPane.alignment="CENTER" styleClass="title-label"/>
+    </top>
+    <center>
+        <VBox>
+        <HBox>
+            <Label text="Map height: "/>
+            <Spinner fx:id="mapHeightSpinner" editable="true"/>
+        </HBox>
+            <HBox>
+                <Label text="Map width: "/>
+                <Spinner fx:id="mapWidthSpinner" editable="true"  />
+            </HBox>
+            <HBox>
+                <Label text="Map variant: "/>
+                <RadioButton fx:id="globeMapButton" text="Globe" selected="true"/>
+            </HBox>
+            <HBox>
+                <Label text="Initial number of plants: "/>
+                <Spinner fx:id="initialNumberOfPlantsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Energy per plant: "/>
+                <Spinner fx:id="energyPerPlantsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Number of plants growing daily: "/>
+                <Spinner fx:id="dailyPlantGrowthSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Plant growth variant: "/>
+                <RadioButton fx:id="forestedEquatorButton" text="Forested equator" selected="true"/>
+                <RadioButton fx:id="zyciodajneTruchlaButton" text="Życiodajne truchła"/>
+            </HBox>
+            <HBox>
+                <Label text="Initial number of animals: "/>
+                <Spinner fx:id="initialNumberOfAnimalsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Initial energy of animals: "/>
+                <Spinner fx:id="initialEnergyOfAnimalsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Energy needed for reproduction: "/>
+                <Spinner fx:id="neededEnergyForReproductionSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Energy lost while reproduction: "/>
+                <Spinner fx:id="reproductionEnergyLostSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Minimum number of mutations: "/>
+                <Spinner fx:id="minNumberOfMutationsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Maximum number of mutations: "/>
+                <Spinner fx:id="maxNumberOfMutationsSpinner" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Mutation variant: "/>
+                <RadioButton fx:id="fullRandomButton" text="Full randomness" selected="true"/>
+                <RadioButton fx:id="slightCorrectionButton" text="Slight correction"/>
+            </HBox>
+            <HBox>
+                <Label text="Length of animal genome: "/>
+                <Spinner fx:id="lengthOfGenome" editable="true" />
+            </HBox>
+            <HBox>
+                <Label text="Animal behaviour variant: "/>
+                <RadioButton fx:id="fullPredestinationButton" text="Full predestination" selected="true"/>
+            </HBox>
+            <HBox>
+                <Label text="Do you want to save configuration? "/>
+                <RadioButton fx:id="yesSaveConfigButton" text="Yes" selected="true"/>
+                <RadioButton fx:id="noSaveConfigButton" text="No"/>
+            </HBox>
+            <HBox>
+                <Button text="Submit"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
