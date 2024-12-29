@@ -7,8 +7,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Button?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40"
-            xmlns:fx="http://javafx.com/fxml/1"
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0" stylesheets="configuration.css"
             fx:controller="agh.ics.poproject.presenters.NewConfigurationPresenter">
     <top>
@@ -88,7 +89,7 @@
                 <RadioButton fx:id="noSaveConfigButton" text="No"/>
             </HBox>
             <HBox>
-                <Button text="Submit"/>
+                <Button text="Start Simulation"/>
             </HBox>
         </VBox>
     </center>

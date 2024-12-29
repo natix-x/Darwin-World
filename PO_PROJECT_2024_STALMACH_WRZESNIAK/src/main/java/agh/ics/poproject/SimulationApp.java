@@ -14,7 +14,7 @@ public class SimulationApp extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("configuration.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("welcomeScreen.fxml"));
         BorderPane viewRoot = loader.load();
         StartSimulationPresenter presenter = new StartSimulationPresenter();
 
@@ -26,9 +26,9 @@ public class SimulationApp extends Application {
     private void configureStage(Stage primaryStage, BorderPane viewRoot) {
         var scene = new Scene(viewRoot);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Simulation app");
-        primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
-        primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
+        primaryStage.setTitle("Welcome");
+        primaryStage.setMaxWidth(900);
+        primaryStage.setMaxHeight(600);
     }
 
 }
