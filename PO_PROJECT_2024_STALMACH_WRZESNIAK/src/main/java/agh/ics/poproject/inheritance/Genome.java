@@ -1,9 +1,11 @@
 package agh.ics.poproject.inheritance;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Genome {
+
     private final ArrayList<Integer> genomes;
 
     private int activateGene;
@@ -13,13 +15,17 @@ public class Genome {
         activateGene = activateRandomGene();
     }
 
-    public Genome(ArrayList<Integer> genomes) {
+    public Genome(List<Integer> genomes) {
         this.genomes = new ArrayList<>(genomes);
         activateGene = activateRandomGene();
     }
 
     public int getActivateGene() {
         return activateGene;
+    }
+
+    public ArrayList<Integer> getGenomes() {
+        return new ArrayList<>(genomes);
     }
 
     private int activateRandomGene() {

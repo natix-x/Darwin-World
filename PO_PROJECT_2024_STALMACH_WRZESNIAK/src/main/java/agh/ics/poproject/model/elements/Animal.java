@@ -6,14 +6,20 @@ import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldElement;
 
+import java.util.UUID;
+
 public class Animal implements WorldElement {
     private MapDirection direction;
+
+
     private Vector2d position;
-    private Genome genome;
+    private final Genome genome;
     private int remainingEnergy;
     private int consumedPlants;
     private int age;
     private int amountOfChildren;
+    private final UUID animalId = UUID.randomUUID();
+
 
 
     public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
@@ -52,17 +58,36 @@ public class Animal implements WorldElement {
         return genome;
     }
 
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
+
     @Override
     public String toString() {
         return direction.getDirection();
     }
 
-    public void rotateAndMove(int steps, MoveValidator validator) {
-        this.direction = direction.rotate(steps);
-        Vector2d newPosition = this.position.add(this.direction.toUnitVector());
-        if (validator.canMoveTo(newPosition)) {
-            this.position = newPosition;
+    public boolean isDead() {
+        return remainingEnergy <= 0;
+    }
+
+    public void changeEnergy(int amount) {
+        remainingEnergy += amount;
+        if (remainingEnergy <= 0) {
+            remainingEnergy = 0;
         }
     }
 
+    public void rotateAndMove(int steps, MoveValidator validator) {
+        this.direction = direction.rotate(steps);
+        System.out.println(direction);
+        Vector2d newPosition = this.position.add(this.direction.toUnitVector());
+        System.out.println(newPosition);
+        if (validator.canMoveTo(newPosition)) {
+            this.position = newPosition;
+        }
+        else {
+            this.direction = direction.opposite();
+        }
+    }
 }
