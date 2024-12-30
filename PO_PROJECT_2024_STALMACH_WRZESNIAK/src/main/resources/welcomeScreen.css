@@ -1,0 +1,27 @@
+.title-label {
+    -fx-font-size: 50;
+}
+
+.image-container {
+    -fx-background-image: url("images/evolutionMeme.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 600 300;
+    -fx-background-position: center center;
+    -fx-pref-width: 600;
+    -fx-pref-height: 300;
+}
+
+BorderPane {
+    -fx-background-color: transparent;
+}
+
+.button {
+    -fx-pref-width: 256;
+    -fx-pref-height: 32;
+}
+
+VBox {
+    -fx-spacing: 10;
+}
+
+

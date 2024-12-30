@@ -1,12 +1,15 @@
-package agh.ics.poproject.model;
+package agh.ics.poproject.model.map;
 
+import agh.ics.poproject.model.MapChangeListener;
+import agh.ics.poproject.model.Vector2d;
+import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.util.MapVisualizer;
 
 import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
 
-    private final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected final Map<Vector2d, Animal> animals = new HashMap<>();
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID mapID = UUID.randomUUID();
 
@@ -19,7 +22,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         mapChangeListeners.remove(listener);
     }
 
-    private void mapChanged(String message){
+    protected void mapChanged(String message){
         mapChangeListeners.forEach(listener -> listener.mapChange(this, message));
     }
 
@@ -32,20 +35,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         else
             throw new IncorrectPositionException(position);
-    }
-
-    @Override
-    public void move(Animal animal, MoveDirection direction) {
-        Vector2d currentPosition = animal.getPosition();
-        if(Objects.equals(objectAt(currentPosition), animal)) {
-            this.animals.remove(currentPosition);
-            animal.move(direction, this);
-            this.animals.put(animal.getPosition(), animal);
-            mapChanged("Animal moved to the position " + animal.getPosition());
-        }
-        else {
-            throw new IllegalArgumentException("Animal not found at position " + currentPosition);
-        };
     }
 
     @Override

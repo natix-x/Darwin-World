@@ -1,5 +1,7 @@
 package agh.ics.poproject.model;
 
+import agh.ics.poproject.model.map.WorldMap;
+
 public class ConsoleMapDisplay implements MapChangeListener {
     private int actualizationCounter = 0;
 

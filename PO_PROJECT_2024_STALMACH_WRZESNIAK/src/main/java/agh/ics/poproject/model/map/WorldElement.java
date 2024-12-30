@@ -1,4 +1,6 @@
-package agh.ics.poproject.model;
+package agh.ics.poproject.model.map;
+
+import agh.ics.poproject.model.Vector2d;
 
 /**
  * The interface responsible for interacting with elements of the map.
