@@ -11,12 +11,12 @@ public class Reproduce {
 
     // TODO: połączyć te wartości z wartościami przekazywanej do symulacji konfiguracji
     int energyNeededToReproduce;
-    int genomeLength;
+
 
     /*
-    Checks if two animals have enough energy to reproduce based on parametes set in configuration
+    Checks if two animals have enough energy to reproduce based on parameters set in configuration
      */
-    public boolean canReproduce(Animal animal1, Animal animal2) {
+    public boolean canReproduce(Animal animal1, Animal animal2, int energyNeededToReproduce) {
         return animal1.getRemainingEnergy() >= energyNeededToReproduce && animal2.getRemainingEnergy() >= energyNeededToReproduce;
     }
 
@@ -33,11 +33,12 @@ public class Reproduce {
 
         Genome gene1 = animal1.getGenome();
         Genome gene2 = animal2.getGenome();
+        int genomeLength = gene1.getGenomes().size(); //to też można przez config przekazać
 
         double energy1 = animal1.getRemainingEnergy();
         double energy2 = animal2.getRemainingEnergy();
 
-        double divisionRatioPercent = Math.floor((energy1 / (energy1 + energy2) * 100) * 8 / 100);
+        double divisionRatioPercent = Math.floor((energy1 / (energy1 + energy2) * 100) * genomeLength / 100);
         int splitIndex = (int) Math.floor(genomeLength * divisionRatioPercent);
 
         // TODO: pewnie da się to jakoś zgrabniej
@@ -80,7 +81,7 @@ public class Reproduce {
     @return Animal object with inherited genes and initial energy on the parents' position
      */
     public Animal reproduce (Animal animal1, Animal animal2){
-        if (canReproduce(animal1, animal2)) {
+        if (canReproduce(animal1, animal2, energyNeededToReproduce)) {
             animal1.changeEnergy(-energyNeededToReproduce);
             animal2.changeEnergy(-energyNeededToReproduce);
             animal1.addAChild();
