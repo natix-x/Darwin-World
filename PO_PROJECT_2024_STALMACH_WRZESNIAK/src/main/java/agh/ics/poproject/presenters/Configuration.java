@@ -1,17 +1,24 @@
 package agh.ics.poproject.presenters;
 
-public class Configuration {
+public record Configuration( int mapHeight,
+                             int mapWidth,
+                             int initialPlants,
+                             int energyPerPlant,
+                             int dailyPlantGrowth,
+                             int initialAnimals,
+                             int initialEnergy,
+                             int neededEnergyForReproduction,
+                             int reproductionEnergyLost,
+                             int minMutations,
+                             int maxMutations,
+                             int genomeLength,
 
-    private final int energyNeededToReproduce;
+                             boolean isGlobeMap,
+                             boolean isForestedEquator,
+                             boolean isFullRandomMutation,
+                             boolean isFullPredestination,
+                             boolean saveConfig
 
-    public Configuration(int energyNeededToReproduce) {
-        this.energyNeededToReproduce = energyNeededToReproduce;
-    }
-
-    public int getEnergyNeededToReproduce() {
-        return energyNeededToReproduce;
-    }
-
-    // Add other getters and setters as needed
+) {
 }
 

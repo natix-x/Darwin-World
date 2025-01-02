@@ -131,8 +131,6 @@ public class NewConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
 
-//        Configuration config = new Configuration();
-
     }
 
 }

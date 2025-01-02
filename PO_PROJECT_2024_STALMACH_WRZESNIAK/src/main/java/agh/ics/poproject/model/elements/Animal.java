@@ -5,8 +5,6 @@ import agh.ics.poproject.model.map.MapDirection;
 import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldElement;
-import agh.ics.poproject.presenters.Configuration;
-import agh.ics.poproject.presenters.NewConfigurationPresenter;
 
 import java.util.UUID;
 
@@ -20,15 +18,14 @@ public class Animal implements WorldElement {
     private int age;
     private int amountOfChildren;
     private final UUID animalId = UUID.randomUUID();
-    private final Configuration config;
 
 
-    public Animal(Vector2d position, Genome genome, int amountOfEnergy, Configuration config) {
+
+    public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
         this.direction = MapDirection.getRandomDirection();
         this.genome = genome;
         this.position = position;
         this.remainingEnergy = amountOfEnergy;
-        this.config = config; //chosen config passed
     }
 
     public MapDirection getDirection() {
@@ -91,6 +88,10 @@ public class Animal implements WorldElement {
         else {
             this.direction = direction.opposite();
         }
+    }
+
+    public void addAChild () {
+        this.amountOfChildren++;
     }
 
 }
