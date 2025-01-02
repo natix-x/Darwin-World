@@ -1,6 +1,7 @@
 HBox {
-    -fx-alignment: center;
+    -fx-alignment: left;
     -fx-spacing: 8;
+    -fx-padding: 0 0 0 15;
 }
 
 VBox {

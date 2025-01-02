@@ -89,8 +89,9 @@
                 <RadioButton fx:id="noSaveConfigButton" text="No"/>
             </HBox>
             <HBox>
-                <Button text="Start Simulation"/>
+                <Button fx:id="startSimulationButton" text="Start Simulation"/>
             </HBox>
+
         </VBox>
     </center>
 
