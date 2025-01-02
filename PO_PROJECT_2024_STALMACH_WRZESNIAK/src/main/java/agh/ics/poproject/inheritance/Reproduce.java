@@ -73,23 +73,25 @@ public class Reproduce {
         }
 
         return new Genome(babyGenomeList);
-    };
+    }
 
     /*
     Animals reproduce, their energy level goes down and genes are shuffled.
     @return Animal object with inherited genes and initial energy on the parents' position
      */
-        public Animal reproduce (Animal animal1, Animal animal2){
-            if (canReproduce(animal1, animal2)) {
-                animal1.changeEnergy(-energyNeededToReproduce);
-                animal2.changeEnergy(-energyNeededToReproduce);
-                animal1.addAChild();
-                animal2.addAChild();
+    public Animal reproduce (Animal animal1, Animal animal2){
+        if (canReproduce(animal1, animal2)) {
+            animal1.changeEnergy(-energyNeededToReproduce);
+            animal2.changeEnergy(-energyNeededToReproduce);
+            animal1.addAChild();
+            animal2.addAChild();
 
-                Genome babyGenome = shuffleGenome(animal1, animal2);
-                return new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
-            }
-            return null;
-        };
+            Genome babyGenome = shuffleGenome(animal1, animal2);
+            return new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
+        }
+        return null;
+    };
 }
+
+
 
