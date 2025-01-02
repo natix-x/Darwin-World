@@ -19,8 +19,6 @@ public class Animal implements WorldElement {
     private int amountOfChildren;
     private final UUID animalId = UUID.randomUUID();
 
-
-
     public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
         this.direction = MapDirection.getRandomDirection();
         this.genome = genome;
@@ -93,5 +91,6 @@ public class Animal implements WorldElement {
     public void addAChild () {
         this.amountOfChildren++;
     }
+
 
 }

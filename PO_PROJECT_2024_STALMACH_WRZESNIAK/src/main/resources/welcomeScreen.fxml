@@ -18,7 +18,7 @@
             <Label text="Welcome to Darwin World!" styleClass="title-label"/>
             <Button text="Load configuration"/>
             <Button text="Add new configuration" onAction="#onAddNewConfigClicked"/>
-            <Button text="Start simulation"/>
+            <Button fx:id="startSimulationButton" text="Start simulation"/>
             <!--onAction="#startSimulation"-->
 <!--Trzeba zablokować ten przycisk jak nie ma załadowanej z pliku configuracji.-->
 <!-- Jak jest załadowana to start symulacji z tymi ustawieniami-->

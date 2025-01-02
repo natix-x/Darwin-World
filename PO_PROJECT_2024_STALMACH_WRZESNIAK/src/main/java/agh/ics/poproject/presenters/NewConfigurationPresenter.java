@@ -131,6 +131,17 @@ public class NewConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
 
+        Configuration configuration = new Configuration(
+                mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
+                initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
+                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator,
+                isFullRandomMutation, isFullPredestination, saveConfig
+        );
+
+        System.out.println("Simulation config:");
+        System.out.println(configuration);
     }
+
+
 
 }
