@@ -2,8 +2,15 @@ package agh.ics.poproject.presenters;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+
+import java.awt.*;
+import java.util.ArrayList;
 
 public class NewConfigurationPresenter {
+
+    @FXML
+    public Button startSimulationButton;
 
     @FXML
     private Spinner<Integer> lengthOfGenome;
@@ -100,4 +107,41 @@ public class NewConfigurationPresenter {
         yesSaveConfigButton.setToggleGroup(saveConfig);
         noSaveConfigButton.setToggleGroup(saveConfig);
     }
+
+
+    @FXML
+    public void startSimulationOnClick() {
+        // Fetch values from the UI
+        int mapHeight = mapHeightSpinner.getValue();
+        int mapWidth = mapWidthSpinner.getValue();
+        int initialPlants = initialNumberOfPlantsSpinner.getValue();
+        int energyPerPlant = energyPerPlantsSpinner.getValue();
+        int dailyPlantGrowth = dailyPlantGrowthSpinner.getValue();
+        int initialAnimals = initialNumberOfAnimalsSpinner.getValue();
+        int initialEnergy = initialEnergyOfAnimalsSpinner.getValue();
+        int neededEnergyForReproduction = neededEnergyForReproductionSpinner.getValue();
+        int reproductionEnergyLost = reproductionEnergyLostSpinner.getValue();
+        int minMutations = minNumberOfMutationsSpinner.getValue();
+        int maxMutations = maxNumberOfMutationsSpinner.getValue();
+        int genomeLength = lengthOfGenome.getValue();
+
+        boolean isGlobeMap = globeMapButton.isSelected();
+        boolean isForestedEquator = forestedEquatorButton.isSelected();
+        boolean isFullRandomMutation = fullRandomButton.isSelected();
+        boolean isFullPredestination = fullPredestinationButton.isSelected();
+        boolean saveConfig = yesSaveConfigButton.isSelected();
+
+        Configuration configuration = new Configuration(
+                mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
+                initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
+                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator,
+                isFullRandomMutation, isFullPredestination, saveConfig
+        );
+
+        System.out.println("Simulation config:");
+        System.out.println(configuration);
+    }
+
+
+
 }
