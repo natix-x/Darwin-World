@@ -9,9 +9,8 @@ import agh.ics.poproject.model.map.WorldElement;
 import java.util.UUID;
 
 public class Animal implements WorldElement {
+
     private MapDirection direction;
-
-
     private Vector2d position;
     private final Genome genome;
     private int remainingEnergy;
@@ -19,8 +18,6 @@ public class Animal implements WorldElement {
     private int age;
     private int amountOfChildren;
     private final UUID animalId = UUID.randomUUID();
-
-
 
     public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
         this.direction = MapDirection.getRandomDirection();
@@ -90,4 +87,10 @@ public class Animal implements WorldElement {
             this.direction = direction.opposite();
         }
     }
+
+    public void addAChild () {
+        this.amountOfChildren++;
+    }
+
+
 }
