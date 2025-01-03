@@ -1,16 +1,20 @@
 package agh.ics.poproject.presenters;
 
 import agh.ics.poproject.SetApp;
+import agh.ics.poproject.Simulation;
 import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.SimulationEngine;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigurationPresenter {
 
-    //lista configów
+    ArrayList<Configuration> configurationList = new ArrayList<>();
 
     @FXML
     public Button startSimulationButton;
@@ -143,17 +147,30 @@ public class ConfigurationPresenter {
                 isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
         );
 
+        this.configurationList.add(configuration);
+
         System.out.println("Simulation config:");
         System.out.println(configuration);
 
         startSimulation();
     }
 
+    /*
+    Sets up the UI and the engine.
+    Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
+     */
+    //TODO: try catch do tego asyncha coś tu pewnie
     public void startSimulation() throws IOException {
-        //get last element if not null
-        //SimulationEngine(config[-1])
-        //engine jako trhread z config
-        SetApp.startSimulationStage();
+        if (!configurationList.isEmpty()) {
+            Configuration configuration = configurationList.getLast();
+            Simulation simulation = new Simulation(configuration);
+            SimulationEngine engine = new SimulationEngine(List.of(simulation));
+            engine.runAsync();
+
+            SetApp.startSimulationStage();
+        }
+
+
     }
 
 
