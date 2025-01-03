@@ -25,11 +25,9 @@ public class SimulationPresenter {
     @FXML
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+        System.out.println(this.configuration);
     }
 
-    public void initializeSimulation() {
-        System.out.println("Received configuration: " + configuration);
-    }
 }
 
 
