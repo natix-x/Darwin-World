@@ -4,7 +4,6 @@ import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.map.MapDirection;
 import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.WorldElement;
 
 import java.util.UUID;
 

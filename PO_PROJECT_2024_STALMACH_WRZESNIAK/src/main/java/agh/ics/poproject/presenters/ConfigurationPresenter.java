@@ -1,13 +1,11 @@
 package agh.ics.poproject.presenters;
 
+import agh.ics.poproject.util.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 
-import java.awt.*;
-import java.util.ArrayList;
-
-public class NewConfigurationPresenter {
+public class ConfigurationPresenter {
 
     @FXML
     public Button startSimulationButton;
@@ -127,15 +125,17 @@ public class NewConfigurationPresenter {
 
         boolean isGlobeMap = globeMapButton.isSelected();
         boolean isForestedEquator = forestedEquatorButton.isSelected();
+        boolean isZyciodajneTruchla = zyciodajneTruchlaButton.isSelected();
         boolean isFullRandomMutation = fullRandomButton.isSelected();
+        boolean isSlightCorrectionMutation = slightCorrectionButton.isSelected();
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
 
         Configuration configuration = new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
-                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator,
-                isFullRandomMutation, isFullPredestination, saveConfig
+                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
         );
 
         System.out.println("Simulation config:");

@@ -1,4 +1,4 @@
-package agh.ics.poproject.presenters;
+package agh.ics.poproject.util;
 
 public record Configuration( int mapHeight,
                              int mapWidth,
@@ -15,7 +15,9 @@ public record Configuration( int mapHeight,
 
                              boolean isGlobeMap,
                              boolean isForestedEquator,
+                             boolean isZyciodajneTruchla,
                              boolean isFullRandomMutation,
+                             boolean isSlightCorrectionMutation,
                              boolean isFullPredestination,
                              boolean saveConfig
 

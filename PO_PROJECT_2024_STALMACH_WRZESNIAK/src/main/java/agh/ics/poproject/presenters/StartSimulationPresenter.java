@@ -13,6 +13,9 @@ import java.io.IOException;
 public class StartSimulationPresenter {
 
     @FXML
+    private Button startSimulationButton;
+
+    @FXML
     public void onAddNewConfigClicked(ActionEvent actionEvent) throws IOException {
         Stage configStage = new Stage();
         FXMLLoader loader = new FXMLLoader();

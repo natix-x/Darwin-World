@@ -11,7 +11,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0" stylesheets="configuration.css"
-            fx:controller="agh.ics.poproject.presenters.NewConfigurationPresenter">
+            fx:controller="agh.ics.poproject.presenters.ConfigurationPresenter">
     <top>
         <Label text="New configuration: " BorderPane.alignment="CENTER" styleClass="title-label"/>
     </top>
@@ -63,6 +63,10 @@
                 <Spinner fx:id="reproductionEnergyLostSpinner" editable="true" />
             </HBox>
             <HBox>
+                <Label text="Length of animal genome: "/>
+                <Spinner fx:id="lengthOfGenome" editable="true" />
+            </HBox>
+            <HBox>
                 <Label text="Minimum number of mutations: "/>
                 <Spinner fx:id="minNumberOfMutationsSpinner" editable="true" />
             </HBox>
@@ -76,10 +80,6 @@
                 <RadioButton fx:id="slightCorrectionButton" text="Slight correction"/>
             </HBox>
             <HBox>
-                <Label text="Length of animal genome: "/>
-                <Spinner fx:id="lengthOfGenome" editable="true" />
-            </HBox>
-            <HBox>
                 <Label text="Animal behaviour variant: "/>
                 <RadioButton fx:id="fullPredestinationButton" text="Full predestination" selected="true"/>
             </HBox>
@@ -89,7 +89,7 @@
                 <RadioButton fx:id="noSaveConfigButton" text="No"/>
             </HBox>
             <HBox>
-                <Button fx:id="startSimulationButton" text="Start Simulation"/>
+                <Button fx:id="startSimulationButton" text="Start Simulation" onAction="#startSimulationOnClick"/>
             </HBox>
 
         </VBox>
