@@ -1,11 +1,16 @@
 package agh.ics.poproject.presenters;
 
+import agh.ics.poproject.SetApp;
 import agh.ics.poproject.util.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 
+import java.io.IOException;
+
 public class ConfigurationPresenter {
+
+    //lista configów
 
     @FXML
     public Button startSimulationButton;
@@ -108,7 +113,7 @@ public class ConfigurationPresenter {
 
 
     @FXML
-    public void startSimulationOnClick() {
+    public void startSimulationOnClick() throws IOException { //save config params
         // Fetch values from the UI
         int mapHeight = mapHeightSpinner.getValue();
         int mapWidth = mapWidthSpinner.getValue();
@@ -131,7 +136,7 @@ public class ConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
 
-        Configuration configuration = new Configuration(
+        Configuration configuration = new Configuration( //dodanie do listy
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
@@ -140,6 +145,15 @@ public class ConfigurationPresenter {
 
         System.out.println("Simulation config:");
         System.out.println(configuration);
+
+        startSimulation();
+    }
+
+    public void startSimulation() throws IOException {
+        //get last element if not null
+        //SimulationEngine(config[-1])
+        //engine jako trhread z config
+        SetApp.startSimulationStage();
     }
 
 

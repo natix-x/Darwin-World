@@ -1,3 +1,19 @@
+package agh.ics.poproject.presenters;
+
+import agh.ics.poproject.model.MapChangeListener;
+import agh.ics.poproject.model.map.WorldMap;
+
+public class SimulationPresenter implements MapChangeListener {
+    @Override
+    public void mapChange(WorldMap worldMap, String message) {
+
+    }
+}
+
+
+
+
+
 //package agh.ics.poproject.presenter;
 //
 //import agh.ics.poproject.OptionsParser;
