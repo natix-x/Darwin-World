@@ -1,4 +1,4 @@
-package agh.ics.poproject.model.map;
+package agh.ics.poproject.model.elements;
 
 import agh.ics.poproject.model.Vector2d;
 

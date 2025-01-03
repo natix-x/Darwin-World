@@ -80,6 +80,7 @@ public class Reproduce {
     Animals reproduce, their energy level goes down and genes are shuffled.
     @return Animal object with inherited genes and initial energy on the parents' position
      */
+    // TODO: doać mutacje
     public Animal reproduce (Animal animal1, Animal animal2){
         if (canReproduce(animal1, animal2, energyNeededToReproduce)) {
             animal1.changeEnergy(-energyNeededToReproduce);
