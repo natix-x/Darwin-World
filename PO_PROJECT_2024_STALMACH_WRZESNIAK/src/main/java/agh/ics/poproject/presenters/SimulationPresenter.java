@@ -1,24 +1,39 @@
-//package agh.ics.poproject.presenter;
-//
-//import agh.ics.poproject.OptionsParser;
-//import agh.ics.poproject.Simulation;
-//import agh.ics.poproject.model.*;
-//import agh.ics.poproject.model.map.WorldMap;
-//import javafx.application.Platform;
-//import javafx.event.ActionEvent;
-//import javafx.fxml.FXML;
-//import javafx.geometry.Pos;
-//import javafx.scene.control.Button;
-//import javafx.scene.control.Label;
-//import javafx.scene.control.TextField;
-//import javafx.scene.layout.ColumnConstraints;
-//import javafx.scene.layout.GridPane;
-//import javafx.scene.layout.RowConstraints;
-//
-//
-//import java.util.List;
-//
-//
+package agh.ics.poproject.presenters;
+
+import agh.ics.poproject.model.*;
+import agh.ics.poproject.model.map.WorldMap;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+
+
+import java.util.List;
+
+
+import agh.ics.poproject.util.Configuration;
+
+public class SimulationPresenter {
+    private Configuration configuration;
+
+    @FXML
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public void initializeSimulation() {
+        System.out.println("Received configuration: " + configuration);
+    }
+}
+
+
+
 //public class SimulationPresenter implements MapChangeListener {
 //
 //    private static final double CELL_WIDTH = 50.0;
@@ -119,13 +134,13 @@
 //    });
 //    }
 //
-//    @FXML
-//    public void onSimulationStartClicked(ActionEvent actionEvent) throws InterruptedException {
-//        List<MoveDirection> directions = OptionsParser.parseMoveDirection(getMovesInstructions());
-//        Simulation simulation = new Simulation(POSITIONS, directions, worldMap);
-//        SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
-//        simulationEngine.runAsync();
-//    }
+////    @FXML
+////    public void onSimulationStartClicked(ActionEvent actionEvent) throws InterruptedException {
+////        List<MoveDirection> directions = OptionsParser.parseMoveDirection(getMovesInstructions());
+////        Simulation simulation = new Simulation(POSITIONS, directions, worldMap);
+////        SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
+////        simulationEngine.runAsync();
+////    }
 //
 //
 //    private String[] getMovesInstructions() {

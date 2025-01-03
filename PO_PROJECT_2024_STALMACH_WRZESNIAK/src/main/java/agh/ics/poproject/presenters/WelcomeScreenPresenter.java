@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class StartSimulationPresenter {
+public class WelcomeScreenPresenter {
 
     @FXML
     private Button startSimulationButton;
@@ -21,7 +21,7 @@ public class StartSimulationPresenter {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("configuration.fxml"));
         BorderPane viewRoot = loader.load();
-        StartSimulationPresenter presenter = new StartSimulationPresenter();
+        ConfigurationPresenter presenter = new ConfigurationPresenter();
 
         configureStage(configStage, viewRoot);
         configStage.show();

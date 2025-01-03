@@ -1,6 +1,6 @@
 package agh.ics.poproject;
 
-import agh.ics.poproject.presenters.StartSimulationPresenter;
+import agh.ics.poproject.presenters.WelcomeScreenPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,8 +16,7 @@ public class SimulationApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("welcomeScreen.fxml"));
         BorderPane viewRoot = loader.load();
-        StartSimulationPresenter presenter = new StartSimulationPresenter();
-
+        WelcomeScreenPresenter presenter = new WelcomeScreenPresenter();
         configureStage(primaryStage, viewRoot);
 
 

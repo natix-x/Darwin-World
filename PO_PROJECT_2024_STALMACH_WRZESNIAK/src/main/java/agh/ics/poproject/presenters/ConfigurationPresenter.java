@@ -1,9 +1,16 @@
 package agh.ics.poproject.presenters;
 
+import agh.ics.poproject.presenters.SimulationPresenter;
 import agh.ics.poproject.util.Configuration;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ConfigurationPresenter {
 
@@ -108,7 +115,7 @@ public class ConfigurationPresenter {
 
 
     @FXML
-    public void startSimulationOnClick() {
+    public void startSimulationOnClick() throws IOException {
         // Fetch values from the UI
         int mapHeight = mapHeightSpinner.getValue();
         int mapWidth = mapWidthSpinner.getValue();
@@ -138,8 +145,31 @@ public class ConfigurationPresenter {
                 isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
         );
 
+        showSimulationWindow(configuration);
+
         System.out.println("Simulation config:");
         System.out.println(configuration);
+    }
+
+    private void showSimulationWindow(Configuration configuration) throws IOException {
+        Stage configStage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        BorderPane viewRoot = loader.load();
+
+        SimulationPresenter presenter = new SimulationPresenter();
+        presenter.setConfiguration(configuration);
+
+        configureStage(configStage, viewRoot);
+        configStage.show();
+    }
+
+    private void configureStage(Stage primaryStage, BorderPane viewRoot) {
+        var scene = new Scene(viewRoot);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Simulation");
+        primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
+        primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 
 
