@@ -140,14 +140,14 @@ public class ConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
 
-        Configuration configuration = new Configuration( //dodanie do listy
+        Configuration configuration = new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
                 isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
         );
 
-        this.configurationList.add(configuration);
+        this.configurationList.add(configuration); //dodanie do listy
 
         System.out.println("Simulation config:");
         System.out.println(configuration);
@@ -159,15 +159,15 @@ public class ConfigurationPresenter {
     Sets up the UI and the engine.
     Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
      */
-    //TODO: try catch do tego asyncha coś tu pewnie
+    //TODO: try catch do tego asyncha coś tu pewnie, zastanowić się bo race condition?
     public void startSimulation() throws IOException {
         if (!configurationList.isEmpty()) {
             Configuration configuration = configurationList.getLast();
-            Simulation simulation = new Simulation(configuration);
-            SimulationEngine engine = new SimulationEngine(List.of(simulation));
+            Simulation simulation = new Simulation(configuration); //symulacja teraz ma wszystkie param config
+            SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SetApp.startSimulationStage();
+            SetApp.startSimulationStage(); //wyswietlamy okienko symulacji
         }
 
 
