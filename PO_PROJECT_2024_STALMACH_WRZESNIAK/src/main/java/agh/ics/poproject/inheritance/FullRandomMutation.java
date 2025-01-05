@@ -1,4 +1,4 @@
-package agh.ics.poproject.inheritance.mutations;
+package agh.ics.poproject.inheritance;
 
 import java.util.*;
 

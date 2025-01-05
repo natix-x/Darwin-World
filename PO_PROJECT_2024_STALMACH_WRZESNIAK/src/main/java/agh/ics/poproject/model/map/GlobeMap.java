@@ -64,4 +64,6 @@ public class GlobeMap extends AbstractWorldMap {
     private boolean isOnLeftEdge(Vector2d position) {
         return position.getX() == LEFT_EDGE;
     }
+
+
 }

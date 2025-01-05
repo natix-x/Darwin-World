@@ -30,7 +30,7 @@ public class SetApp extends Application {
         primaryStage.show();
     }
 
-    private static void setNewStage(BorderPane viewRoot, String title) throws IOException {
+    private static void setNewStage(BorderPane viewRoot, String title) {
         Stage stage = new Stage();
         var scene = new Scene(viewRoot);
         stage.setScene(scene);

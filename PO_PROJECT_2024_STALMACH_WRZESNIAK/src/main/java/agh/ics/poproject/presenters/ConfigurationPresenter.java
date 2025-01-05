@@ -1,16 +1,12 @@
 package agh.ics.poproject.presenters;
 
 import agh.ics.poproject.SetApp;
-import agh.ics.poproject.Simulation;
+import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.util.Configuration;
 import agh.ics.poproject.util.SimulationEngine;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -173,10 +169,9 @@ public class ConfigurationPresenter {
             engine.runAsync();
 
             SimulationPresenter presenter = SetApp.startSimulationStage();
-            presenter.setSimulationParameters(simulation);
+            presenter.setSimulationParameters(simulation); //wyswietlamy okienko symulacji
 
 
-            //wyswietlamy okienko symulacji
 
         }
 
