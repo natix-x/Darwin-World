@@ -1,6 +1,6 @@
 package agh.ics.poproject.util;
 
-import agh.ics.poproject.Simulation;
+import agh.ics.poproject.simulation.Simulation;
 
 import java.util.ArrayList;
 import java.util.List;

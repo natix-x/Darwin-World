@@ -42,4 +42,8 @@ public class Genome {
         return randomGenome;
     }
 
+    public void activateNextGene() {
+        activateGene = (activateRandomGene() + 1) % genomes.size();
+    }
+
 }

@@ -1,9 +1,8 @@
 package agh.ics.poproject.presenters;
 
-import agh.ics.poproject.Simulation;
+import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.AbstractWorldMap;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.WorldMap;
 import javafx.application.Platform;
@@ -19,19 +18,22 @@ public class SimulationPresenter implements MapChangeListener {
 
     private static final double CELL_HEIGHT = 50.0;
     private static final double CELL_WIDTH = 50.0;
-    public Button startButton;
+
+    @FXML
+    private Button startButton;
 
     public Simulation simulation;
     public GlobeMap worldMap;
 
-    public GridPane mapGrid;
+    @FXML
+    private GridPane mapGrid;
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
 
         System.out.println("GlobeMap");
-        this.worldMap = new GlobeMap(simulation.config.mapWidth(), simulation.config.mapHeight());
-
+        this.worldMap = new GlobeMap(simulation.getConfig().mapWidth(), simulation.getConfig().mapHeight());
+        this.simulation.setWorldMap(worldMap);
         drawMap();
     }
 
@@ -42,8 +44,8 @@ public class SimulationPresenter implements MapChangeListener {
         Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
 
         createNewMapGrid(lowerBound, upperBound);
-        String mapRepresentation = worldMap.toString();
-        fillTheMap(mapRepresentation);
+        //String mapRepresentation = worldMap.toString();
+        //fillTheMap(mapRepresentation);
 
     }
 
@@ -57,8 +59,8 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
-        int width = Math.abs(lowerBound.getX() - upperBound.getX()) + 2;
-        int height = Math.abs(lowerBound.getY() - upperBound.getY()) + 2;
+        int width = Math.abs(lowerBound.getX() - upperBound.getX());
+        int height = Math.abs(lowerBound.getY() - upperBound.getY());
         for (int column = 0; column < width; column++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
         }
@@ -113,3 +115,4 @@ public class SimulationPresenter implements MapChangeListener {
         System.out.println(worldMap.getCurrentBounds().LowerBound());
         System.out.println(worldMap.getCurrentBounds().UpperBound());
     }
+}

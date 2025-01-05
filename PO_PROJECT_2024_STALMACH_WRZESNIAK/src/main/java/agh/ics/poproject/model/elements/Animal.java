@@ -1,6 +1,7 @@
 package agh.ics.poproject.model.elements;
 
 import agh.ics.poproject.inheritance.Genome;
+import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.map.MapDirection;
 import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
@@ -85,6 +86,15 @@ public class Animal implements WorldElement {
         else {
             this.direction = direction.opposite();
         }
+        genome.activateNextGene();
+    }
+
+    public void reproduce(Animal reproductionPartner, int energyNeededForReproduce) {
+        // TODO: implement
+    }
+
+    public void eat() {
+        // TODO: implement
     }
 
     public void addAChild () {

@@ -1,8 +1,5 @@
-package agh.ics.poproject.inheritance.mutations;
+package agh.ics.poproject.inheritance;
 
-import agh.ics.poproject.inheritance.Genome;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public interface MutationMethod {
