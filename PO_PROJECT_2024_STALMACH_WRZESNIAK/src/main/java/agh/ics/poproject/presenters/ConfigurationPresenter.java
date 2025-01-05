@@ -1,11 +1,20 @@
 package agh.ics.poproject.presenters;
 
+import agh.ics.poproject.SetApp;
+import agh.ics.poproject.Simulation;
 import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.SimulationEngine;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConfigurationPresenter {
+
+    ArrayList<Configuration> configurationList = new ArrayList<>();
 
     @FXML
     public Button startSimulationButton;
@@ -108,7 +117,7 @@ public class ConfigurationPresenter {
 
 
     @FXML
-    public void startSimulationOnClick() {
+    public void startSimulationOnClick() throws IOException { //save config params
         // Fetch values from the UI
         int mapHeight = mapHeightSpinner.getValue();
         int mapWidth = mapWidthSpinner.getValue();
@@ -138,8 +147,30 @@ public class ConfigurationPresenter {
                 isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
         );
 
+        this.configurationList.add(configuration); //dodanie do listy
+
         System.out.println("Simulation config:");
         System.out.println(configuration);
+
+        startSimulation();
+    }
+
+    /*
+    Sets up the UI and the engine.
+    Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
+     */
+    //TODO: try catch do tego asyncha coś tu pewnie, zastanowić się bo race condition?
+    public void startSimulation() throws IOException {
+        if (!configurationList.isEmpty()) {
+            Configuration configuration = configurationList.getLast();
+            Simulation simulation = new Simulation(configuration); //symulacja teraz ma wszystkie param config
+            SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
+            engine.runAsync();
+
+            SetApp.startSimulationStage(); //wyswietlamy okienko symulacji
+        }
+
+
     }
 
 
