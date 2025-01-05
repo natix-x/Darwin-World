@@ -11,7 +11,9 @@
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="agh.ics.poproject.presenters.SimulationPresenter">
-    <!--    presenter zamiast simulation engine do obsługi UI-->
+
+<!--    presenter zamiast simulation engine do obsługi UI-->
+
     <top>
     </top>
     <center>
@@ -24,8 +26,10 @@
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
             <Button fx:id="startButton" text="Start!" onAction="#startSimulation"/>
-            <!--                    onAction="#run"/>-->
+
+<!--                    onAction="#run"/>-->
 
         </HBox>
     </bottom>
 </BorderPane>
+

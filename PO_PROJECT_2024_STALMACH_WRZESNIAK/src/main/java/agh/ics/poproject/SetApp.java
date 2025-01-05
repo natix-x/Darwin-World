@@ -53,4 +53,4 @@ public class SetApp extends Application {
         setNewStage("simulation.fxml", "New Simulation");
     }
 
-}
+
