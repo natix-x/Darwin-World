@@ -1,5 +1,7 @@
 package agh.ics.poproject;
 
+import agh.ics.poproject.presenters.ConfigurationPresenter;
+import agh.ics.poproject.presenters.SimulationPresenter;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,12 +30,8 @@ public class SetApp extends Application {
         primaryStage.show();
     }
 
-    private static void setNewStage(String filename, String title) throws IOException {
+    private static void setNewStage(BorderPane viewRoot, String title) throws IOException {
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(SetApp.class.getClassLoader().getResource(filename));
-        BorderPane viewRoot = loader.load();
-
         var scene = new Scene(viewRoot);
         stage.setScene(scene);
         stage.setTitle(title);
@@ -46,11 +44,19 @@ public class SetApp extends Application {
     // TODO: to comment xd
     @FXML
     public void startConfigStage(ActionEvent actionEvent) throws IOException {
-        setNewStage("configuration.fxml", "New Configuration");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(SetApp.class.getClassLoader().getResource("configuration.fxml"));
+        BorderPane viewRoot = loader.load();
+        setNewStage(viewRoot, "New Configuration");
     }
 
-    public static void startSimulationStage() throws IOException {
-        setNewStage("simulation.fxml", "New Simulation");
+    public static SimulationPresenter startSimulationStage() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(SetApp.class.getClassLoader().getResource("simulation.fxml"));
+        BorderPane viewRoot = loader.load();
+        setNewStage(viewRoot, "New Simulation");
+        return loader.getController();
     }
+}
 
 

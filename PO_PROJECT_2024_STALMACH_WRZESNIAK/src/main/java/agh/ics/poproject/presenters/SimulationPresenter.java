@@ -19,12 +19,15 @@ public class SimulationPresenter implements MapChangeListener {
 
     private static final double CELL_HEIGHT = 50.0;
     private static final double CELL_WIDTH = 50.0;
-    public Button startButton;
+
+    @FXML
+    private Button startButton;
 
     public Simulation simulation;
     public GlobeMap worldMap;
 
-    public GridPane mapGrid;
+    @FXML
+    private GridPane mapGrid;
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
@@ -113,3 +116,4 @@ public class SimulationPresenter implements MapChangeListener {
         System.out.println(worldMap.getCurrentBounds().LowerBound());
         System.out.println(worldMap.getCurrentBounds().UpperBound());
     }
+}

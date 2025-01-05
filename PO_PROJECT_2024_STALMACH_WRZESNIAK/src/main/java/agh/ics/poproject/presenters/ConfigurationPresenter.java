@@ -5,8 +5,12 @@ import agh.ics.poproject.Simulation;
 import agh.ics.poproject.util.Configuration;
 import agh.ics.poproject.util.SimulationEngine;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -164,15 +168,18 @@ public class ConfigurationPresenter {
         if (!configurationList.isEmpty()) {
             Configuration configuration = configurationList.getLast();
             Simulation simulation = new Simulation(configuration); //symulacja teraz ma wszystkie param config
+
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SetApp.startSimulationStage(); //wyswietlamy okienko symulacji
+            SimulationPresenter presenter = SetApp.startSimulationStage();
+            presenter.setSimulationParameters(simulation);
+
+
+            //wyswietlamy okienko symulacji
+
         }
 
 
     }
-
-
-
 }
