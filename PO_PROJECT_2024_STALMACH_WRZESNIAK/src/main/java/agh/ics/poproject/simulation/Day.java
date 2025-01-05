@@ -22,12 +22,18 @@ public class Day {
 
     }
 
+    /**
+    Generates all necessary elements for simulation launch
+     */
     public void FirstDayActivities() throws IncorrectPositionException {
         generateAnimals();
         generatePlants();
     }
 
 
+    /*
+
+     */
     private void generateAnimals() throws IncorrectPositionException {
         int numberOfAnimalsToGenerate = config.initialAnimals();
         // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać

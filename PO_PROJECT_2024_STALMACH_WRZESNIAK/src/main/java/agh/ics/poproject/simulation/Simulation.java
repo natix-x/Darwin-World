@@ -45,7 +45,7 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Engine imulation started");
+        System.out.println("Engine simulation started");
 
     }
 

@@ -1,0 +1,25 @@
+
+.cell {
+    -fx-background-color: #6e4f41;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-alignment: center;
+}
+
+.cell-plant {
+    -fx-background-color: green;
+    -fx-border-color: black;
+}
+
+
+.cell-animal {
+    -fx-background-color: white;
+    -fx-border-color: black;
+}
+
+
+GridPane {
+    -fx-alignment: center;
+}

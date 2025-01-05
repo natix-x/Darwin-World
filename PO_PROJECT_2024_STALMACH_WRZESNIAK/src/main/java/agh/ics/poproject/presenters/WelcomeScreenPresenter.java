@@ -21,8 +21,6 @@ public class WelcomeScreenPresenter {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("configuration.fxml"));
         BorderPane viewRoot = loader.load();
-        ConfigurationPresenter presenter = new ConfigurationPresenter();
-
         configureStage(configStage, viewRoot);
         configStage.show();
     }
