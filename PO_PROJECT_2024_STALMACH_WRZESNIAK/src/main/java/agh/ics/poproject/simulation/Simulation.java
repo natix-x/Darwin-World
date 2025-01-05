@@ -17,6 +17,10 @@ public class Simulation implements Runnable {
     private List<Animal> animals;
     private List<Plant> plants;
 
+    public Simulation(Configuration config) {
+        this.config = config;
+    }
+
     public List<Animal> getAnimals() {
         return animals;
     }
@@ -27,10 +31,6 @@ public class Simulation implements Runnable {
 
     public WorldMap getWorldMap() {
         return worldMap;
-    }
-
-    public Simulation(Configuration config) {
-        this.config = config;
     }
 
     public void setWorldMap(WorldMap worldMap) {

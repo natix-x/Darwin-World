@@ -1,8 +1,10 @@
 package agh.ics.poproject.simulation;
 
 import agh.ics.poproject.inheritance.Genome;
+import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.util.Configuration;
 
@@ -30,10 +32,18 @@ public class Day {
         generatePlants();
     }
 
-
-    /*
-
+    /**
+     Generates and updated all map elements in the timeframe of one day
      */
+    public void EveryDayActivities() throws IncorrectPositionException {
+        removeDeadAnimals();
+        moveAndRotateAnimals();
+        consumePlants();
+        reproduceAnimals();
+        growNewPlants();
+        //TODO: można pomyśleć nad jakimś counterem dni
+    }
+
     private void generateAnimals() throws IncorrectPositionException {
         int numberOfAnimalsToGenerate = config.initialAnimals();
         // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać
@@ -60,6 +70,7 @@ public class Day {
 
     /**
      * Generate random position of elements knowing that only one element from one category can be on each position.
+     * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
      */
     private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate) {
         Random random = new Random();
@@ -71,15 +82,6 @@ public class Day {
             uniquePositions.add(position);
         }
         return uniquePositions;
-    }
-
-
-    public void EveryDayActivities() {
-        removeDeadAnimals();
-        moveAndRotateAnimals();
-        consumePlants();
-        reproduceAnimals();
-        growNewPlants();
     }
 
     /**
@@ -96,7 +98,7 @@ public class Day {
         for (Animal animal : animals) {
             simulation.getWorldMap().move(animal);
         }
-        }
+    }
 
 
     private void growNewPlants() {
@@ -104,10 +106,32 @@ public class Day {
         // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
     }
 
-    private void reproduceAnimals() {
+    private void reproduceAnimals() throws IncorrectPositionException {
+        List<Animal> animals = simulation.getAnimals();
+        for (Animal animal1 : animals) {
+            for (Animal animal2 : animals) {
+                if (animal1.getPosition().equals(animal2.getPosition())) {
+                    Reproduce reproduction = new Reproduce();
+                    Animal animal3 = reproduction.reproduce(animal1, animal2);
+                    simulation.addAnimal(animal3);
+                    simulation.getWorldMap().place(animal3);
+                }
+            }
+        }
+
     }
 
     private void consumePlants() {
+        List<Animal> animals = simulation.getAnimals();
+        List<Plant> plants = simulation.getPlants();
+        for (Animal animal : animals) {
+            for (Plant plant : plants) {
+                if (animal.getPosition().equals(plant.getPosition())) {
+                    animal.eat();
+                    plants.remove(plant);
+                }
+            }
+        }
     }
 
 
