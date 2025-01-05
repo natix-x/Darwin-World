@@ -20,8 +20,8 @@
             <Button text="Add new configuration" onAction="#startConfigStage"/>
             <Button fx:id="startSimulationButton" text="Start simulation"/>
             <!--onAction="#startSimulation"-->
-<!--Trzeba zablokować ten przycisk jak nie ma załadowanej z pliku configuracji.-->
-<!-- Jak jest załadowana to start symulacji z tymi ustawieniami-->
+            <!--Trzeba zablokować ten przycisk jak nie ma załadowanej z pliku configuracji.-->
+            <!-- Jak jest załadowana to start symulacji z tymi ustawieniami-->
         </VBox>
     </center>
 </BorderPane>

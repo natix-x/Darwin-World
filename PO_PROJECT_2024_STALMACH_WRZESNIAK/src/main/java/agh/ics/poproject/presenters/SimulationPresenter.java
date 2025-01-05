@@ -113,4 +113,3 @@ public class SimulationPresenter implements MapChangeListener {
         System.out.println(worldMap.getCurrentBounds().LowerBound());
         System.out.println(worldMap.getCurrentBounds().UpperBound());
     }
-}
