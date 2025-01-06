@@ -1,7 +1,6 @@
 package agh.ics.poproject.model.elements;
 
 import agh.ics.poproject.inheritance.Genome;
-import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.map.MapDirection;
 import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
@@ -24,6 +23,7 @@ public class Animal implements WorldElement {
         this.genome = genome;
         this.position = position;
         this.remainingEnergy = amountOfEnergy;
+        this.age = 1; //age: 1 when animal is created/born
     }
 
     public MapDirection getDirection() {
@@ -93,12 +93,17 @@ public class Animal implements WorldElement {
         // TODO: implement
     }
 
-    public void eat() {
+    public void eat(int energyPerPlant) {
+        this.consumedPlants += energyPerPlant;
         // TODO: implement
     }
 
     public void addAChild () {
         this.amountOfChildren++;
+    }
+
+    public void ageAnimal() {
+        this.age++;
     }
 
 

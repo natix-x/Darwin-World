@@ -14,8 +14,12 @@ public class Simulation implements Runnable {
 
 
     private  WorldMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
-    private List<Animal> animals;
-    private List<Plant> plants;
+    private ArrayList<Animal> animals;
+    private ArrayList<Plant> plants;
+
+    public Simulation(Configuration config) {
+        this.config = config;
+    }
 
     public List<Animal> getAnimals() {
         return animals;
@@ -29,10 +33,6 @@ public class Simulation implements Runnable {
         return worldMap;
     }
 
-    public Simulation(Configuration config) {
-        this.config = config;
-    }
-
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }
@@ -40,12 +40,10 @@ public class Simulation implements Runnable {
     public Configuration getConfig() {
         return config;
     }
-
-
-
+    
     @Override
     public void run() {
-        System.out.println("Engine imulation started");
+        System.out.println("Engine simulation started");
 
     }
 

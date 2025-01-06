@@ -16,8 +16,8 @@ import javafx.scene.layout.RowConstraints;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private static final double CELL_HEIGHT = 50.0;
-    private static final double CELL_WIDTH = 50.0;
+    private static final double CELL_HEIGHT = 10.0;
+    private static final double CELL_WIDTH = 10.0;
 
     @FXML
     private Button startButton;
@@ -49,7 +49,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     }
 
-    /*
+    /**
     Clears space in the simulation window for printing the map
      */
     private void clearMapGrid() {
@@ -59,6 +59,8 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
+        clearMapGrid();
+        mapGrid.alignmentProperty();
         int width = Math.abs(lowerBound.getX() - upperBound.getX());
         int height = Math.abs(lowerBound.getY() - upperBound.getY());
         for (int column = 0; column < width; column++) {
@@ -67,9 +69,18 @@ public class SimulationPresenter implements MapChangeListener {
         for (int row = 0; row < height; row++) {
             mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
         }
+
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                Label cell = new Label();
+                cell.getStyleClass().add("cell");
+                mapGrid.add(cell, column, row);
+            }
+        }
     }
 
     //TODO: przekleić reprezentację jako string do kodu żeby śmigało
+    //TODO: coś się papra, do poprawy print
     private void fillTheMap(String mapRepresentation) {
         String[] lines = mapRepresentation.split("\n");
 

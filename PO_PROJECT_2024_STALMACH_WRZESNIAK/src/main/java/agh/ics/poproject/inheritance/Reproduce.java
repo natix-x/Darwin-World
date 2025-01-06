@@ -13,14 +13,14 @@ public class Reproduce {
     int energyNeededToReproduce;
 
 
-    /*
+    /**
     Checks if two animals have enough energy to reproduce based on parameters set in configuration
      */
     public boolean canReproduce(Animal animal1, Animal animal2, int energyNeededToReproduce) {
         return animal1.getRemainingEnergy() >= energyNeededToReproduce && animal2.getRemainingEnergy() >= energyNeededToReproduce;
     }
 
-    /*
+    /**
     Shuffles parents' genomes accordingly to create baby's genome.
     Calculates the percentage of inheritance of each parent based on energy level and combines the genes
     @return Genome of the baby animal
@@ -76,7 +76,7 @@ public class Reproduce {
         return new Genome(babyGenomeList);
     }
 
-    /*
+    /**
     Animals reproduce, their energy level goes down and genes are shuffled.
     @return Animal object with inherited genes and initial energy on the parents' position
      */

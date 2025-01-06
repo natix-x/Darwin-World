@@ -7,10 +7,12 @@
 <?import javafx.scene.layout.HBox?>
 
 
+<?import javafx.scene.layout.StackPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.poproject.presenters.SimulationPresenter">
+            fx:controller="agh.ics.poproject.presenters.SimulationPresenter"
+            stylesheets="stylesheets/simulation.css">
 
 <!--    presenter zamiast simulation engine do obsługi UI-->
 
@@ -18,9 +20,11 @@
     </top>
     <center>
         <Label  text="tu mapa"/>
-        <GridPane fx:id="mapGrid" gridLinesVisible="true"
-                  style="-fx-padding: 10; -fx-hgap: 5; -fx-vgap: 5;">
-        </GridPane>
+        <StackPane fx:id="stackPane" alignment="CENTER">
+            <GridPane fx:id="mapGrid" gridLinesVisible="true"
+                      style="-fx-padding: 10; -fx-hgap: 5; -fx-vgap: 5;">
+            </GridPane>
+        </StackPane>
     </center>
 
     <bottom>
