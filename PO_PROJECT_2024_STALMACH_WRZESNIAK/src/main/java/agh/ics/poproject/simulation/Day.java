@@ -54,18 +54,18 @@ public class Day {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
             simulation.addAnimal(animal);
-            simulation.getWorldMap().place(animal);  // pokazanie na mapie
+            simulation.getWorldMap().placeAnimal(animal);  // pokazanie na mapie
         }
     }
 
-    private void generatePlants() {
+    private void generatePlants() throws IncorrectPositionException {
         int numberOfPlantsToGenerate = config.initialPlants();
-        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
-        for (Vector2d position : generatedAnimalsRandomPositions) {
-            Genome genome = new Genome(config.genomeLength());
-            Animal animal = new Animal(position, genome, config.initialEnergy());
-            simulation.addAnimal(animal);
-            // TODO:simulation.getWorldMap().place(animal); musi byc tez place dla roślinek, bo ta na razie działa tylko dla zwierzakó
+        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
+        for (Vector2d position : generatedPlantsRandomPositions) {
+            Plant plant = new Plant(position);
+            simulation.addPlant(plant);
+            simulation.getWorldMap().placePlant(plant);
+            //TODO: nie wiem czy nie lepiej załatwić to metodą jakąś wspólną, która będzie działała na WorldElement
         }
 
     }
@@ -159,7 +159,7 @@ public class Day {
                 Reproduce reproduction = new Reproduce();
                 Animal babyAnimal = reproduction.reproduce(animal1, animal2);
                 simulation.addAnimal(babyAnimal);
-                simulation.getWorldMap().place(babyAnimal);
+                simulation.getWorldMap().placeAnimal(babyAnimal);
             }
         }
     }
