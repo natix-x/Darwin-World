@@ -112,7 +112,6 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-
     @Override
     public void mapChange(WorldMap worldMap, String message) {
         Platform.runLater(this::drawMap);

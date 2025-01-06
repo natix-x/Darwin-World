@@ -4,6 +4,7 @@ package agh.ics.poproject.model.map;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.elements.WorldElement;
 
 import java.util.Collection;
@@ -24,8 +25,16 @@ public interface WorldMap extends MoveValidator {
      *
      * @param animal The animal to place on the map.
      */
-    void place(Animal animal) throws IncorrectPositionException;
+    void placeAnimal(Animal animal) throws IncorrectPositionException;
 
+    /**
+     * Place a plant on the map.
+     *
+     * @param plant The animal to place on the map.
+     */
+    void placePlant(Plant plant) throws IncorrectPositionException;
+
+    void placeWorldElement(WorldElement element) throws IncorrectPositionException;
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
      * If the move is not possible, this method has no effect.
@@ -43,6 +52,7 @@ public interface WorldMap extends MoveValidator {
     default boolean isOccupied(Vector2d position) {
         return objectAt(position) != null;
     }
+
 
     /**
      * Return an element of world at a given position.

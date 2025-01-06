@@ -3,6 +3,7 @@ package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.elements.Plant;
 import jdk.incubator.vector.VectorOperators;
 
 import java.util.Objects;

@@ -13,7 +13,7 @@ public class Simulation implements Runnable {
     private final Configuration config;
 
 
-    private  WorldMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
+    private WorldMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
     private ArrayList<Animal> animals;
     private ArrayList<Plant> plants;
 
@@ -54,9 +54,6 @@ public class Simulation implements Runnable {
     public void addPlant(Plant plant) {
         plants.add(plant);
     }
-
-
-
 
 
 }
