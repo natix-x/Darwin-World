@@ -23,18 +23,10 @@ public interface WorldMap extends MoveValidator {
     /**
      * Place an animal on the map.
      *
-     * @param animal The animal to place on the map.
+     * @param worldElement The worldElement to place on map.
      */
-    void placeAnimal(Animal animal) throws IncorrectPositionException;
+    void placeWorldElement(WorldElement worldElement) throws IncorrectPositionException;
 
-    /**
-     * Place a plant on the map.
-     *
-     * @param plant The animal to place on the map.
-     */
-    void placePlant(Plant plant) throws IncorrectPositionException;
-
-    void placeWorldElement(WorldElement element) throws IncorrectPositionException;
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
      * If the move is not possible, this method has no effect.

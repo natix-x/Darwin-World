@@ -77,9 +77,7 @@ public class Animal implements WorldElement {
 
     public void rotateAndMove(int steps, MoveValidator validator) {
         this.direction = direction.rotate(steps);
-        System.out.println(direction);
         Vector2d newPosition = this.position.add(this.direction.toUnitVector());
-        System.out.println(newPosition);
         if (validator.canMoveTo(newPosition)) {
             this.position = newPosition;
         }

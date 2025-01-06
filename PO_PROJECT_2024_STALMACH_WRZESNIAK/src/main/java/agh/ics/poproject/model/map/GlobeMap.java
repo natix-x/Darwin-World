@@ -4,7 +4,7 @@ package agh.ics.poproject.model.map;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
-import jdk.incubator.vector.VectorOperators;
+import agh.ics.poproject.model.elements.WorldElement;
 
 import java.util.Objects;
 
@@ -28,6 +28,14 @@ public class GlobeMap extends AbstractWorldMap {
         return !isOnTopOrBottomEdge(position);
     }
 
+    /**
+     Moves the specified animal to a new position on the map.
+     Checks if the animal is present at its current position and removes it from there.
+     The animal's movement and rotation are determined by its active gene.
+     If the animal moves beyond the left or right edge of the map, its position wraps around to the opposite edge.
+     The animal is added to its new position on the map, and a notification is sent about the movement.
+     Throws an exception if the animal is not found at its current position.
+     */
     @Override
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
@@ -68,4 +76,41 @@ public class GlobeMap extends AbstractWorldMap {
         return position.getX() == LEFT_EDGE;
     }
 
+    @Override
+    public void placeWorldElement(WorldElement element) throws IncorrectPositionException {
+        Vector2d position = element.getPosition();
+        if (element instanceof Animal) {
+            placeAnimal(position, (Animal) element);
+        }
+        else if (element instanceof Plant) {
+            placePlant(position, (Plant) element);
+        }
+    }
+
+    private void placeAnimal(Vector2d position, Animal animal) throws IncorrectPositionException {
+        if (canMoveTo(position)) {
+            animals.put(position, animal);
+            mapChanged("Animal placed at position " + position);
+        }
+        else
+            throw new IncorrectPositionException(position);
+    }
+
+
+    private void placePlant(Vector2d position, Plant plant) throws IncorrectPositionException {
+        if (canPlantGrow(position)) {
+            plants.put(position, plant);
+            mapChanged("Plant placed at position " + position);
+        }
+        else
+            throw new IncorrectPositionException(position);
+    }
+
+    /**
+     Checks if plant can grow on selected position.
+     Plant can grow on every position except position occupied by another plant.
+     */
+    private boolean canPlantGrow(Vector2d position) {
+        return plants.get(position) == null;
+    }
 }

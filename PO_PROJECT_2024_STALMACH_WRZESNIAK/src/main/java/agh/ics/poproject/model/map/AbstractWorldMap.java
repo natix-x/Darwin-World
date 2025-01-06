@@ -29,35 +29,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         mapChangeListeners.forEach(listener -> listener.mapChange(this, message));
     }
 
-    @Override
-    public void placeAnimal(Animal animal) throws IncorrectPositionException {
-        Vector2d position = animal.getPosition();
-        if (canMoveTo(position)) {
-            animals.put(position, animal);
-            mapChanged("Animal placed at position " + position);
-        }
-        else
-            throw new IncorrectPositionException(position);
-    }
-
-    @Override
-    public void placePlant(Plant plant) throws IncorrectPositionException {
-        Vector2d position = plant.getPosition();
-        plants.put(position, plant);
-    }
-
-//    @Override
-//    public void placeWorldElement(WorldElement element) throws IncorrectPositionException {
-//        Vector2d position = element.getPosition();
-//        if (element instanceof Animal) {
-//            if (canMoveTo(position)) {
-//                animals.put(position, (Animal) element);
-//                mapChanged("Animal placed at position " + position);
-//        } else if (element instanceof Plant) {
-//                plants.put(position, (Plant) element);
-//            }
-//        }
-//    }
 
     @Override
     public WorldElement objectAt(Vector2d position) {

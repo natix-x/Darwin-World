@@ -9,5 +9,5 @@ public interface MutationMethod {
      *
      * @return Genome with inserted mutations.
      */
-    List<Integer> mutate(List<Integer> genes, int mutationNumber);
+    List<Integer> mutateGenome(List<Integer> genes);
 }
