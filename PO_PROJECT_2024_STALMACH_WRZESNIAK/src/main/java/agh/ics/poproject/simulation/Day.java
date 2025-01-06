@@ -7,12 +7,8 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.util.Configuration;
-import jdk.javadoc.doclet.Reporter;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Nodes.collect;
 // TODO: aktualizować wszystko na mapie
 // TODO: osługa błędów w momencie gdzie nie ma już na mapie miejsca dla nowych zwierzaków bądź nowych roślin
 /**
@@ -27,7 +23,6 @@ public class Day {
     public Day(Simulation simulation) {
         this.simulation = simulation;
         this.config = simulation.getConfig();
-
     }
 
     /**
@@ -42,6 +37,7 @@ public class Day {
      Generates and updated all map elements in the timeframe of one day
      */
     public void EveryDayActivities() throws IncorrectPositionException {
+        ageAllAnimals(); //adds +1 to each animal's age
         removeDeadAnimals();
         moveAndRotateAnimals();
         consumePlants();
@@ -91,11 +87,25 @@ public class Day {
     }
 
     /**
-     * Removes dead animal from animals list in Simulation class.
+     * Removes dead animals from animals list in Simulation class.
+     */
+    private void ageAllAnimals() {
+        for (Animal animal : simulation.getAnimals()) {
+            animal.ageAnimal();
+        }
+    }
+
+    /**
+     * Removes dead animals from the map
      */
     private void removeDeadAnimals() {
         List<Animal> animals = simulation.getAnimals();
         animals.removeIf(Animal::isDead);
+        for (Animal animal : animals) {
+            if (animal.isDead()) {
+                simulation.getWorldMap().removeElement(animal.getPosition());
+            }
+        }
         // TODO:wywołanie metody remove z mapy -> usuń zwierzaka
     }
 
@@ -106,17 +116,30 @@ public class Day {
         }
     }
 
-
     private void growNewPlants() {
         int numberOfPlants = config.dailyPlantGrowth();
         // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
     }
 
-    private void reproduceAnimals() throws IncorrectPositionException {
+    /**
+     * Groups animals by key: position
+     */
+    private void groupAnimalsByPositions() {
         for (Animal animal : simulation.getAnimals()) {
             List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
             animalPositions.add(animal);
         }
+    }
+
+    /**
+     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post reproduction
+     *
+     * @throws IncorrectPositionException
+     */
+    private void reproduceAnimals() throws IncorrectPositionException {
+
+        groupAnimalsByPositions();
 
         for (List<Animal> animals : positionMap.values()) {
             List<Animal> priorityForReproduction = animals.stream()
@@ -141,13 +164,15 @@ public class Day {
         }
     }
 
+
+    /**
+     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post plant consumption
+     */
     private void consumePlants() {
         List<Plant> plants = simulation.getPlants();
 
-        for (Animal animal : simulation.getAnimals()) {
-            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
-            animalPositions.add(animal);
-        }
+        groupAnimalsByPositions();
 
         for (List<Animal> animals : positionMap.values()) {
             List<Animal> priorityForFood = animals.stream()
@@ -166,7 +191,7 @@ public class Day {
                     List<Animal> animalsPositions = positionMap.get(plantPosition);
 
                     if (!animalsPositions.isEmpty()) {
-                        Animal animal = animalsPositions.getFirst();
+                        Animal animal = priorityForFood.getFirst();
                         animal.eat();
                         simulation.getPlants().remove(plant);
                     }
@@ -175,4 +200,6 @@ public class Day {
 
         }
     }
+
+
 }

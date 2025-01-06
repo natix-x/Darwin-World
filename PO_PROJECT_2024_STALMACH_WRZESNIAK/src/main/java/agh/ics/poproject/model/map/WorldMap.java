@@ -73,4 +73,8 @@ public interface WorldMap extends MoveValidator {
      */
     UUID getId();
 
+    /**
+     * Removes a map element on a given position
+     */
+    void removeElement(Vector2d position);
 }

@@ -40,9 +40,7 @@ public class Simulation implements Runnable {
     public Configuration getConfig() {
         return config;
     }
-
-
-
+    
     @Override
     public void run() {
         System.out.println("Engine simulation started");
