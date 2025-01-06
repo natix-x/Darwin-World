@@ -192,7 +192,7 @@ public class Day {
 
                     if (!animalsPositions.isEmpty()) {
                         Animal animal = priorityForFood.getFirst();
-                        animal.eat();
+                        animal.eat(config.energyPerPlant());
                         simulation.getPlants().remove(plant);
                     }
                 }

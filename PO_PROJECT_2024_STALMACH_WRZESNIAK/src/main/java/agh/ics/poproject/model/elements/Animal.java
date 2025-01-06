@@ -93,7 +93,8 @@ public class Animal implements WorldElement {
         // TODO: implement
     }
 
-    public void eat() {
+    public void eat(int energyPerPlant) {
+        this.consumedPlants += energyPerPlant;
         // TODO: implement
     }
 
