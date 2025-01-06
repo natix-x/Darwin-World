@@ -155,7 +155,7 @@ public class ConfigurationPresenter {
         startSimulation();
     }
 
-    /*
+    /**
     Sets up the UI and the engine.
     Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
      */
@@ -171,10 +171,7 @@ public class ConfigurationPresenter {
             SimulationPresenter presenter = SetApp.startSimulationStage();
             presenter.setSimulationParameters(simulation); //wyswietlamy okienko symulacji
 
-
-
         }
-
-
     }
+
 }

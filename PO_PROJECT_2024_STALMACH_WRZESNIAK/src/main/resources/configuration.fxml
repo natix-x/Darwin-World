@@ -10,7 +10,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0" stylesheets="configuration.css"
+            minHeight="550.0" minWidth="850.0" stylesheets="stylesheets/configuration.css"
             fx:controller="agh.ics.poproject.presenters.ConfigurationPresenter">
     <top>
         <Label text="New configuration: " BorderPane.alignment="CENTER" styleClass="title-label"/>

@@ -3,7 +3,7 @@
 }
 
 .image-container {
-    -fx-background-image: url("images/evolutionMeme.jpg");
+    -fx-background-image: url("../images/evolutionMeme.jpg");
     -fx-background-repeat: stretch;
     -fx-background-size: 600 300;
     -fx-background-position: center center;

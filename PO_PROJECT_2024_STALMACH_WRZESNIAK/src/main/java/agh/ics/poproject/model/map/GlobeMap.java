@@ -3,6 +3,7 @@ package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
+import jdk.incubator.vector.VectorOperators;
 
 import java.util.Objects;
 
@@ -51,6 +52,7 @@ public class GlobeMap extends AbstractWorldMap {
         return new Boundary(LOWER_BOUND, upperBound);
     }
 
+
     private boolean isOnTopOrBottomEdge(Vector2d position) {
         System.out.println(topEdge);
         System.out.println(BOTTOM_EDGE);
@@ -64,6 +66,5 @@ public class GlobeMap extends AbstractWorldMap {
     private boolean isOnLeftEdge(Vector2d position) {
         return position.getX() == LEFT_EDGE;
     }
-
 
 }
