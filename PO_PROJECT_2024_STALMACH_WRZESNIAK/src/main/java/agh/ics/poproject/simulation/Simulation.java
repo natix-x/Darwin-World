@@ -14,8 +14,8 @@ public class Simulation implements Runnable {
 
 
     private  WorldMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
-    private List<Animal> animals;
-    private List<Plant> plants;
+    private ArrayList<Animal> animals;
+    private ArrayList<Plant> plants;
 
     public Simulation(Configuration config) {
         this.config = config;
