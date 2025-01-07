@@ -17,6 +17,14 @@ public abstract class AbstractMutationMethod implements MutationMethod {
 
     }
 
+    /**
+     Mutates the genome.
+     Randomly selects the number of mutation between min and max number of mutations.
+     Randomly selects gene to mutate (each gene can only be mutated once.)
+     Applies mutation method for selected gene.
+     Slight correction changes gene up or down by one.
+     @return mutated genome
+     */
     @Override
     public List<Integer> mutateGenome(List<Integer> genes) {
         int mutationNumber = random.nextInt(maxMutations - minMutations) + minMutations;

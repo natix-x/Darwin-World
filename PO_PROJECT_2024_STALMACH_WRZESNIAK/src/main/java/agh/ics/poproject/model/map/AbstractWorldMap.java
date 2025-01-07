@@ -58,10 +58,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         return mapID;
     }
 
-    @Override
-    public void removeElement(Vector2d position) {
-        animals.remove(position);
-    }
 
 
 }

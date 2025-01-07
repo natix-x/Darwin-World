@@ -6,19 +6,19 @@ import java.util.Random;
 
 public class Genome {
 
-    private final ArrayList<Integer> genomes;
+    private final ArrayList<Integer> genome;
 
     private int activateGene;
 
     // for generated animals
     public Genome(int genesNumber) {
-        this.genomes = generateRandomGenome(genesNumber);
+        this.genome = generateRandomGenome(genesNumber);
         activateGene = activateRandomGene();
     }
 
     // for babies
     public Genome(List<Integer> genomes) {
-        this.genomes = new ArrayList<>(genomes);
+        this.genome = new ArrayList<>(genomes);
         activateGene = activateRandomGene();
     }
 
@@ -27,7 +27,7 @@ public class Genome {
     }
 
     public ArrayList<Integer> getGenomes() {
-        return new ArrayList<>(genomes);
+        return new ArrayList<>(genome);
     }
 
     /**
@@ -35,7 +35,8 @@ public class Genome {
      */
     private int activateRandomGene() {
         Random random = new Random();
-        return genomes.get(random.nextInt(genomes.size()));
+        int randomIndex = random.nextInt(genome.size());
+        return genome.get(randomIndex);
     }
 
     /**
@@ -54,7 +55,7 @@ public class Genome {
      Activates next gene (used after the end of the move process).
      * */
     public void activateNextGene() {
-        activateGene = (activateRandomGene() + 1) % genomes.size();
+        activateGene = (activateGene + 1) % genome.size();
     }
 
 }

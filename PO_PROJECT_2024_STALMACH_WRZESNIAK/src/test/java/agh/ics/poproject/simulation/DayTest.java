@@ -30,11 +30,11 @@ class DayTest {
     Simulation simulation = new Simulation(config);
     Day day = new Day(simulation);
 
-//    @Test
-//    void checkIfAnimalsGenerateCorrectly() throws IncorrectPositionException {
-//        day.firstDayActivities();
-//        assertEquals(5, simulation.getAnimals().size());
-//    }
+    @Test
+    void checkIfAnimalsGenerateCorrectly() throws IncorrectPositionException {
+        day.firstDayActivities();
+        assertEquals(5, simulation.getAnimals().size());
+    }
 
     @Test
     void checkIfPlantsGenerateCorrectly() throws IncorrectPositionException {
@@ -49,5 +49,5 @@ class DayTest {
 //        day.everyDayActivities();
 //        assertEquals(2, simulation.getAnimals().getFirst().getAge());
 //    }
-
+//
 }
