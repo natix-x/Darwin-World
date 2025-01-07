@@ -28,7 +28,7 @@ public class Day {
     /**
     Generates all necessary elements for simulation launch
      */
-    public void FirstDayActivities() throws IncorrectPositionException {
+    public void firstDayActivities() throws IncorrectPositionException {
         generateAnimals();
         generatePlants();
     }
@@ -36,7 +36,7 @@ public class Day {
     /**
      Generates and updated all map elements in the timeframe of one day
      */
-    public void EveryDayActivities() throws IncorrectPositionException {
+    public void everyDayActivities() throws IncorrectPositionException {
         ageAllAnimals(); //adds +1 to each animal's age
         removeDeadAnimals();
         moveAndRotateAnimals();
@@ -54,7 +54,7 @@ public class Day {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
             simulation.addAnimal(animal);
-            simulation.getWorldMap().placeAnimal(animal);  // pokazanie na mapie
+            simulation.getWorldMap().placeWorldElement(animal);  // pokazanie na mapie
         }
     }
 
@@ -64,7 +64,7 @@ public class Day {
         for (Vector2d position : generatedPlantsRandomPositions) {
             Plant plant = new Plant(position);
             simulation.addPlant(plant);
-            simulation.getWorldMap().placePlant(plant);
+            simulation.getWorldMap().placeWorldElement(plant);
             //TODO: nie wiem czy nie lepiej załatwić to metodą jakąś wspólną, która będzie działała na WorldElement
         }
 
@@ -159,7 +159,7 @@ public class Day {
                 Reproduce reproduction = new Reproduce();
                 Animal babyAnimal = reproduction.reproduce(animal1, animal2);
                 simulation.addAnimal(babyAnimal);
-                simulation.getWorldMap().placeAnimal(babyAnimal);
+                simulation.getWorldMap().placeWorldElement(babyAnimal);
             }
         }
     }

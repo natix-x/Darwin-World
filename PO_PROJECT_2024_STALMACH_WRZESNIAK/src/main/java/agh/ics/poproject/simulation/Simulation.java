@@ -2,6 +2,7 @@ package agh.ics.poproject.simulation;
 
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
+import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.util.Configuration;
 
@@ -19,6 +20,13 @@ public class Simulation implements Runnable {
 
     public Simulation(Configuration config) {
         this.config = config;
+
+        if (config.isGlobeMap()) {
+            this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
+        }
+
+        this.animals = new ArrayList<>();
+        this.plants = new ArrayList<>();
     }
 
     public List<Animal> getAnimals() {
