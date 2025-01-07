@@ -61,7 +61,7 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        return direction.getDirection();
+        return "direction " + direction.getDirection();
     }
 
     public boolean isDead() {
