@@ -41,6 +41,7 @@ public class Simulation implements Runnable {
         return worldMap;
     }
 
+
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
     }

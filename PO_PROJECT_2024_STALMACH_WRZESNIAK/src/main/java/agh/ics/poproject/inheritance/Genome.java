@@ -15,7 +15,6 @@ public class Genome {
         this.genome = generateRandomGenome(genesNumber);
         activeGene = activateRandomGene();
     }
-
     // for babies
     public Genome(List<Integer> genomes) {
         this.genome = new ArrayList<>(genomes);
