@@ -37,7 +37,7 @@ public class Reproduce {
 
         Genome gene1 = animal1.getGenome();
         Genome gene2 = animal2.getGenome();
-        int genomeLength = gene1.getGenomes().size();
+        int genomeLength = gene1.getGenesSequence().size();
 
         double energy1 = animal1.getRemainingEnergy();
         double energy2 = animal2.getRemainingEnergy();
@@ -45,11 +45,11 @@ public class Reproduce {
         int splitIndex = Math.min((int) Math.round((energy1 / (energy1 + energy2)) * genomeLength), genomeLength - 1);
 
         if (randomGenomeSide == 0) {
-            babyGenomeList.addAll(gene1.getGenomes().subList(0, splitIndex));
-            babyGenomeList.addAll(gene2.getGenomes().subList(splitIndex, genomeLength));
+            babyGenomeList.addAll(gene1.getGenesSequence().subList(0, splitIndex));
+            babyGenomeList.addAll(gene2.getGenesSequence().subList(splitIndex, genomeLength));
         } else {
-            babyGenomeList.addAll(gene2.getGenomes().subList(0, splitIndex));
-            babyGenomeList.addAll(gene1.getGenomes().subList(splitIndex, genomeLength));
+            babyGenomeList.addAll(gene2.getGenesSequence().subList(0, splitIndex));
+            babyGenomeList.addAll(gene1.getGenesSequence().subList(splitIndex, genomeLength));
         }
 
         return new Genome(babyGenomeList);

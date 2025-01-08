@@ -10,21 +10,21 @@ import java.util.Objects;
 
 public class GlobeMap extends AbstractWorldMap {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
-    private static final int LEFT_EDGE = LOWER_BOUND.getX();
-    private static final int BOTTOM_EDGE = LOWER_BOUND.getY();
+    private static final int LEFT_EDGE = LOWER_BOUND.x();
+    private static final int BOTTOM_EDGE = LOWER_BOUND.y();
     private final Vector2d upperBound;
     private final int rightEdge;
     private final int topEdge;
 
     public GlobeMap(int width, int height) {
         this.upperBound = new Vector2d(width, height);
-        this.rightEdge = upperBound.getX();
-        this.topEdge = upperBound.getY();
+        this.rightEdge = upperBound.x();
+        this.topEdge = upperBound.y();
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !isBeyondTopOrBottomEdge(position);
+        return !isBeyondTopOrBottomEdge(position) && (position.follows(LOWER_BOUND) && position.precedes(upperBound));
     }
 
     /**
@@ -43,9 +43,9 @@ public class GlobeMap extends AbstractWorldMap {
             animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
             if (isBeyondLeftEdge(animalNewPosition)) {
-                animalNewPosition = new Vector2d(rightEdge, animalNewPosition.getY());
+                animalNewPosition = new Vector2d(rightEdge, animalNewPosition.y());
             } else if (isBeyondRightEdge(animalNewPosition)) {
-                animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.getY());
+                animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.y());
             }
             animal.setPosition(animalNewPosition);
             animals.put(animal.getPosition(), animal);
@@ -62,15 +62,15 @@ public class GlobeMap extends AbstractWorldMap {
 
 
     private boolean isBeyondTopOrBottomEdge(Vector2d position) {
-        return position.getY() > topEdge || position.getY() < BOTTOM_EDGE;
+        return position.y() > topEdge || position.y() < BOTTOM_EDGE;
     }
 
     private boolean isBeyondRightEdge(Vector2d position) {
-        return position.getX() > rightEdge;
+        return position.x() > rightEdge;
     }
 
     private boolean isBeyondLeftEdge(Vector2d position) {
-        return position.getX() < LEFT_EDGE;
+        return position.x() < LEFT_EDGE;
     }
 
     @Override

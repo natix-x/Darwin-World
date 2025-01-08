@@ -46,4 +46,20 @@ class AnimalTest {
 
         assertEquals(expectedPosition, animal1.getPosition());
     }
+
+    @Test
+    void correctDirectionAfterImpossibleMove() {
+        // given
+        Vector2d animalPosition = new Vector2d(3, 2);
+        Genome genome = new Genome(List.of(0, 5, 7, 4, 0, 1));
+
+        GlobeMap globe = new GlobeMap(5, 10);
+        Animal animal1 = new Animal(animalPosition, genome, 50);
+        MapDirection currentDirection = animal1.getDirection();
+
+        // when
+        animal1.rotateAndMove(100, globe);
+        // then
+        assertEquals(currentDirection.opposite(), animal1.getDirection());
+    }
 }

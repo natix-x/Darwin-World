@@ -1,6 +1,5 @@
 package agh.ics.poproject.inheritance;
 
-import java.util.*;
 
 public class FullRandomMutation extends AbstractMutationMethod {
 

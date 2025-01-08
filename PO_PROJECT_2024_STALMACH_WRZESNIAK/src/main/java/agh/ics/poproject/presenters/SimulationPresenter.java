@@ -61,8 +61,8 @@ public class SimulationPresenter implements MapChangeListener {
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
         clearMapGrid();
         mapGrid.alignmentProperty();
-        int width = Math.abs(lowerBound.getX() - upperBound.getX());
-        int height = Math.abs(lowerBound.getY() - upperBound.getY());
+        int width = Math.abs(lowerBound.x() - upperBound.x());
+        int height = Math.abs(lowerBound.y() - upperBound.y());
         for (int column = 0; column < width; column++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
         }
