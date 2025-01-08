@@ -8,22 +8,22 @@ public class Genome {
 
     private final ArrayList<Integer> genome;
 
-    private int activateGene;
+    private int activeGene;
 
     // for generated animals
     public Genome(int genesNumber) {
         this.genome = generateRandomGenome(genesNumber);
-        activateGene = activateRandomGene();
+        activeGene = activateRandomGene();
     }
 
     // for babies
     public Genome(List<Integer> genomes) {
         this.genome = new ArrayList<>(genomes);
-        activateGene = activateRandomGene();
+        activeGene = activateRandomGene();
     }
 
-    public int getActivateGene() {
-        return activateGene;
+    public int getActiveGene() {
+        return activeGene;
     }
 
     public ArrayList<Integer> getGenomes() {
@@ -55,7 +55,7 @@ public class Genome {
      Activates next gene (used after the end of the move process).
      * */
     public void activateNextGene() {
-        activateGene = (activateGene + 1) % genome.size();
+        activeGene = (activeGene + 1) % genome.size();
     }
 
 }

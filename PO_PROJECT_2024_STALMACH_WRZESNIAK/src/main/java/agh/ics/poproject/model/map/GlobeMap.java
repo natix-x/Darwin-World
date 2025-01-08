@@ -40,7 +40,7 @@ public class GlobeMap extends AbstractWorldMap {
         Vector2d currentPosition = animal.getPosition();
         if (Objects.equals(objectAt(currentPosition), animal)) {
             animals.remove(currentPosition);
-            animal.rotateAndMove(animal.getGenome().getActivateGene(), this);
+            animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
             if (isBeyondLeftEdge(animalNewPosition)) {
                 animalNewPosition = new Vector2d(rightEdge, animalNewPosition.getY());
