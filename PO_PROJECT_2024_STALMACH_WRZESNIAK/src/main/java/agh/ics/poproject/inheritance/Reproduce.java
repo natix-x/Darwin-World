@@ -21,10 +21,14 @@ public class Reproduce {
     }
 
     /**
-    Shuffles parents' genomes accordingly to create baby's genome.
-    Calculates the percentage of inheritance of each parent based on energy level and combines the genes
-    @return Genome of the baby animal
+     * Shuffles parents' genomes accordingly to create baby's genome.
+     * Calculates the percentage of inheritance of each parent based on energy level and combines the genes
+     *
+     * @param animal1 first parent
+     * @param animal2 second parent
+     * @return Genome of the baby animal
      */
+
     public Genome shuffleGenome(Animal animal1, Animal animal2) {
         ArrayList<Integer> babyGenomeList = new ArrayList<>();
 
@@ -33,44 +37,19 @@ public class Reproduce {
 
         Genome gene1 = animal1.getGenome();
         Genome gene2 = animal2.getGenome();
-        int genomeLength = gene1.getGenomes().size(); //to też można przez config przekazać
+        int genomeLength = gene1.getGenomes().size();
 
         double energy1 = animal1.getRemainingEnergy();
         double energy2 = animal2.getRemainingEnergy();
 
-        double divisionRatioPercent = Math.floor((energy1 / (energy1 + energy2) * 100) * genomeLength / 100);
-        int splitIndex = (int) Math.floor(genomeLength * divisionRatioPercent);
+        int splitIndex = Math.min((int) Math.round((energy1 / (energy1 + energy2)) * genomeLength), genomeLength - 1);
 
-        // TODO: pewnie da się to jakoś zgrabniej
         if (randomGenomeSide == 0) {
-            for (int i = 0; i < splitIndex; i++) {
-                if (energy1 > energy2) {
-                    babyGenomeList.add(gene1.getGenomes().get(i));
-                    for (int j = splitIndex; j < genomeLength; j++) {
-                        babyGenomeList.add(gene2.getGenomes().get(j));
-                    }
-                } else {
-                    babyGenomeList.add(gene2.getGenomes().get(i));
-                    for (int j = splitIndex; j < genomeLength; j++) {
-                        babyGenomeList.add(gene1.getGenomes().get(j));
-                    }
-                }
-            }
-
+            babyGenomeList.addAll(gene1.getGenomes().subList(0, splitIndex));
+            babyGenomeList.addAll(gene2.getGenomes().subList(splitIndex, genomeLength));
         } else {
-            for (int i = splitIndex; i < genomeLength; i++) {
-                if (energy1 > energy2) {
-                    babyGenomeList.add(gene1.getGenomes().get(i));
-                    for (int j = 0; j < splitIndex; j++) {
-                        babyGenomeList.add(gene2.getGenomes().get(j));
-                    }
-                } else {
-                    babyGenomeList.add(gene2.getGenomes().get(i));
-                    for (int j = 0; j < splitIndex; j++) {
-                        babyGenomeList.add(gene1.getGenomes().get(j));
-                    }
-                }
-            }
+            babyGenomeList.addAll(gene2.getGenomes().subList(0, splitIndex));
+            babyGenomeList.addAll(gene1.getGenomes().subList(splitIndex, genomeLength));
         }
 
         return new Genome(babyGenomeList);
@@ -80,7 +59,7 @@ public class Reproduce {
     Animals reproduce, their energy level goes down and genes are shuffled.
     @return Animal object with inherited genes and initial energy on the parents' position
      */
-    // TODO: doać mutacje
+    // TODO: dodać mutacje
     public Animal reproduce (Animal animal1, Animal animal2){
         if (canReproduce(animal1, animal2, energyNeededToReproduce)) {
             animal1.changeEnergy(-energyNeededToReproduce);
