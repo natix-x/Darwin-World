@@ -24,8 +24,7 @@ public class GlobeMap extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        System.out.println(isOnTopOrBottomEdge(position));
-        return !isOnTopOrBottomEdge(position);
+        return !isBeyondTopOrBottomEdge(position);
     }
 
     /**
@@ -41,11 +40,11 @@ public class GlobeMap extends AbstractWorldMap {
         Vector2d currentPosition = animal.getPosition();
         if (Objects.equals(objectAt(currentPosition), animal)) {
             animals.remove(currentPosition);
-            animal.rotateAndMove(animal.getGenome().getActivateGene(), this);
+            animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
-            if (isOnLeftEdge(animalNewPosition)) {
+            if (isBeyondLeftEdge(animalNewPosition)) {
                 animalNewPosition = new Vector2d(rightEdge, animalNewPosition.getY());
-            } else if (isOnRightEdge(animalNewPosition)) {
+            } else if (isBeyondRightEdge(animalNewPosition)) {
                 animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.getY());
             }
             animal.setPosition(animalNewPosition);
@@ -62,18 +61,16 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
 
-    private boolean isOnTopOrBottomEdge(Vector2d position) {
-        System.out.println(topEdge);
-        System.out.println(BOTTOM_EDGE);
-        return position.getY() == topEdge || position.getY() == BOTTOM_EDGE;
+    private boolean isBeyondTopOrBottomEdge(Vector2d position) {
+        return position.getY() > topEdge || position.getY() < BOTTOM_EDGE;
     }
 
-    private boolean isOnRightEdge(Vector2d position) {
-        return position.getX() == rightEdge;
+    private boolean isBeyondRightEdge(Vector2d position) {
+        return position.getX() > rightEdge;
     }
 
-    private boolean isOnLeftEdge(Vector2d position) {
-        return position.getX() == LEFT_EDGE;
+    private boolean isBeyondLeftEdge(Vector2d position) {
+        return position.getX() < LEFT_EDGE;
     }
 
     @Override
@@ -112,5 +109,18 @@ public class GlobeMap extends AbstractWorldMap {
      */
     private boolean canPlantGrow(Vector2d position) {
         return plants.get(position) == null;
+    }
+
+    /**
+     Removes element from world map, first checking if its type is animal or plant
+     */
+    @Override
+    public void removeElement(WorldElement element, Vector2d position) {
+        if (element instanceof Animal) {
+            animals.remove(position);
+        }
+        else if (element instanceof Plant) {
+            plants.remove(position);
+        }
     }
 }

@@ -65,7 +65,6 @@ public class Day {
             Plant plant = new Plant(position);
             simulation.addPlant(plant);
             simulation.getWorldMap().placeWorldElement(plant);
-            //TODO: nie wiem czy nie lepiej załatwić to metodą jakąś wspólną, która będzie działała na WorldElement
         }
 
     }
@@ -103,10 +102,10 @@ public class Day {
         animals.removeIf(Animal::isDead);
         for (Animal animal : animals) {
             if (animal.isDead()) {
-                simulation.getWorldMap().removeElement(animal.getPosition());
+                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
+                simulation.getAnimals().remove(animal);  // from simulation
             }
         }
-        // TODO:wywołanie metody remove z mapy -> usuń zwierzaka
     }
 
     private void moveAndRotateAnimals() {
@@ -193,7 +192,8 @@ public class Day {
                     if (!animalsPositions.isEmpty()) {
                         Animal animal = priorityForFood.getFirst();
                         animal.eat(config.energyPerPlant());
-                        simulation.getPlants().remove(plant);
+                        simulation.getPlants().remove(plant);  // from simulation
+                        simulation.getWorldMap().removeElement(plant, plant.getPosition());
                     }
                 }
             }
