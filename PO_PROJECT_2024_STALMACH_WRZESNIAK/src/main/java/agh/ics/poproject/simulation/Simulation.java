@@ -15,7 +15,7 @@ public class Simulation implements Runnable {
     private final Configuration config;
 
 
-    private WorldMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
+    private GlobeMap worldMap;  // można pomyśleć czy tu nie stworzyć GlobeMap a nie w SImulationPresenter?
     private ArrayList<Animal> animals;
     private ArrayList<Plant> plants;
 
@@ -25,7 +25,6 @@ public class Simulation implements Runnable {
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
         }
-
         this.animals = new ArrayList<>();
         this.plants = new ArrayList<>();
     }
@@ -38,12 +37,11 @@ public class Simulation implements Runnable {
         return plants;
     }
 
-    public WorldMap getWorldMap() {
+    public GlobeMap getWorldMap() {
         return worldMap;
     }
 
-
-    public void setWorldMap(WorldMap worldMap) {
+    public void setWorldMap(GlobeMap worldMap) {
         this.worldMap = worldMap;
     }
 
@@ -58,19 +56,24 @@ public class Simulation implements Runnable {
         Day simulationDay = new Day(this);
         try {
             simulationDay.firstDayActivities();
+            System.out.println(simulationDay.getDayCount());
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
-        for (Animal animal : animals) {
-            System.out.println(animal.getPosition());
-        }
-        int day = 0;
+
         while (!animals.isEmpty()) {
             try {
-                System.out.println(day++);
                 simulationDay.everyDayActivities();
+                System.out.println(simulationDay.getDayCount());
+                System.out.println("_________");
+
+                // Wait for 1 second
+                Thread.sleep(1000);
             } catch (IncorrectPositionException e) {
                 throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore interrupt status
+                throw new RuntimeException("Thread was interrupted", e);
             }
         }
     }

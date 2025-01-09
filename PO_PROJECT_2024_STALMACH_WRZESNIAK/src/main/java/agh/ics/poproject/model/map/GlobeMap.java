@@ -1,12 +1,16 @@
 package agh.ics.poproject.model.map;
 
 
+import agh.ics.poproject.inheritance.Genome;
+import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.elements.WorldElement;
+import agh.ics.poproject.simulation.Simulation;
+import agh.ics.poproject.util.Configuration;
 
-import java.util.Objects;
+import java.util.*;
 
 public class GlobeMap extends AbstractWorldMap {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
@@ -29,10 +33,6 @@ public class GlobeMap extends AbstractWorldMap {
 
     /**
      Moves the specified animal to a new position on the map.
-     Checks if the animal is present at its current position and removes it from there.
-     The animal's movement and rotation are determined by its active gene.
-     If the animal moves beyond the left or right edge of the map, its position wraps around to the opposite edge.
-     The animal is added to its new position on the map, and a notification is sent about the movement.
      Throws an exception if the animal is not found at its current position.
      */
     @Override
@@ -123,4 +123,167 @@ public class GlobeMap extends AbstractWorldMap {
             plants.remove(position);
         }
     }
+
+    public void generateAnimals(Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+
+        int numberOfAnimalsToGenerate = config.initialAnimals();
+        // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać
+        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate, simulation);
+        for (Vector2d position : generatedAnimalsRandomPositions) {
+            Genome genome = new Genome(config.genomeLength());
+            Animal animal = new Animal(position, genome, config.initialEnergy());
+            simulation.addAnimal(animal);
+            simulation.getWorldMap().placeWorldElement(animal);  // pokazanie na mapie
+        }
+    }
+
+    public void generatePlants(Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+        int numberOfPlantsToGenerate = config.initialPlants();
+        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate, simulation);
+        for (Vector2d position : generatedPlantsRandomPositions) {
+            Plant plant = new Plant(position);
+            simulation.addPlant(plant);
+            simulation.getWorldMap().placeWorldElement(plant);
+        }
+
+    }
+
+    /**
+     * Generate random position of elements knowing that only one element from one category can be on each position.
+     * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
+     */
+    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate, Simulation simulation) {
+        Configuration config = simulation.getConfig();
+        Random random = new Random();
+        Set<Vector2d> uniquePositions = new HashSet<>();
+        while (uniquePositions.size() < numberOfElementsToGenerate) {
+            int x = random.nextInt(config.mapWidth());
+            int y = random.nextInt(config.mapHeight());
+            Vector2d position = new Vector2d(x, y);
+            uniquePositions.add(position);
+        }
+        return uniquePositions;
+    }
+
+    /**
+     * Removes dead animals from animals list in Simulation class.
+     */
+    public void ageAllAnimals(Simulation simulation) {
+        for (Animal animal : simulation.getAnimals()) {
+            animal.ageAnimal();
+        }
+    }
+
+    /**
+     * Removes dead animals from the map
+     */
+    public void removeDeadAnimals(Simulation simulation) {
+        List<Animal> animals = simulation.getAnimals();
+        for (Animal animal : animals) {
+            if (animal.isDead()) {
+                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
+                simulation.getAnimals().remove(animal);  // from simulation
+            }
+        }
+    }
+
+    public void moveAndRotateAnimals(Simulation simulation) {
+        List<Animal> animals = simulation.getAnimals();
+        for (Animal animal : animals) {
+            simulation.getWorldMap().move(animal);
+        }
+    }
+
+    public void growNewPlants(Simulation simulation) {
+        Configuration config = simulation.getConfig();
+        int numberOfPlants = config.dailyPlantGrowth();
+        // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
+    }
+
+    /**
+     * Groups animals by key: position
+     */
+    public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
+        for (Animal animal : simulation.getAnimals()) {
+            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
+            animalPositions.add(animal);
+        }
+    }
+
+    /**
+     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post reproduction
+     *
+     */
+    public void reproduceAnimals(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+
+        groupAnimalsByPositions(positionMap, simulation);
+
+        for (List<Animal> animals : positionMap.values()) {
+            List<Animal> priorityForReproduction = animals.stream()
+                    .filter(animal -> animal.getRemainingEnergy() > config.neededEnergyForReproduction()) //only those with sufficient energy
+                    .sorted((animal1, animal2) -> { //sort for reproduction priority
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+
+            if (priorityForReproduction.size() >= 2) {
+                Animal animal1 = priorityForReproduction.get(0);
+                Animal animal2 = priorityForReproduction.get(1);
+
+                Reproduce reproduction = new Reproduce();
+                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
+                simulation.addAnimal(babyAnimal);
+                simulation.getWorldMap().placeWorldElement(babyAnimal);
+                System.out.println("Baby made!");
+            }
+        }
+    }
+
+    /**
+     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post plant consumption
+     */
+    public void consumePlants(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
+        Configuration config = simulation.getConfig();
+        List<Plant> plants = simulation.getPlants();
+
+        groupAnimalsByPositions(positionMap, simulation);
+
+        for (List<Animal> animals : positionMap.values()) {
+            List<Animal> priorityForFood = animals.stream()
+                    .sorted((animal1, animal2) -> {
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+            Iterator<Plant> iterator = plants.iterator();
+            while (iterator.hasNext()) {
+                Plant plant = iterator.next();
+                Vector2d plantPosition = plant.getPosition();
+
+                if (positionMap.containsKey(plantPosition)) {
+                    List<Animal> animalsPositions = positionMap.get(plantPosition);
+
+                    if (!animalsPositions.isEmpty()) {
+                        Animal animal = priorityForFood.getFirst();
+                        animal.eat(config.energyPerPlant());
+                        iterator.remove();
+                        simulation.getWorldMap().removeElement(plant, plant.getPosition());
+                    }
+                }
+            }
+        }
+
+
+    }
+
 }
