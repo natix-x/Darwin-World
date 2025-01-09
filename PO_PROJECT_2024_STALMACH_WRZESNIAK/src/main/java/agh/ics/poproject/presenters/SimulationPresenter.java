@@ -117,7 +117,7 @@ public class SimulationPresenter implements MapChangeListener {
         System.out.println("TUTAJ OZNACZA ZE DZIALA POLACZENIE PREZENTERA");
 
         setSimulationParameters(simulation);
-        System.out.println(worldMap.getCurrentBounds().LowerBound());
-        System.out.println(worldMap.getCurrentBounds().UpperBound());
+
+        simulation.run();
     }
 }
