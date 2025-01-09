@@ -14,8 +14,8 @@ class GenomeTest {
         // when
         Genome genome = new Genome(genesNumber);
         // then
-        assertEquals(8, genome.getGenomes().size());
-        for (Integer gene : genome.getGenomes() ) {
+        assertEquals(8, genome.getGenesSequence().size());
+        for (Integer gene : genome.getGenesSequence() ) {
             assertTrue(gene >= 0 && gene <= 7);
         }
     }
@@ -27,8 +27,8 @@ class GenomeTest {
         // when
         Genome genome = new Genome(genomeFromParents);
         // then
-        assertEquals(6, genome.getGenomes().size());
-        for (Integer gene : genome.getGenomes() ) {
+        assertEquals(6, genome.getGenesSequence().size());
+        for (Integer gene : genome.getGenesSequence() ) {
             assertTrue(gene >= 0 && gene <= 7);
         }
     }

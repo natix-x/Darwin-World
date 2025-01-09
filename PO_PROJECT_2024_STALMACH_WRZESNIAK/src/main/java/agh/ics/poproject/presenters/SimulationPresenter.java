@@ -1,9 +1,10 @@
 package agh.ics.poproject.presenters;
 
+import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.WorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,24 +17,26 @@ import javafx.scene.layout.RowConstraints;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private static final double CELL_HEIGHT = 10.0;
-    private static final double CELL_WIDTH = 10.0;
+    // TODO: rozmiary komórek dostosowane do rozmiaru okna
+    private static final double CELL_HEIGHT = 25.0;
+    private static final double CELL_WIDTH = 25.0;
 
     @FXML
     private Button startButton;
 
-    public Simulation simulation;
-    public GlobeMap worldMap;
+    private Simulation simulation;
+    private WorldMap worldMap;
 
     @FXML
     private GridPane mapGrid;
+
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
 
         System.out.println("GlobeMap");
-        this.worldMap = new GlobeMap(simulation.getConfig().mapWidth(), simulation.getConfig().mapHeight());
-        this.simulation.setWorldMap(worldMap);
+        this.worldMap = simulation.getWorldMap();
+        this.worldMap.subscribe(this);
         drawMap();
     }
 
@@ -44,8 +47,7 @@ public class SimulationPresenter implements MapChangeListener {
         Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
 
         createNewMapGrid(lowerBound, upperBound);
-        //String mapRepresentation = worldMap.toString();
-        //fillTheMap(mapRepresentation);
+        fillTheMap(lowerBound, upperBound);
 
     }
 
@@ -61,56 +63,49 @@ public class SimulationPresenter implements MapChangeListener {
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
         clearMapGrid();
         mapGrid.alignmentProperty();
-        int width = Math.abs(lowerBound.getX() - upperBound.getX());
-        int height = Math.abs(lowerBound.getY() - upperBound.getY());
+        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
+        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
+
         for (int column = 0; column < width; column++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
         }
         for (int row = 0; row < height; row++) {
             mapGrid.getRowConstraints().add(new RowConstraints(CELL_HEIGHT));
         }
+    }
 
-        for (int row = 0; row < height; row++) {
-            for (int column = 0; column < width; column++) {
-                Label cell = new Label();
-                cell.getStyleClass().add("cell");
-                mapGrid.add(cell, column, row);
+    private void fillTheMap(Vector2d lowerBound, Vector2d upperBound) {
+        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
+        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
+
+        for (int column = 0; column <= width; column++) {
+            for (int row = 0; row <= height; row++) {
+                Vector2d position = new Vector2d(column, row);
+                Label cellLabel = createCellLabel(position);
+                mapGrid.add(cellLabel, column, row);
             }
         }
     }
+    private Label createCellLabel(Vector2d position) {
+        Label cellLabel = new Label();
+        cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
+        cellLabel.setAlignment(Pos.CENTER);
 
-    //TODO: przekleić reprezentację jako string do kodu żeby śmigało
-    //TODO: coś się papra, do poprawy print
-    private void fillTheMap(String mapRepresentation) {
-        String[] lines = mapRepresentation.split("\n");
-
-        int rowIndex = 0;
-
-        for (String line : lines) {
-            String[] cells;
-
-            if (line.contains("y\\x")) {
-                cells = line.split(" ");
-            } else if ((line.contains("|"))) {
-                cells = line.split("\\|");
-            } else {
-                continue;
+        Object objectAtPosition = worldMap.objectAt(position);
+        if (objectAtPosition != null) {
+            if (objectAtPosition instanceof Animal) {
+                cellLabel.getStyleClass().add("cell-animal");
             }
-
-            int columnIndex = 0;
-
-            for (String cell : cells) {
-                if (!cell.isEmpty()) {
-                    Label cellLabel = new Label(cell);
-                    cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
-                    cellLabel.setAlignment(Pos.CENTER);
-                    mapGrid.add(cellLabel, columnIndex, rowIndex);
-                }
-                columnIndex++;
+            else if (objectAtPosition instanceof Plant) {
+                cellLabel.getStyleClass().add("cell-plant");
             }
-            rowIndex++;
+            cellLabel.setText(objectAtPosition.toString());
+        } else {
+            cellLabel.getStyleClass().add("cell");
         }
+        return cellLabel;
     }
+
 
     @Override
     public void mapChange(WorldMap worldMap, String message) {

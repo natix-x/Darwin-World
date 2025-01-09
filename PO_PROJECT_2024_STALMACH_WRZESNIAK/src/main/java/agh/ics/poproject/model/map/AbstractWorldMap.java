@@ -30,9 +30,16 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
+    // TODO zastanowić się później co ta metoda ma zwracać w przypadku kiedy na jednym polu jest wiele zwierząt / zwierząt i roślina
     @Override
     public WorldElement objectAt(Vector2d position) {
-        return this.animals.get(position);
+        if (animals.containsKey(position)) {
+            return animals.get(position);
+        }
+        else if (plants.containsKey(position)) {
+            return plants.get(position);
+        }
+        return null;
     }
 
     @Override

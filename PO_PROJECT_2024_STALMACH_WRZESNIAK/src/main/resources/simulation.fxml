@@ -22,7 +22,7 @@
         <Label  text="tu mapa"/>
         <StackPane fx:id="stackPane" alignment="CENTER">
             <GridPane fx:id="mapGrid" gridLinesVisible="true"
-                      style="-fx-padding: 10; -fx-hgap: 5; -fx-vgap: 5;">
+                      style="-fx-padding: 10; ">
             </GridPane>
         </StackPane>
     </center>
