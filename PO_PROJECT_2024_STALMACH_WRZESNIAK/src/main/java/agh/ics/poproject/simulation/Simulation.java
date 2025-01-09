@@ -60,15 +60,20 @@ public class Simulation implements Runnable {
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
-        for (Animal animal : animals) {
-            System.out.println(animal.getPosition());
-        }
+
         while (!animals.isEmpty()) {
             try {
                 simulationDay.everyDayActivities();
                 System.out.println(simulationDay.getDayCount());
+                System.out.println("_________");
+
+                // Wait for 1 second
+                Thread.sleep(1000);
             } catch (IncorrectPositionException e) {
                 throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore interrupt status
+                throw new RuntimeException("Thread was interrupted", e);
             }
         }
     }
