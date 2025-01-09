@@ -3,6 +3,7 @@ package agh.ics.poproject.simulation;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
+import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.util.Configuration;
 
@@ -49,11 +50,24 @@ public class Simulation implements Runnable {
     public Configuration getConfig() {
         return config;
     }
-    
-    @Override
-    public void run() {
-        System.out.println("Engine simulation started");
 
+    // TODO: osbługa errorów
+    @Override
+    public void run()  {
+        System.out.println("Simulation started");
+        Day simulationDay = new Day(this);
+        try {
+            simulationDay.firstDayActivities();
+        } catch (IncorrectPositionException e) {
+            throw new RuntimeException(e);
+        }
+//        while (!animals.isEmpty()) {
+//            try {
+//                simulationDay.everyDayActivities();
+//            } catch (IncorrectPositionException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 
     public void addAnimal(Animal animal) {

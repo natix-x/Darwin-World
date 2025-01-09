@@ -77,8 +77,8 @@ public class Day {
         Random random = new Random();
         Set<Vector2d> uniquePositions = new HashSet<>();
         while (uniquePositions.size() < numberOfElementsToGenerate) {
-            int x = random.nextInt(config.mapWidth() + 1);
-            int y = random.nextInt(config.mapHeight() + 1);
+            int x = random.nextInt(config.mapWidth());
+            int y = random.nextInt(config.mapHeight());
             Vector2d position = new Vector2d(x, y);
             uniquePositions.add(position);
         }
