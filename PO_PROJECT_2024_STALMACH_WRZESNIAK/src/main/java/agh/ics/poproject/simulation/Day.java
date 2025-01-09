@@ -57,43 +57,4 @@ public class Day {
     }
 
 
-//
-//    /**
-//     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
-//     * Handles the simulation update post plant consumption
-//     */
-//    public void consumePlants() {
-//        List<Plant> plants = simulation.getPlants();
-//
-//        groupAnimalsByPositions();
-//
-//        for (List<Animal> animals : positionMap.values()) {
-//            List<Animal> priorityForFood = animals.stream()
-//                    .sorted((animal1, animal2) -> {
-//                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-//                        if (energyComparison != 0) {
-//                            return energyComparison;
-//                        }
-//                        return Integer.compare(animal2.getAge(), animal1.getAge());
-//                    }).toList();
-//            Iterator<Plant> iterator = plants.iterator();
-//            while (iterator.hasNext()) {
-//                Plant plant = iterator.next();
-//                Vector2d plantPosition = plant.getPosition();
-//
-//                if (positionMap.containsKey(plantPosition)) {
-//                    List<Animal> animalsPositions = positionMap.get(plantPosition);
-//
-//                    if (!animalsPositions.isEmpty()) {
-//                        Animal animal = priorityForFood.getFirst();
-//                        animal.eat(config.energyPerPlant());
-//                        iterator.remove();
-//                        simulation.getWorldMap().removeElement(plant, plant.getPosition());
-//                    }
-//                }
-//            }
-//        }
-//
-//
-//    }
 }
