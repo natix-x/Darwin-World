@@ -75,8 +75,8 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void fillTheMap(Vector2d lowerBound, Vector2d upperBound) {
-        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
-        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
+        int width = Math.abs(lowerBound.x() - upperBound.x());
+        int height = Math.abs(lowerBound.y() - upperBound.y());
 
         for (int column = 0; column <= width; column++) {
             for (int row = 0; row <= height; row++) {
