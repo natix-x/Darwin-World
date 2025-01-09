@@ -5,6 +5,7 @@ import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
+import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.util.Configuration;
 
@@ -17,26 +18,32 @@ import java.util.*;
 public class Day {
     private final Simulation simulation;
     private final Configuration config;
+    private int dayCount = 0;
 
     Map<Vector2d, List<Animal>> positionMap = new HashMap<>(); //dict key: position vector, val: animal
+
+    private GlobeMap worldMap;
 
     public Day(Simulation simulation) {
         this.simulation = simulation;
         this.config = simulation.getConfig();
+        this.worldMap = simulation.getWorldMap();
     }
 
     /**
     Generates all necessary elements for simulation launch
      */
-    public void firstDayActivities() throws IncorrectPositionException {
-        generateAnimals();
-        generatePlants();
+    void firstDayActivities() throws IncorrectPositionException {
+        dayCount++;
+        worldMap.generateAnimals(simulation);
+        worldMap.generatePlants(simulation);
     }
 
     /**
      Generates and updated all map elements in the timeframe of one day
      */
-    public void everyDayActivities() throws IncorrectPositionException {
+     void everyDayActivities() throws IncorrectPositionException {
+        dayCount++;
         ageAllAnimals(); //adds +1 to each animal's age
         removeDeadAnimals();
         moveAndRotateAnimals();
@@ -46,44 +53,11 @@ public class Day {
         //TODO: można pomyśleć nad jakimś counterem dni
     }
 
-    private void generateAnimals() throws IncorrectPositionException {
-        int numberOfAnimalsToGenerate = config.initialAnimals();
-        // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać
-        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate);
-        for (Vector2d position : generatedAnimalsRandomPositions) {
-            Genome genome = new Genome(config.genomeLength());
-            Animal animal = new Animal(position, genome, config.initialEnergy());
-            simulation.addAnimal(animal);
-            simulation.getWorldMap().placeWorldElement(animal);  // pokazanie na mapie
-        }
+    public int getDayCount() {
+        return dayCount;
     }
 
-    private void generatePlants() throws IncorrectPositionException {
-        int numberOfPlantsToGenerate = config.initialPlants();
-        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
-        for (Vector2d position : generatedPlantsRandomPositions) {
-            Plant plant = new Plant(position);
-            simulation.addPlant(plant);
-            simulation.getWorldMap().placeWorldElement(plant);
-        }
 
-    }
-
-    /**
-     * Generate random position of elements knowing that only one element from one category can be on each position.
-     * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
-     */
-    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate) {
-        Random random = new Random();
-        Set<Vector2d> uniquePositions = new HashSet<>();
-        while (uniquePositions.size() < numberOfElementsToGenerate) {
-            int x = random.nextInt(config.mapWidth());
-            int y = random.nextInt(config.mapHeight());
-            Vector2d position = new Vector2d(x, y);
-            uniquePositions.add(position);
-        }
-        return uniquePositions;
-    }
 
     /**
      * Removes dead animals from animals list in Simulation class.

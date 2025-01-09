@@ -1,12 +1,18 @@
 package agh.ics.poproject.model.map;
 
 
+import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.elements.WorldElement;
+import agh.ics.poproject.simulation.Simulation;
+import agh.ics.poproject.util.Configuration;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 
 public class GlobeMap extends AbstractWorldMap {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
@@ -29,10 +35,6 @@ public class GlobeMap extends AbstractWorldMap {
 
     /**
      Moves the specified animal to a new position on the map.
-     Checks if the animal is present at its current position and removes it from there.
-     The animal's movement and rotation are determined by its active gene.
-     If the animal moves beyond the left or right edge of the map, its position wraps around to the opposite edge.
-     The animal is added to its new position on the map, and a notification is sent about the movement.
      Throws an exception if the animal is not found at its current position.
      */
     @Override
@@ -122,5 +124,48 @@ public class GlobeMap extends AbstractWorldMap {
         else if (element instanceof Plant) {
             plants.remove(position);
         }
+    }
+
+    public void generateAnimals(Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+
+        int numberOfAnimalsToGenerate = config.initialAnimals();
+        // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać
+        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate, simulation);
+        for (Vector2d position : generatedAnimalsRandomPositions) {
+            Genome genome = new Genome(config.genomeLength());
+            Animal animal = new Animal(position, genome, config.initialEnergy());
+            simulation.addAnimal(animal);
+            simulation.getWorldMap().placeWorldElement(animal);  // pokazanie na mapie
+        }
+    }
+
+    public void generatePlants(Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+        int numberOfPlantsToGenerate = config.initialPlants();
+        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate, simulation);
+        for (Vector2d position : generatedPlantsRandomPositions) {
+            Plant plant = new Plant(position);
+            simulation.addPlant(plant);
+            simulation.getWorldMap().placeWorldElement(plant);
+        }
+
+    }
+
+    /**
+     * Generate random position of elements knowing that only one element from one category can be on each position.
+     * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
+     */
+    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate, Simulation simulation) {
+        Configuration config = simulation.getConfig();
+        Random random = new Random();
+        Set<Vector2d> uniquePositions = new HashSet<>();
+        while (uniquePositions.size() < numberOfElementsToGenerate) {
+            int x = random.nextInt(config.mapWidth());
+            int y = random.nextInt(config.mapHeight());
+            Vector2d position = new Vector2d(x, y);
+            uniquePositions.add(position);
+        }
+        return uniquePositions;
     }
 }
