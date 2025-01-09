@@ -2,6 +2,7 @@ package agh.ics.poproject.model.map;
 
 
 import agh.ics.poproject.inheritance.Genome;
+import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
@@ -9,10 +10,7 @@ import agh.ics.poproject.model.elements.WorldElement;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.util.Configuration;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class GlobeMap extends AbstractWorldMap {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
@@ -168,4 +166,88 @@ public class GlobeMap extends AbstractWorldMap {
         }
         return uniquePositions;
     }
+
+    /**
+     * Removes dead animals from animals list in Simulation class.
+     */
+    public void ageAllAnimals(Simulation simulation) {
+        for (Animal animal : simulation.getAnimals()) {
+            animal.ageAnimal();
+        }
+    }
+
+    /**
+     * Removes dead animals from the map
+     */
+    public void removeDeadAnimals(Simulation simulation) {
+        List<Animal> animals = simulation.getAnimals();
+        for (Animal animal : animals) {
+            if (animal.isDead()) {
+                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
+                simulation.getAnimals().remove(animal);  // from simulation
+            }
+        }
+    }
+
+    public void moveAndRotateAnimals(Simulation simulation) {
+        List<Animal> animals = simulation.getAnimals();
+        for (Animal animal : animals) {
+            simulation.getWorldMap().move(animal);
+        }
+    }
+
+    public void growNewPlants(Simulation simulation) {
+        Configuration config = simulation.getConfig();
+        int numberOfPlants = config.dailyPlantGrowth();
+        // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
+    }
+
+    /**
+     * Groups animals by key: position
+     */
+    public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
+        for (Animal animal : simulation.getAnimals()) {
+            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
+            animalPositions.add(animal);
+        }
+    }
+
+    /**
+     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post reproduction
+     *
+     */
+    public void reproduceAnimals(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+
+        groupAnimalsByPositions(positionMap, simulation);
+
+        getAnimalPositions(positionMap, simulation, config);
+    }
+
+    public static void getAnimalPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation, Configuration config) throws IncorrectPositionException {
+        for (List<Animal> animals : positionMap.values()) {
+            List<Animal> priorityForReproduction = animals.stream()
+                    .filter(animal -> animal.getRemainingEnergy() > config.neededEnergyForReproduction()) //only those with sufficient energy
+                    .sorted((animal1, animal2) -> { //sort for reproduction priority
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+
+            if (priorityForReproduction.size() >= 2) {
+                Animal animal1 = priorityForReproduction.get(0);
+                Animal animal2 = priorityForReproduction.get(1);
+
+                Reproduce reproduction = new Reproduce();
+                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
+                simulation.addAnimal(babyAnimal);
+                simulation.getWorldMap().placeWorldElement(babyAnimal);
+            }
+        }
+    }
+
+
 }
