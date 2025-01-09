@@ -61,13 +61,18 @@ public class Simulation implements Runnable {
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
-//        while (!animals.isEmpty()) {
-//            try {
-//                simulationDay.everyDayActivities();
-//            } catch (IncorrectPositionException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        for (Animal animal : animals) {
+            System.out.println(animal.getPosition());
+        }
+        int day = 0;
+        while (!animals.isEmpty()) {
+            try {
+                System.out.println(day++);
+                simulationDay.everyDayActivities();
+            } catch (IncorrectPositionException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void addAnimal(Animal animal) {

@@ -99,7 +99,6 @@ public class Day {
      */
     private void removeDeadAnimals() {
         List<Animal> animals = simulation.getAnimals();
-        animals.removeIf(Animal::isDead);
         for (Animal animal : animals) {
             if (animal.isDead()) {
                 simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
@@ -134,10 +133,8 @@ public class Day {
      * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post reproduction
      *
-     * @throws IncorrectPositionException
      */
     private void reproduceAnimals() throws IncorrectPositionException {
-
         groupAnimalsByPositions();
 
         for (List<Animal> animals : positionMap.values()) {
@@ -182,8 +179,9 @@ public class Day {
                         }
                         return Integer.compare(animal2.getAge(), animal1.getAge());
                     }).toList();
-
-            for (Plant plant : plants) {
+            Iterator<Plant> iterator = plants.iterator();
+            while (iterator.hasNext()) {
+                Plant plant = iterator.next();
                 Vector2d plantPosition = plant.getPosition();
 
                 if (positionMap.containsKey(plantPosition)) {
@@ -192,14 +190,13 @@ public class Day {
                     if (!animalsPositions.isEmpty()) {
                         Animal animal = priorityForFood.getFirst();
                         animal.eat(config.energyPerPlant());
-                        simulation.getPlants().remove(plant);  // from simulation
+                        iterator.remove();
                         simulation.getWorldMap().removeElement(plant, plant.getPosition());
                     }
                 }
             }
-
         }
+
+
     }
-
-
 }

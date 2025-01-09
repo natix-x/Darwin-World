@@ -5,7 +5,6 @@ import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.WorldMap;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -31,11 +30,13 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
+
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
 
         System.out.println("GlobeMap");
         this.worldMap = simulation.getWorldMap();
+        this.worldMap.subscribe(this);
         drawMap();
     }
 
@@ -62,8 +63,8 @@ public class SimulationPresenter implements MapChangeListener {
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
         clearMapGrid();
         mapGrid.alignmentProperty();
-        int width = Math.abs(lowerBound.x() - upperBound.x());
-        int height = Math.abs(lowerBound.y() - upperBound.y());
+        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
+        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
 
         for (int column = 0; column < width; column++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
@@ -74,8 +75,8 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void fillTheMap(Vector2d lowerBound, Vector2d upperBound) {
-        int width = Math.abs(lowerBound.x() - upperBound.x());
-        int height = Math.abs(lowerBound.y() - upperBound.y());
+        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
+        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
 
         for (int column = 0; column <= width; column++) {
             for (int row = 0; row <= height; row++) {
