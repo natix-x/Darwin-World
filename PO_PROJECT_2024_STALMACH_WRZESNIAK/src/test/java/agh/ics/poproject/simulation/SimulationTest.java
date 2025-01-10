@@ -39,9 +39,9 @@ Configuration config = new Configuration(   10,
     @Test
     void checkGetAnimals() throws IncorrectPositionException {
         Animal animal1 = new Animal(new Vector2d(1, 1), new Genome(config.genomeLength()), config.initialEnergy());
-        simulation.addAnimal(animal1);
-        assertTrue(simulation.getAnimals().contains(animal1));
-        assertFalse(simulation.getAnimals().isEmpty());
+        simulation.addAliveAnimal(animal1);
+        assertTrue(simulation.getAliveAnimals().contains(animal1));
+        assertFalse(simulation.getAliveAnimals().isEmpty());
     }
 
     @Test

@@ -39,7 +39,7 @@ public class GlobeMap extends AbstractWorldMap {
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         List<Animal> animalsAtSelectedPosition = animals.get(currentPosition);
-        if (animalsAtSelectedPosition.contains(animal)) {
+        if (animalsAtSelectedPosition !=null && animalsAtSelectedPosition.contains(animal)) {
             animalsAtSelectedPosition.remove(animal);
             if (animalsAtSelectedPosition.isEmpty()) {
                 animals.remove(currentPosition);
@@ -143,7 +143,7 @@ public class GlobeMap extends AbstractWorldMap {
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
-            simulation.addAnimal(animal);
+            simulation.addAliveAnimal(animal);
             simulation.getWorldMap().placeWorldElement(animal);  // pokazanie na mapie
         }
     }
@@ -181,11 +181,12 @@ public class GlobeMap extends AbstractWorldMap {
      * Removes dead animals from the map
      */
     public void removeDeadAnimals(Simulation simulation) {
-        List<Animal> animals = simulation.getAnimals();
+        List<Animal> animals = simulation.getAliveAnimals();
         for (Animal animal : animals) {
             if (animal.isDead()) {
                 simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
-                simulation.getAnimals().remove(animal);  // from simulation
+                simulation.getAliveAnimals().remove(animal);
+                simulation.getDeadAnimals().add(animal);
             }
         }
     }
@@ -193,6 +194,7 @@ public class GlobeMap extends AbstractWorldMap {
     public void growNewPlants(Simulation simulation) {
         Configuration config = simulation.getConfig();
         int numberOfPlants = config.dailyPlantGrowth();
+
         // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
     }
 
@@ -200,7 +202,8 @@ public class GlobeMap extends AbstractWorldMap {
      * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post plant consumption
      */
-    public void consumePlants(int energyPerPlant) {
+    public void consumePlants(Simulation simulation) {
+        int energyPerPlant = simulation.getConfig().energyPerPlant();
         for (List<Animal> allAnimals : animals.values()) {
             List<Animal> priorityForFood = allAnimals.stream()
                     .sorted((animal1, animal2) -> {
@@ -223,6 +226,7 @@ public class GlobeMap extends AbstractWorldMap {
                         animal.eat(energyPerPlant);
                         iterator.remove();
                         removeElement(plant, plant.getPosition());
+                        simulation.getPlants().remove(plant);
                     }
                 }
             }
@@ -235,8 +239,8 @@ public class GlobeMap extends AbstractWorldMap {
      *
      */
     public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
-        for (List<Animal> allAnimals : animals.values()) {
-            List<Animal> priorityForReproduction = allAnimals.stream()
+        for (List<Animal> allAnimalsAtPosition : animals.values()) {
+            List<Animal> priorityForReproduction = allAnimalsAtPosition.stream()
                     .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
                     .sorted((animal1, animal2) -> { //sort for reproduction priority
                         int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
@@ -252,13 +256,11 @@ public class GlobeMap extends AbstractWorldMap {
 
                 Reproduce reproduction = new Reproduce();
                 Animal babyAnimal = reproduction.reproduce(animal1, animal2);
-                simulation.addAnimal(babyAnimal);
+                simulation.addAliveAnimal(babyAnimal);
                 simulation.getWorldMap().placeWorldElement(babyAnimal);
                 System.out.println("Baby made!");
             }
         }
     }
-
-
 
 }

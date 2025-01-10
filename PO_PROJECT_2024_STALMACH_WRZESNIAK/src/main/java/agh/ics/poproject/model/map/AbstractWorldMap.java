@@ -16,6 +16,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID mapID = UUID.randomUUID();
 
+    public Map<Vector2d, List<Animal>> getAnimals() {
+        return animals;
+    }
+
     @Override
     public void subscribe(MapChangeListener listener) {
         mapChangeListeners.add(listener);

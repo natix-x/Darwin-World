@@ -8,6 +8,7 @@
 
 
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -20,12 +21,32 @@
     </top>
     <center>
         <Label  text="tu mapa"/>
-        <StackPane fx:id="stackPane" alignment="CENTER">
+        <StackPane>
             <GridPane fx:id="mapGrid" gridLinesVisible="true"
                       style="-fx-padding: 10; ">
             </GridPane>
         </StackPane>
     </center>
+    <right>
+        <VBox alignment="CENTER">
+            <Label text="Number of animals:"/>
+            <Label fx:id="numberOfAnimalsLabel"/>
+            <Label text="Number of plants:"/>
+            <Label fx:id="numberOfPlantsLabel"/>
+            <Label text="Number of unoccupied positions:"/>
+            <Label fx:id="numberOfUnoccupiedPositions"/>
+            <Label text="Most popular genomes:"/>
+            <Label fx:id="mostPopularGenomesLabel"/>
+            <Label text="Average animal energy:"/>
+            <Label fx:id="averageAnimalEnergyLabel"/>
+            <Label text="Average animal lifespan:"/>
+            <Label fx:id="averageAnimalLifespanLabel"/>
+            <Label text="Average children number:"/>
+            <Label fx:id="averageChildrenNumberLabel"/>
+        </VBox>
+
+    </right>
+
 
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">

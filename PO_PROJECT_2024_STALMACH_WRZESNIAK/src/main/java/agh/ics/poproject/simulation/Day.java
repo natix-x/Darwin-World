@@ -18,7 +18,6 @@ import java.util.*;
 public class Day {
     private final Simulation simulation;
     private final Configuration config;
-    private int dayCount = 0;
     private GlobeMap worldMap;
 
     public Day(Simulation simulation) {
@@ -31,39 +30,34 @@ public class Day {
      * Generates all necessary elements for simulation launch
      */
     void firstDayActivities() throws IncorrectPositionException {
-        dayCount++;
         worldMap.generateAnimals(simulation);
         worldMap.generatePlants(simulation);
     }
 
+    // TODO refaktoryzacja metod - wszystkie wywoływane z Day a później aktualizowane w GLobe (jak moveAndRotate)
     /**
      * Generates and updated all map elements in the timeframe of one day
      */
     void everyDayActivities() throws IncorrectPositionException {
-        dayCount++;
         ageAllAnimals(); //adds +1 to each animal's ageworldMap.removeDeadAnimals();
         moveAndRotateAnimals();
-        simulation.getWorldMap().consumePlants(config.energyPerPlant());
+        simulation.getWorldMap().consumePlants(simulation);
         simulation.getWorldMap().reproduceAnimal(simulation);
-        //worldMap.growNewPlants(simulation);
-        //TODO: można pomyśleć nad jakimś counterem dni
+        //simulation.getWorldMap().growNewPlants(simulation);
     }
 
-    public int getDayCount() {
-        return dayCount;
-    }
 
     /**
-     * Removes dead animals from animals list in Simulation class.
+     * Adds one to each animal age.
      */
     private void ageAllAnimals() {
-        for (Animal animal : simulation.getAnimals()) {
+        for (Animal animal : simulation.getAliveAnimals()) {
             animal.ageAnimal();
         }
     }
 
     private void moveAndRotateAnimals() {
-        List<Animal> animals = simulation.getAnimals();
+        List<Animal> animals = simulation.getAliveAnimals();
         for (Animal animal : animals) {
             simulation.getWorldMap().move(animal);
         }

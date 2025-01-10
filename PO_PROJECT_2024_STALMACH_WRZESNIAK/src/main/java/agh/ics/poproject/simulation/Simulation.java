@@ -5,6 +5,7 @@ import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
 
 import java.util.ArrayList;
@@ -13,11 +14,14 @@ import java.util.List;
 public class Simulation implements Runnable {
     //to tak jakby nasz engine do backendu, tu powinny być wszystkie listy zwierząt itd
     private final Configuration config;
+    private Stats stats;
 
 
     private GlobeMap worldMap;
-    private ArrayList<Animal> animals;
+    private ArrayList<Animal> aliveAnimals;
+    private ArrayList<Animal> deadAnimals;
     private ArrayList<Plant> plants;
+    private int dayCount = 0;
 
     public Simulation(Configuration config) {
         this.config = config;
@@ -25,12 +29,16 @@ public class Simulation implements Runnable {
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
         }
-        this.animals = new ArrayList<>();
+        this.aliveAnimals = new ArrayList<>();
         this.plants = new ArrayList<>();
     }
 
-    public List<Animal> getAnimals() {
-        return animals;
+    public List<Animal> getAliveAnimals() {
+        return aliveAnimals;
+    }
+
+    public ArrayList<Animal> getDeadAnimals() {
+        return deadAnimals;
     }
 
     public List<Plant> getPlants() {
@@ -49,22 +57,29 @@ public class Simulation implements Runnable {
         return config;
     }
 
+    public Stats getStats() {
+        return stats;
+    }
+
     // TODO: osbługa errorów
     @Override
     public void run()  {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);
+        this.stats = new Stats(this);
         try {
             simulationDay.firstDayActivities();
-            System.out.println(simulationDay.getDayCount());
+            dayCount ++;
+            System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
 
-        while (!animals.isEmpty()) {
+        while (!aliveAnimals.isEmpty()) {
             try {
                 simulationDay.everyDayActivities();
-                System.out.println(simulationDay.getDayCount());
+                dayCount ++;
+                System.out.println(dayCount);
                 System.out.println("_________");
 
                 // Wait for 1 second
@@ -78,8 +93,12 @@ public class Simulation implements Runnable {
         }
     }
 
-    public void addAnimal(Animal animal) {
-        animals.add(animal);
+    public void addAliveAnimal(Animal animal) {
+        aliveAnimals.add(animal);
+    }
+
+    public void addDeadAnimal(Animal animal) {
+        deadAnimals.add(animal);
     }
 
     public void addPlant(Plant plant) {
