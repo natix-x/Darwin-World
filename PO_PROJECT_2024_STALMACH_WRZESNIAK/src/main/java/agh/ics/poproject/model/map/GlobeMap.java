@@ -201,10 +201,8 @@ public class GlobeMap extends AbstractWorldMap {
      * Handles the simulation update post plant consumption
      */
     public void consumePlants(int energyPerPlant) {
-        //Configuration config = simulation.getConfig();
-
-        for (List<Animal> animalsAtSelectedPosition : animals.values()) {
-            List<Animal> priorityForFood = animalsAtSelectedPosition.stream()
+        for (List<Animal> allAnimals : animals.values()) {
+            List<Animal> priorityForFood = allAnimals.stream()
                     .sorted((animal1, animal2) -> {
                         int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
                         if (energyComparison != 0) {
@@ -232,12 +230,32 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
     /**
-     * Groups animals by key: position
+     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post reproduction
+     *
      */
-    public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
-        for (Animal animal : simulation.getAnimals()) {
-            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
-            animalPositions.add(animal);
+    public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
+        for (List<Animal> allAnimals : animals.values()) {
+            List<Animal> priorityForReproduction = allAnimals.stream()
+                    .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
+                    .sorted((animal1, animal2) -> { //sort for reproduction priority
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+
+            if (priorityForReproduction.size() >= 2) {
+                Animal animal1 = priorityForReproduction.get(0);
+                Animal animal2 = priorityForReproduction.get(1);
+
+                Reproduce reproduction = new Reproduce();
+                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
+                simulation.addAnimal(babyAnimal);
+                simulation.getWorldMap().placeWorldElement(babyAnimal);
+                System.out.println("Baby made!");
+            }
         }
     }
 
