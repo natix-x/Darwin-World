@@ -5,6 +5,7 @@ import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 public class Simulation implements Runnable {
     //to tak jakby nasz engine do backendu, tu powinny być wszystkie listy zwierząt itd
     private final Configuration config;
+    private Stats stats;
 
 
     private GlobeMap worldMap;
@@ -55,11 +57,16 @@ public class Simulation implements Runnable {
         return config;
     }
 
+    public Stats getStats() {
+        return stats;
+    }
+
     // TODO: osbługa errorów
     @Override
     public void run()  {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);
+        this.stats = new Stats(this);
         try {
             simulationDay.firstDayActivities();
             dayCount ++;

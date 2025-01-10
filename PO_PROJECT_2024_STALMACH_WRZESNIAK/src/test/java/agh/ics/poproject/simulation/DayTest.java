@@ -36,7 +36,7 @@ class DayTest {
     @Test
     void checkIfAnimalsGenerateCorrectly() throws IncorrectPositionException {
         day.firstDayActivities();
-        assertEquals(5, simulation.getAnimals().size());
+        assertEquals(5, simulation.getAliveAnimals().size());
     }
 
     @Test
@@ -48,22 +48,22 @@ class DayTest {
     @Test
     void checkIfAgingWorks() throws IncorrectPositionException {
         day.firstDayActivities();
-        assertEquals(1, simulation.getAnimals().getFirst().getAge());
+        assertEquals(1, simulation.getAliveAnimals().getFirst().getAge());
         day.everyDayActivities();
-        assertEquals(2, simulation.getAnimals().getFirst().getAge());
+        assertEquals(2, simulation.getAliveAnimals().getFirst().getAge());
     }
 
     @Test
     void checkIfDaySimulationWorks() throws IncorrectPositionException {
         Day testDay = new Day(simulation);
         testDay.firstDayActivities();
-        assertEquals(5, simulation.getAnimals().size());
+        assertEquals(5, simulation.getAliveAnimals().size());
         assertEquals(4, simulation.getPlants().size());
 
-        Vector2d positionBefore = simulation.getAnimals().getFirst().getPosition();
+        Vector2d positionBefore = simulation.getAliveAnimals().getFirst().getPosition();
 
         testDay.everyDayActivities();
-        Vector2d positionAfter = simulation.getAnimals().getFirst().getPosition();
+        Vector2d positionAfter = simulation.getAliveAnimals().getFirst().getPosition();
 
         //checks if animal is moving after simulating the day
         assertNotEquals(positionBefore, positionAfter);

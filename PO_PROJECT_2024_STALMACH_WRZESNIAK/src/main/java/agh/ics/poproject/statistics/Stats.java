@@ -3,6 +3,7 @@ package agh.ics.poproject.statistics;
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.simulation.Simulation;
+import agh.ics.poproject.util.Configuration;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class Stats {
         this.simulation = simulation;
     }
 
+    // zakładam, że chodzi o żywe zwierzaki
     public int countAnimalsNumber() {
         return simulation.getAliveAnimals().size();
     }
@@ -24,10 +26,13 @@ public class Stats {
 
     // liczba wolnych pól to chyba liczba niezajętych przez zwierzaki? rośliny nie mają znaczenia? można dopytać
     public int countNumberOfPositionsUnoccupiedByAnyAnimal() {
-        // TODO: implement
-        return 0;
+        Configuration config = simulation.getConfig();
+        int allPositions = config.mapHeight() * config.mapWidth();
+        int occupiedPositionsByAnimals = simulation.getWorldMap().getAnimals().size();
+        return allPositions - occupiedPositionsByAnimals;
     }
 
+    // ile??
     public Genome getMostPopularGenotype() {
         // TODO: implement
         return null;

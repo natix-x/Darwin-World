@@ -6,6 +6,7 @@ import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.statistics.Stats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -22,6 +23,27 @@ public class SimulationPresenter implements MapChangeListener {
     private static final double CELL_WIDTH = 25.0;
 
     @FXML
+    private Label numberOfAnimalsLabel;
+
+    @FXML
+    private Label numberOfPlantsLabel;
+
+    @FXML
+    private Label numberOfUnoccupiedPositions;
+
+    @FXML
+    private Label mostPopularGenomesLabel;
+
+    @FXML
+    private Label averageAnimalEnergyLabel;
+
+    @FXML
+    private Label averageAnimalLifespanLabel;
+
+    @FXML
+    private Label averageChildrenNumberLabel;
+
+    @FXML
     private Button startButton;
 
     private Simulation simulation;
@@ -29,7 +51,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private GridPane mapGrid;
-
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
@@ -106,10 +127,24 @@ public class SimulationPresenter implements MapChangeListener {
         return cellLabel;
     }
 
+    private void getCurrentStats() {
+        Stats stats = simulation.getStats();
+        numberOfAnimalsLabel.setText(String.valueOf(stats.countAnimalsNumber()));
+        numberOfPlantsLabel.setText(String.valueOf(stats.countPlantsNumber()));
+        numberOfUnoccupiedPositions.setText(String.valueOf(stats.countNumberOfPositionsUnoccupiedByAnyAnimal()));
+        mostPopularGenomesLabel.setText(String.valueOf(stats.getMostPopularGenotype()));
+        averageAnimalEnergyLabel.setText(String.valueOf(stats.countAverageEnergyOfAliveAnimals()));
+        averageAnimalLifespanLabel.setText(String.valueOf(stats.countAverageAnimalLifeSpan()));
+        averageChildrenNumberLabel.setText(String.valueOf(stats.countAverageNumberOfChildrenForAliveAnimals()));
+    }
+
 
     @Override
     public void mapChange(WorldMap worldMap, String message) {
-        Platform.runLater(this::drawMap);
+        Platform.runLater(() -> {
+            drawMap();
+            getCurrentStats();
+        });
     }
 
     @FXML
