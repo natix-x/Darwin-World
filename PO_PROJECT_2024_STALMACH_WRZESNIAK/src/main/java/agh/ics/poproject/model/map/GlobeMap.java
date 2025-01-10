@@ -177,23 +177,29 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
 
+    private List<Animal> checkAnimalStatus(Simulation simulation) {
+        List<Animal> deadAnimals = new ArrayList<>();
+        for (Animal animal : simulation.getAliveAnimals()) {
+            if (animal.isDead()) {
+                deadAnimals.add(animal);
+            }
+        }
+        return deadAnimals;
+    }
+
     /**
      * Removes dead animals from the map
      * @param simulation chosen simulation
      */
     public void removeDeadAnimals(Simulation simulation) {
-        List<Animal> deadAnimals = new ArrayList<>();
-        for (Animal animal : simulation.getAliveAnimals()) {
-            if (animal.isDead()) {
-                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // Remove from map
-                deadAnimals.add(animal);
-                simulation.addDeadAnimal(animal);
-                mapChanged("Animal died");
-            }
-        }
+        List<Animal> deadAnimals = checkAnimalStatus(simulation);
+        WorldMap worldMap = simulation.getWorldMap();
 
         for (Animal deadAnimal : deadAnimals) {
-            simulation.removeAliveAnimal(deadAnimal);
+            simulation.removeFromAliveAnimal(deadAnimal);
+            simulation.addDeadAnimal(deadAnimal);
+            worldMap.removeElement(deadAnimal, deadAnimal.getPosition());
+            mapChanged("Removed dead animal at " + deadAnimal.getPosition());
         }
     }
 
@@ -213,68 +219,69 @@ public class GlobeMap extends AbstractWorldMap {
     public void consumePlants(Simulation simulation) {
         int energyPerPlant = simulation.getConfig().energyPerPlant();
 
-        List<Animal> priorityForFood = sortAnimals(simulation);
-
-        Iterator<Plant> iterator = plants.values().iterator();
-        while (iterator.hasNext()) {
-            Plant plant = iterator.next();
+        for (Plant plant : new ArrayList<>(plants.values())) { // Avoid concurrent modification
             Vector2d plantPosition = plant.getPosition();
 
             if (animals.containsKey(plantPosition)) {
-                List<Animal> animalsPositions = animals.get(plantPosition);
+                List<Animal> animalsAtPosition = animals.get(plantPosition);
+                Animal highestPriorityAnimal = animalsAtPosition.stream()
+                        .max(Comparator.comparingInt(Animal::getRemainingEnergy)
+                                .thenComparingInt(Animal::getAge))
+                        .orElse(null);
 
-                if (!animalsPositions.isEmpty()) {
-                    Animal animal = priorityForFood.getFirst();
-                    animal.eat(energyPerPlant);
-                    iterator.remove();
-                    removeElement(plant, plant.getPosition());
+                if (highestPriorityAnimal != null) {
+                    highestPriorityAnimal.eat(energyPerPlant);
+                    plants.remove(plantPosition);
                     simulation.getPlants().remove(plant);
+                    mapChanged("Plant at " + plantPosition + " was eaten.");
                 }
             }
         }
     }
+
 
     /**
      * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post reproduction
      * @param simulation chosen simulation
      */
-    public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
-        List<Animal> priorityForReproduction = sortAnimals(simulation);
+    public void reproduceAnimals(Simulation simulation) throws IncorrectPositionException {
+        for (Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey();
+            List<Animal> animalsAtPosition = entry.getValue().stream()
+                    .filter(animal -> animal.getRemainingEnergy() >= simulation.getConfig().neededEnergyForReproduction())
+                    .sorted(Comparator.comparingInt(Animal::getRemainingEnergy).reversed()
+                            .thenComparingInt(Animal::getAge))
+                    .toList();
 
-        if (priorityForReproduction.size() >= 2) {
-            Animal animal1 = priorityForReproduction.get(0);
-            Animal animal2 = priorityForReproduction.get(1);
+            if (animalsAtPosition.size() >= 2) {
+                Animal parent1 = animalsAtPosition.get(0);
+                Animal parent2 = animalsAtPosition.get(1);
 
-            Reproduce reproduction = new Reproduce();
-            Animal babyAnimal = reproduction.reproduce(animal1, animal2);
-            simulation.addAliveAnimal(babyAnimal);
-            simulation.getWorldMap().placeWorldElement(babyAnimal);
-            System.out.println("Baby made!");
+                Reproduce reproduction = new Reproduce();
+                Animal offspring = reproduction.reproduce(parent1, parent2);
+
+                simulation.addAliveAnimal(offspring);
+                simulation.getWorldMap().placeWorldElement(offspring);
+                mapChanged("New animal born at " + position);
+            }
         }
     }
 
-    /**
-     * Sorts animals according to requirements to resolve reproduction and plant consumption conflicts
-     * @param simulation chosen simulation
-     * @return List of sorted animals
-     */
-    private List<Animal> sortAnimals(Simulation simulation) {
-        List<Animal> allAnimalsAtPosition = simulation.getAliveAnimals();
 
-        //only those with sufficient energy
-        //sort for reproduction priority
+//    /**
+//     * Sorts animals according to requirements to resolve reproduction and plant consumption conflicts
+//     * @param simulation chosen simulation
+//     * @return List of sorted animals
+//     */
+//    private List<Animal> getSortedAnimals(Simulation simulation) {
+//        return simulation.getAliveAnimals().stream()
+//                .filter(animal -> animal.getRemainingEnergy() >= simulation.getConfig().neededEnergyForReproduction())
+//                .sorted(Comparator.comparingInt(Animal::getRemainingEnergy).reversed()
+//                        .thenComparingInt(Animal::getAge))
+//                .toList();
+//    }
 
-        return allAnimalsAtPosition.stream()
-                .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
-                .sorted((animal1, animal2) -> { //sort for reproduction priority
-                    int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                    if (energyComparison != 0) {
-                        return energyComparison;
-                    }
-                    return Integer.compare(animal2.getAge(), animal1.getAge());
-                }).toList();
-    }
 
 
 

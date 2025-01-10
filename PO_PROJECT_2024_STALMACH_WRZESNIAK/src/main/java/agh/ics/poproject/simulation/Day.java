@@ -43,7 +43,7 @@ public class Day {
         simulation.getWorldMap().removeDeadAnimals(simulation);
         moveAndRotateAnimals();
         simulation.getWorldMap().consumePlants(simulation);
-        simulation.getWorldMap().reproduceAnimal(simulation);
+        simulation.getWorldMap().reproduceAnimals(simulation);
         //simulation.getWorldMap().growNewPlants(simulation);
     }
 
