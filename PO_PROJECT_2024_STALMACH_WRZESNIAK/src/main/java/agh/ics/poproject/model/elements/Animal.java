@@ -70,7 +70,7 @@ public class Animal implements WorldElement {
     }
 
     public boolean isDead() {
-        return remainingEnergy <= 0;
+        return age > remainingEnergy;
     }
 
     public void changeEnergy(int amount) {
