@@ -31,9 +31,27 @@ public class GlobeMap extends AbstractWorldMap {
         return !isBeyondTopOrBottomEdge(position) && (position.follows(LOWER_BOUND) && position.precedes(upperBound));
     }
 
+    @Override
+    public Boundary getCurrentBounds() {
+        return new Boundary(LOWER_BOUND, upperBound);
+    }
+
+    private boolean isBeyondTopOrBottomEdge(Vector2d position) {
+        return position.y() > topEdge || position.y() < BOTTOM_EDGE;
+    }
+
+    private boolean isBeyondRightEdge(Vector2d position) {
+        return position.x() > rightEdge;
+    }
+
+    private boolean isBeyondLeftEdge(Vector2d position) {
+        return position.x() < LEFT_EDGE;
+    }
+
     /**
      Moves the specified animal to a new position on the map.
      Throws an exception if the animal is not found at its current position.
+     @param animal animal that will be moved
      */
     @Override
     public void move(Animal animal) {
@@ -57,24 +75,6 @@ public class GlobeMap extends AbstractWorldMap {
         } else {
             throw new IllegalArgumentException("Animal not found at position " + currentPosition);
         }
-    }
-
-    @Override
-    public Boundary getCurrentBounds() {
-        return new Boundary(LOWER_BOUND, upperBound);
-    }
-
-
-    private boolean isBeyondTopOrBottomEdge(Vector2d position) {
-        return position.y() > topEdge || position.y() < BOTTOM_EDGE;
-    }
-
-    private boolean isBeyondRightEdge(Vector2d position) {
-        return position.x() > rightEdge;
-    }
-
-    private boolean isBeyondLeftEdge(Vector2d position) {
-        return position.x() < LEFT_EDGE;
     }
 
     @Override
@@ -179,6 +179,7 @@ public class GlobeMap extends AbstractWorldMap {
 
     /**
      * Removes dead animals from the map
+     * @param simulation chosen simulation
      */
     public void removeDeadAnimals(Simulation simulation) {
         List<Animal> animals = simulation.getAliveAnimals();
@@ -187,6 +188,7 @@ public class GlobeMap extends AbstractWorldMap {
                 simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
                 simulation.getAliveAnimals().remove(animal);
                 simulation.getDeadAnimals().add(animal);
+                mapChanged("Animal died");
             }
         }
     }
@@ -201,33 +203,27 @@ public class GlobeMap extends AbstractWorldMap {
     /**
      * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post plant consumption
+     * @param simulation chosen simulation
      */
     public void consumePlants(Simulation simulation) {
         int energyPerPlant = simulation.getConfig().energyPerPlant();
-        for (List<Animal> allAnimals : animals.values()) {
-            List<Animal> priorityForFood = allAnimals.stream()
-                    .sorted((animal1, animal2) -> {
-                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                        if (energyComparison != 0) {
-                            return energyComparison;
-                        }
-                        return Integer.compare(animal2.getAge(), animal1.getAge());
-                    }).toList();
-            Iterator<Plant> iterator = plants.values().iterator();
-            while (iterator.hasNext()) {
-                Plant plant = iterator.next();
-                Vector2d plantPosition = plant.getPosition();
 
-                if (animals.containsKey(plantPosition)) {
-                    List<Animal> animalsPositions = animals.get(plantPosition);
+        List<Animal> priorityForFood = sortAnimals(simulation);
 
-                    if (!animalsPositions.isEmpty()) {
-                        Animal animal = priorityForFood.getFirst();
-                        animal.eat(energyPerPlant);
-                        iterator.remove();
-                        removeElement(plant, plant.getPosition());
-                        simulation.getPlants().remove(plant);
-                    }
+        Iterator<Plant> iterator = plants.values().iterator();
+        while (iterator.hasNext()) {
+            Plant plant = iterator.next();
+            Vector2d plantPosition = plant.getPosition();
+
+            if (animals.containsKey(plantPosition)) {
+                List<Animal> animalsPositions = animals.get(plantPosition);
+
+                if (!animalsPositions.isEmpty()) {
+                    Animal animal = priorityForFood.getFirst();
+                    animal.eat(energyPerPlant);
+                    iterator.remove();
+                    removeElement(plant, plant.getPosition());
+                    simulation.getPlants().remove(plant);
                 }
             }
         }
@@ -236,31 +232,49 @@ public class GlobeMap extends AbstractWorldMap {
     /**
      * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post reproduction
-     *
+     * @param simulation chosen simulation
      */
     public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
-        for (List<Animal> allAnimalsAtPosition : animals.values()) {
-            List<Animal> priorityForReproduction = allAnimalsAtPosition.stream()
-                    .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
-                    .sorted((animal1, animal2) -> { //sort for reproduction priority
-                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                        if (energyComparison != 0) {
-                            return energyComparison;
-                        }
-                        return Integer.compare(animal2.getAge(), animal1.getAge());
-                    }).toList();
+        List<Animal> priorityForReproduction = sortAnimals(simulation);
 
-            if (priorityForReproduction.size() >= 2) {
-                Animal animal1 = priorityForReproduction.get(0);
-                Animal animal2 = priorityForReproduction.get(1);
+        if (priorityForReproduction.size() >= 2) {
+            Animal animal1 = priorityForReproduction.get(0);
+            Animal animal2 = priorityForReproduction.get(1);
 
-                Reproduce reproduction = new Reproduce();
-                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
-                simulation.addAliveAnimal(babyAnimal);
-                simulation.getWorldMap().placeWorldElement(babyAnimal);
-                System.out.println("Baby made!");
-            }
+            Reproduce reproduction = new Reproduce();
+            Animal babyAnimal = reproduction.reproduce(animal1, animal2);
+            simulation.addAliveAnimal(babyAnimal);
+            simulation.getWorldMap().placeWorldElement(babyAnimal);
+            System.out.println("Baby made!");
         }
     }
 
+    /**
+     * Sorts animals according to requirements to resolve reproduction and plant consumption conflicts
+     * @param simulation chosen simulation
+     * @return List of sorted animals
+     */
+    private List<Animal> sortAnimals(Simulation simulation) {
+        List<Animal> allAnimalsAtPosition = simulation.getAliveAnimals();
+
+        //only those with sufficient energy
+        //sort for reproduction priority
+
+        return allAnimalsAtPosition.stream()
+                .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
+                .sorted((animal1, animal2) -> { //sort for reproduction priority
+                    int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                    if (energyComparison != 0) {
+                        return energyComparison;
+                    }
+                    return Integer.compare(animal2.getAge(), animal1.getAge());
+                }).toList();
+    }
+
+
+
+
+
+
 }
+

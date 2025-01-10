@@ -15,20 +15,17 @@
             fx:controller="agh.ics.poproject.presenters.SimulationPresenter"
             stylesheets="stylesheets/simulation.css">
 
-<!--    presenter zamiast simulation engine do obsługi UI-->
-
     <top>
     </top>
     <center>
-        <Label  text="tu mapa"/>
         <StackPane>
             <GridPane fx:id="mapGrid" gridLinesVisible="true"
-                      style="-fx-padding: 10; ">
+                      style="-fx-padding: 10;">
             </GridPane>
         </StackPane>
     </center>
     <right>
-        <VBox alignment="CENTER">
+        <VBox alignment="CENTER" style="-fx-padding: 10; -fx-min-width: 200;">
             <Label text="Number of animals:"/>
             <Label fx:id="numberOfAnimalsLabel"/>
             <Label text="Number of plants:"/>
@@ -44,17 +41,10 @@
             <Label text="Average children number:"/>
             <Label fx:id="averageChildrenNumberLabel"/>
         </VBox>
-
     </right>
-
-
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
             <Button fx:id="startButton" text="Start!" onAction="#startSimulation"/>
-
-<!--                    onAction="#run"/>-->
-
         </HBox>
     </bottom>
 </BorderPane>
-
