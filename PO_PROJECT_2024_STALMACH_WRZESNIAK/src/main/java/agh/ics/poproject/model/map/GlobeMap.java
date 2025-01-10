@@ -197,6 +197,41 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
     /**
+     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post plant consumption
+     */
+    public void consumePlants(int energyPerPlant) {
+        //Configuration config = simulation.getConfig();
+
+        for (List<Animal> animalsAtSelectedPosition : animals.values()) {
+            List<Animal> priorityForFood = animalsAtSelectedPosition.stream()
+                    .sorted((animal1, animal2) -> {
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+            Iterator<Plant> iterator = plants.values().iterator();
+            while (iterator.hasNext()) {
+                Plant plant = iterator.next();
+                Vector2d plantPosition = plant.getPosition();
+
+                if (animals.containsKey(plantPosition)) {
+                    List<Animal> animalsPositions = animals.get(plantPosition);
+
+                    if (!animalsPositions.isEmpty()) {
+                        Animal animal = priorityForFood.getFirst();
+                        animal.eat(energyPerPlant);
+                        iterator.remove();
+                        removeElement(plant, plant.getPosition());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Groups animals by key: position
      */
     public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {

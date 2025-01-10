@@ -18,7 +18,6 @@ import java.util.*;
 public class Day {
     private final Simulation simulation;
     private final Configuration config;
-    Map<Vector2d, List<Animal>> positionMap = new HashMap<>(); //dict key: position vector, val: animal
     private int dayCount = 0;
     private GlobeMap worldMap;
 
@@ -44,8 +43,8 @@ public class Day {
         dayCount++;
         ageAllAnimals(); //adds +1 to each animal's ageworldMap.removeDeadAnimals();
         moveAndRotateAnimals();
-        consumePlants();
-        reproduceAnimals();
+        simulation.getWorldMap().consumePlants(config.energyPerPlant());
+        //reproduceAnimals();
         //worldMap.reproduceAnimals(positionMap, simulation);
         //worldMap.growNewPlants(simulation);
         //TODO: można pomyśleć nad jakimś counterem dni
@@ -71,86 +70,39 @@ public class Day {
         }
     }
 
-    /**
-     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
-     * Handles the simulation update post plant consumption
-     */
-    public void consumePlants() {
-        Configuration config = simulation.getConfig();
-        List<Plant> plants = simulation.getPlants();
-
-        groupAnimalsByPositions(positionMap, simulation);
-
-        for (List<Animal> animals : positionMap.values()) {
-            List<Animal> priorityForFood = animals.stream()
-                    .sorted((animal1, animal2) -> {
-                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                        if (energyComparison != 0) {
-                            return energyComparison;
-                        }
-                        return Integer.compare(animal2.getAge(), animal1.getAge());
-                    }).toList();
-            Iterator<Plant> iterator = plants.iterator();
-            while (iterator.hasNext()) {
-                Plant plant = iterator.next();
-                Vector2d plantPosition = plant.getPosition();
-
-                if (positionMap.containsKey(plantPosition)) {
-                    List<Animal> animalsPositions = positionMap.get(plantPosition);
-
-                    if (!animalsPositions.isEmpty()) {
-                        Animal animal = priorityForFood.getFirst();
-                        animal.eat(config.energyPerPlant());
-                        iterator.remove();
-                        simulation.getWorldMap().removeElement(plant, plant.getPosition());
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Groups animals by key: position
-     */
-    public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
-        for (Animal animal : simulation.getAnimals()) {
-            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
-            animalPositions.add(animal);
-        }
-    }
 
     /**
      * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post reproduction
      *
      */
-    public void reproduceAnimals() throws IncorrectPositionException {
-        Configuration config = simulation.getConfig();
-
-        groupAnimalsByPositions(positionMap, simulation);
-
-        for (List<Animal> animals : positionMap.values()) {
-            List<Animal> priorityForReproduction = animals.stream()
-                    .filter(animal -> animal.getRemainingEnergy() > config.neededEnergyForReproduction()) //only those with sufficient energy
-                    .sorted((animal1, animal2) -> { //sort for reproduction priority
-                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                        if (energyComparison != 0) {
-                            return energyComparison;
-                        }
-                        return Integer.compare(animal2.getAge(), animal1.getAge());
-                    }).toList();
-
-            if (priorityForReproduction.size() >= 2) {
-                Animal animal1 = priorityForReproduction.get(0);
-                Animal animal2 = priorityForReproduction.get(1);
-
-                Reproduce reproduction = new Reproduce();
-                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
-                simulation.addAnimal(babyAnimal);
-                simulation.getWorldMap().placeWorldElement(babyAnimal);
-                System.out.println("Baby made!");
-            }
-        }
-    }
+//    public void reproduceAnimals() throws IncorrectPositionException {
+//        Configuration config = simulation.getConfig();
+//
+//        //groupAnimalsByPositions(positionMap, simulation);
+//
+//        for (List<Animal> animals : positionMap.values()) {
+//            List<Animal> priorityForReproduction = animals.stream()
+//                    .filter(animal -> animal.getRemainingEnergy() > config.neededEnergyForReproduction()) //only those with sufficient energy
+//                    .sorted((animal1, animal2) -> { //sort for reproduction priority
+//                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+//                        if (energyComparison != 0) {
+//                            return energyComparison;
+//                        }
+//                        return Integer.compare(animal2.getAge(), animal1.getAge());
+//                    }).toList();
+//
+//            if (priorityForReproduction.size() >= 2) {
+//                Animal animal1 = priorityForReproduction.get(0);
+//                Animal animal2 = priorityForReproduction.get(1);
+//
+//                Reproduce reproduction = new Reproduce();
+//                Animal babyAnimal = reproduction.reproduce(animal1, animal2);
+//                simulation.addAnimal(babyAnimal);
+//                simulation.getWorldMap().placeWorldElement(babyAnimal);
+//                System.out.println("Baby made!");
+//            }
+//        }
+//    }
 
 }
