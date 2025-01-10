@@ -51,6 +51,10 @@ public class Animal implements WorldElement {
         return age;
     }
 
+    public UUID getAnimalId() {
+        return animalId;
+    }
+
     public Genome getGenome() {
         return genome;
     }
@@ -104,6 +108,5 @@ public class Animal implements WorldElement {
     public void ageAnimal() {
         this.age++;
     }
-
 
 }

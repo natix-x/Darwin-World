@@ -38,8 +38,12 @@ public class GlobeMap extends AbstractWorldMap {
     @Override
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
-        if (Objects.equals(objectAt(currentPosition), animal)) {
-            animals.remove(currentPosition);
+        List<Animal> animalsAtSelectedPosition = animals.get(currentPosition);
+        if (animalsAtSelectedPosition.contains(animal)) {
+            animalsAtSelectedPosition.remove(animal);
+            if (animalsAtSelectedPosition.isEmpty()) {
+                animals.remove(currentPosition);
+            }
             animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
             if (isBeyondLeftEdge(animalNewPosition)) {
@@ -48,7 +52,7 @@ public class GlobeMap extends AbstractWorldMap {
                 animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.y());
             }
             animal.setPosition(animalNewPosition);
-            animals.put(animal.getPosition(), animal);
+            animals.computeIfAbsent(animalNewPosition, k -> new ArrayList<>()).add(animal);
             super.mapChanged("Animal moved to the position " + animal.getPosition());
         } else {
             throw new IllegalArgumentException("Animal not found at position " + currentPosition);
@@ -86,7 +90,7 @@ public class GlobeMap extends AbstractWorldMap {
 
     private void placeAnimal(Vector2d position, Animal animal) throws IncorrectPositionException {
         if (canMoveTo(position)) {
-            animals.put(position, animal);
+            animals.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
             mapChanged("Animal placed at position " + position);
         }
         else
@@ -117,10 +121,16 @@ public class GlobeMap extends AbstractWorldMap {
     @Override
     public void removeElement(WorldElement element, Vector2d position) {
         if (element instanceof Animal) {
-            animals.remove(position);
+            List<Animal> animalsAtPosition = animals.get(element.getPosition());
+                animalsAtPosition.remove(element);
+                if (animalsAtPosition.isEmpty()) {
+                    animals.remove(element.getPosition());
+                }
+                mapChanged("Removed animal at " + element.getPosition());
         }
         else if (element instanceof Plant) {
             plants.remove(position);
+            mapChanged("Added plant at " + element.getPosition());
         }
     }
 
@@ -129,7 +139,7 @@ public class GlobeMap extends AbstractWorldMap {
 
         int numberOfAnimalsToGenerate = config.initialAnimals();
         // zakładamy, że zwierzaki nie mogą się pojawiać na tym samym polu, można o to dopytać
-        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate, simulation);
+        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate);
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
@@ -141,7 +151,7 @@ public class GlobeMap extends AbstractWorldMap {
     public void generatePlants(Simulation simulation) throws IncorrectPositionException {
         Configuration config = simulation.getConfig();
         int numberOfPlantsToGenerate = config.initialPlants();
-        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate, simulation);
+        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
         for (Vector2d position : generatedPlantsRandomPositions) {
             Plant plant = new Plant(position);
             simulation.addPlant(plant);
@@ -154,27 +164,18 @@ public class GlobeMap extends AbstractWorldMap {
      * Generate random position of elements knowing that only one element from one category can be on each position.
      * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
      */
-    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate, Simulation simulation) {
-        Configuration config = simulation.getConfig();
+    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate) {
         Random random = new Random();
         Set<Vector2d> uniquePositions = new HashSet<>();
         while (uniquePositions.size() < numberOfElementsToGenerate) {
-            int x = random.nextInt(config.mapWidth());
-            int y = random.nextInt(config.mapHeight());
+            int x = random.nextInt(rightEdge);
+            int y = random.nextInt(topEdge);
             Vector2d position = new Vector2d(x, y);
             uniquePositions.add(position);
         }
         return uniquePositions;
     }
 
-    /**
-     * Removes dead animals from animals list in Simulation class.
-     */
-    public void ageAllAnimals(Simulation simulation) {
-        for (Animal animal : simulation.getAnimals()) {
-            animal.ageAnimal();
-        }
-    }
 
     /**
      * Removes dead animals from the map
@@ -189,13 +190,6 @@ public class GlobeMap extends AbstractWorldMap {
         }
     }
 
-    public void moveAndRotateAnimals(Simulation simulation) {
-        List<Animal> animals = simulation.getAnimals();
-        for (Animal animal : animals) {
-            simulation.getWorldMap().move(animal);
-        }
-    }
-
     public void growNewPlants(Simulation simulation) {
         Configuration config = simulation.getConfig();
         int numberOfPlants = config.dailyPlantGrowth();
@@ -203,12 +197,35 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
     /**
-     * Groups animals by key: position
+     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post plant consumption
      */
-    public void groupAnimalsByPositions(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
-        for (Animal animal : simulation.getAnimals()) {
-            List<Animal> animalPositions = positionMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
-            animalPositions.add(animal);
+    public void consumePlants(int energyPerPlant) {
+        for (List<Animal> allAnimals : animals.values()) {
+            List<Animal> priorityForFood = allAnimals.stream()
+                    .sorted((animal1, animal2) -> {
+                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
+                        if (energyComparison != 0) {
+                            return energyComparison;
+                        }
+                        return Integer.compare(animal2.getAge(), animal1.getAge());
+                    }).toList();
+            Iterator<Plant> iterator = plants.values().iterator();
+            while (iterator.hasNext()) {
+                Plant plant = iterator.next();
+                Vector2d plantPosition = plant.getPosition();
+
+                if (animals.containsKey(plantPosition)) {
+                    List<Animal> animalsPositions = animals.get(plantPosition);
+
+                    if (!animalsPositions.isEmpty()) {
+                        Animal animal = priorityForFood.getFirst();
+                        animal.eat(energyPerPlant);
+                        iterator.remove();
+                        removeElement(plant, plant.getPosition());
+                    }
+                }
+            }
         }
     }
 
@@ -217,14 +234,10 @@ public class GlobeMap extends AbstractWorldMap {
      * Handles the simulation update post reproduction
      *
      */
-    public void reproduceAnimals(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) throws IncorrectPositionException {
-        Configuration config = simulation.getConfig();
-
-        groupAnimalsByPositions(positionMap, simulation);
-
-        for (List<Animal> animals : positionMap.values()) {
-            List<Animal> priorityForReproduction = animals.stream()
-                    .filter(animal -> animal.getRemainingEnergy() > config.neededEnergyForReproduction()) //only those with sufficient energy
+    public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
+        for (List<Animal> allAnimals : animals.values()) {
+            List<Animal> priorityForReproduction = allAnimals.stream()
+                    .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
                     .sorted((animal1, animal2) -> { //sort for reproduction priority
                         int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
                         if (energyComparison != 0) {
@@ -246,44 +259,6 @@ public class GlobeMap extends AbstractWorldMap {
         }
     }
 
-    /**
-     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
-     * Handles the simulation update post plant consumption
-     */
-    public void consumePlants(Map<Vector2d, List<Animal>> positionMap, Simulation simulation) {
-        Configuration config = simulation.getConfig();
-        List<Plant> plants = simulation.getPlants();
 
-        groupAnimalsByPositions(positionMap, simulation);
-
-        for (List<Animal> animals : positionMap.values()) {
-            List<Animal> priorityForFood = animals.stream()
-                    .sorted((animal1, animal2) -> {
-                        int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
-                        if (energyComparison != 0) {
-                            return energyComparison;
-                        }
-                        return Integer.compare(animal2.getAge(), animal1.getAge());
-                    }).toList();
-            Iterator<Plant> iterator = plants.iterator();
-            while (iterator.hasNext()) {
-                Plant plant = iterator.next();
-                Vector2d plantPosition = plant.getPosition();
-
-                if (positionMap.containsKey(plantPosition)) {
-                    List<Animal> animalsPositions = positionMap.get(plantPosition);
-
-                    if (!animalsPositions.isEmpty()) {
-                        Animal animal = priorityForFood.getFirst();
-                        animal.eat(config.energyPerPlant());
-                        iterator.remove();
-                        simulation.getWorldMap().removeElement(plant, plant.getPosition());
-                    }
-                }
-            }
-        }
-
-
-    }
 
 }

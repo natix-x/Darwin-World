@@ -11,7 +11,7 @@ import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap {
 
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();
+    protected final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     protected final Map<Vector2d, Plant> plants = new HashMap<>();
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID mapID = UUID.randomUUID();
@@ -34,7 +34,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public WorldElement objectAt(Vector2d position) {
         if (animals.containsKey(position)) {
-            return animals.get(position);
+            return animals.get(position).getFirst();  // for test purposes, pewnie trzeba zwrocic wszytsko?
         }
         else if (plants.containsKey(position)) {
             return plants.get(position);
@@ -45,8 +45,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     @Override
     public List<WorldElement> getElements() {;
         List<WorldElement> elements = new ArrayList<>();
-        for (Map.Entry<Vector2d, Animal> entry : animals.entrySet()) {
-            elements.add(entry.getValue());}
+        animals.values().forEach(elements::addAll);
+        elements.addAll(plants.values());
         return elements;
     }
 
@@ -64,7 +64,5 @@ public abstract class AbstractWorldMap implements WorldMap {
     public UUID getId() {
         return mapID;
     }
-
-
 
 }
