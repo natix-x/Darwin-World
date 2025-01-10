@@ -182,16 +182,21 @@ public class GlobeMap extends AbstractWorldMap {
      * @param simulation chosen simulation
      */
     public void removeDeadAnimals(Simulation simulation) {
-        List<Animal> animals = simulation.getAliveAnimals();
-        for (Animal animal : animals) {
+        List<Animal> deadAnimals = new ArrayList<>();
+        for (Animal animal : simulation.getAliveAnimals()) {
             if (animal.isDead()) {
-                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // from map
-                simulation.getAliveAnimals().remove(animal);
-                simulation.getDeadAnimals().add(animal);
+                simulation.getWorldMap().removeElement(animal, animal.getPosition());  // Remove from map
+                deadAnimals.add(animal);
+                simulation.addDeadAnimal(animal);
                 mapChanged("Animal died");
             }
         }
+
+        for (Animal deadAnimal : deadAnimals) {
+            simulation.removeAliveAnimal(deadAnimal);
+        }
     }
+
 
     public void growNewPlants(Simulation simulation) {
         Configuration config = simulation.getConfig();

@@ -97,6 +97,10 @@ public class Simulation implements Runnable {
         aliveAnimals.add(animal);
     }
 
+    public void removeAliveAnimal(Animal animal) {
+        aliveAnimals.remove(animal);
+    }
+
     public void addDeadAnimal(Animal animal) {
         deadAnimals.add(animal);
     }
