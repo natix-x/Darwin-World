@@ -21,6 +21,7 @@ public class Stats {
     }
 
     public int countPlantsNumber() {
+        System.out.println(simulation.getPlants().size());
         return simulation.getPlants().size();
     }
 

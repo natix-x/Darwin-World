@@ -94,7 +94,7 @@ public class ConfigurationPresenter {
         minNumberOfMutationsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1));
         maxNumberOfMutationsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 2));
         // TODO: min musi być mniejsze od max i max musi byc tyle co liczba genow
-        lengthOfGenome.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, Integer.MAX_VALUE, 7));
+        lengthOfGenome.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 7));
 
         ToggleGroup mapVariant = new ToggleGroup();  // in case any other variant adds
         globeMapButton.setToggleGroup(mapVariant);

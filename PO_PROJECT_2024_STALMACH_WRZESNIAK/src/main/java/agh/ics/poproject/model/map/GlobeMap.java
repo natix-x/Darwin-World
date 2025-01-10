@@ -202,7 +202,8 @@ public class GlobeMap extends AbstractWorldMap {
      * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
      * Handles the simulation update post plant consumption
      */
-    public void consumePlants(int energyPerPlant) {
+    public void consumePlants(Simulation simulation) {
+        int energyPerPlant = simulation.getConfig().energyPerPlant();
         for (List<Animal> allAnimals : animals.values()) {
             List<Animal> priorityForFood = allAnimals.stream()
                     .sorted((animal1, animal2) -> {
@@ -225,6 +226,7 @@ public class GlobeMap extends AbstractWorldMap {
                         animal.eat(energyPerPlant);
                         iterator.remove();
                         removeElement(plant, plant.getPosition());
+                        simulation.getPlants().remove(plant);
                     }
                 }
             }
@@ -237,8 +239,8 @@ public class GlobeMap extends AbstractWorldMap {
      *
      */
     public void reproduceAnimal(Simulation simulation) throws IncorrectPositionException {
-        for (List<Animal> allAnimals : animals.values()) {
-            List<Animal> priorityForReproduction = allAnimals.stream()
+        for (List<Animal> allAnimalsAtPosition : animals.values()) {
+            List<Animal> priorityForReproduction = allAnimalsAtPosition.stream()
                     .filter(animal -> animal.getRemainingEnergy() > simulation.getConfig().neededEnergyForReproduction()) //only those with sufficient energy
                     .sorted((animal1, animal2) -> { //sort for reproduction priority
                         int energyComparison = Integer.compare(animal2.getRemainingEnergy(), animal1.getRemainingEnergy());
@@ -260,7 +262,5 @@ public class GlobeMap extends AbstractWorldMap {
             }
         }
     }
-
-
 
 }

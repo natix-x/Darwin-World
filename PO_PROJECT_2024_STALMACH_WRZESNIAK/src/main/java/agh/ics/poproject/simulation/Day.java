@@ -41,9 +41,9 @@ public class Day {
     void everyDayActivities() throws IncorrectPositionException {
         ageAllAnimals(); //adds +1 to each animal's ageworldMap.removeDeadAnimals();
         moveAndRotateAnimals();
-        simulation.getWorldMap().consumePlants(config.energyPerPlant());
+        simulation.getWorldMap().consumePlants(simulation);
         simulation.getWorldMap().reproduceAnimal(simulation);
-        simulation.getWorldMap().growNewPlants(simulation);
+        //simulation.getWorldMap().growNewPlants(simulation);
     }
 
 
