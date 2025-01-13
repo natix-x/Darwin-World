@@ -19,12 +19,12 @@ class ReproduceTest {
     Animal animal3 = new Animal(new Vector2d(1, 1), new Genome(genomeList1), 10);
     Animal animal4 = new Animal(new Vector2d(1, 1), new Genome(genomeList2), 11);
 
-    Reproduce reproduce = new Reproduce();
+    Reproduce reproduce = new Reproduce(energyNeededToReproduce);
 
     @Test
     void canAnimalsReproduceCorrectly() {
-        assertTrue(reproduce.canReproduce(animal1, animal2, energyNeededToReproduce));
-        assertFalse(reproduce.canReproduce(animal3, animal4, energyNeededToReproduce));
+        assertTrue(reproduce.canReproduce(animal1, animal2));
+        assertFalse(reproduce.canReproduce(animal3, animal4));
     }
 
 //    @Test

@@ -177,32 +177,6 @@ public class GlobeMap extends AbstractWorldMap {
     }
 
 
-    private List<Animal> checkAnimalStatus(Simulation simulation) {
-        List<Animal> deadAnimals = new ArrayList<>();
-        for (Animal animal : simulation.getAliveAnimals()) {
-            if (animal.isDead()) {
-                deadAnimals.add(animal);
-            }
-        }
-        return deadAnimals;
-    }
-
-    /**
-     * Removes dead animals from the map
-     * @param simulation chosen simulation
-     */
-    public void removeDeadAnimals(Simulation simulation) {
-        List<Animal> deadAnimals = checkAnimalStatus(simulation);
-        WorldMap worldMap = simulation.getWorldMap();
-
-        for (Animal deadAnimal : deadAnimals) {
-            simulation.removeFromAliveAnimal(deadAnimal);
-            simulation.addDeadAnimal(deadAnimal);
-            worldMap.removeElement(deadAnimal, deadAnimal.getPosition());
-            mapChanged("Removed dead animal at " + deadAnimal.getPosition());
-        }
-    }
-
 
     public void growNewPlants(Simulation simulation) {
         Configuration config = simulation.getConfig();
@@ -211,62 +185,7 @@ public class GlobeMap extends AbstractWorldMap {
         // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
     }
 
-    /**
-     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
-     * Handles the simulation update post plant consumption
-     * @param simulation chosen simulation
-     */
-    public void consumePlants(Simulation simulation) {
-        int energyPerPlant = simulation.getConfig().energyPerPlant();
 
-        for (Plant plant : new ArrayList<>(plants.values())) { // Avoid concurrent modification
-            Vector2d plantPosition = plant.getPosition();
-
-            if (animals.containsKey(plantPosition)) {
-                List<Animal> animalsAtPosition = animals.get(plantPosition);
-                Animal highestPriorityAnimal = animalsAtPosition.stream()
-                        .max(Comparator.comparingInt(Animal::getRemainingEnergy)
-                                .thenComparingInt(Animal::getAge))
-                        .orElse(null);
-
-                if (highestPriorityAnimal != null) {
-                    highestPriorityAnimal.eat(energyPerPlant);
-                    plants.remove(plantPosition);
-                    simulation.getPlants().remove(plant);
-                    mapChanged("Plant at " + plantPosition + " was eaten.");
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
-     * Handles the simulation update post reproduction
-     * @param simulation chosen simulation
-     */
-    public void reproduceAnimals(Simulation simulation) throws IncorrectPositionException {
-        for (Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
-            Vector2d position = entry.getKey();
-            List<Animal> animalsAtPosition = entry.getValue().stream()
-                    .filter(animal -> animal.getRemainingEnergy() >= simulation.getConfig().neededEnergyForReproduction())
-                    .sorted(Comparator.comparingInt(Animal::getRemainingEnergy).reversed()
-                            .thenComparingInt(Animal::getAge))
-                    .toList();
-
-            if (animalsAtPosition.size() >= 2) {
-                Animal parent1 = animalsAtPosition.get(0);
-                Animal parent2 = animalsAtPosition.get(1);
-
-                Reproduce reproduction = new Reproduce();
-                Animal offspring = reproduction.reproduce(parent1, parent2);
-
-                simulation.addAliveAnimal(offspring);
-                simulation.getWorldMap().placeWorldElement(offspring);
-                mapChanged("New animal born at " + position);
-            }
-        }
-    }
 
 
 //    /**

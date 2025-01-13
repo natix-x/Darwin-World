@@ -65,7 +65,6 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        System.out.println(direction.getDirection());
         return direction.getDirection();
     }
 
@@ -89,7 +88,6 @@ public class Animal implements WorldElement {
         else {
             this.direction = direction.opposite();
         }
-        this.changeEnergy(-1);
         genome.activateNextGene();
     }
 
@@ -98,7 +96,7 @@ public class Animal implements WorldElement {
     }
 
     public void eat(int energyPerPlant) {
-        this.consumedPlants += energyPerPlant;
+        this.remainingEnergy += energyPerPlant;
         // TODO: implement
     }
 

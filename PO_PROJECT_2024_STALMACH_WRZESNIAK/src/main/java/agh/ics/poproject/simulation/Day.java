@@ -6,6 +6,7 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
+import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.util.Configuration;
 
 import java.util.*;
@@ -39,11 +40,11 @@ public class Day {
      * Generates and updated all map elements in the timeframe of one day
      */
     void everyDayActivities() throws IncorrectPositionException {
-        ageAllAnimals(); //adds +1 to each animal's ageworldMap.removeDeadAnimals();
-        simulation.getWorldMap().removeDeadAnimals(simulation);
+        removeDeadAnimals();
         moveAndRotateAnimals();
-        simulation.getWorldMap().consumePlants(simulation);
-        simulation.getWorldMap().reproduceAnimals(simulation);
+        consumePlants();
+        reproduceAnimals();
+        ageAllAnimals();
         //simulation.getWorldMap().growNewPlants(simulation);
     }
 
@@ -61,6 +62,81 @@ public class Day {
         List<Animal> animals = simulation.getAliveAnimals();
         for (Animal animal : animals) {
             simulation.getWorldMap().move(animal);
+            System.out.println(animal.getRemainingEnergy());
+            System.out.println(animal.isDead());
         }
+    }
+
+    /**
+     * Establishes the animals that will reproduce, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post reproduction
+     *
+     */
+    public void reproduceAnimals() throws IncorrectPositionException {
+        for (Map.Entry<Vector2d, List<Animal>> entry : simulation.getWorldMap().getAnimals().entrySet()) {
+
+            List<Animal> animalsAtPosition = entry.getValue().stream()
+                    .filter(animal -> animal.getRemainingEnergy() >= config.neededEnergyForReproduction())
+                    .sorted(Comparator.comparingInt(Animal::getRemainingEnergy).reversed()
+                            .thenComparingInt(Animal::getAge))
+                    .toList();
+
+            if (animalsAtPosition.size() >= 2) {
+                Animal parent1 = animalsAtPosition.get(0);
+                Animal parent2 = animalsAtPosition.get(1);
+
+                Reproduce reproduction = new Reproduce(config.neededEnergyForReproduction());
+                Animal offspring = reproduction.reproduce(parent1, parent2);
+                System.out.println(offspring.getAge());
+                System.out.println(offspring.getRemainingEnergy());
+                simulation.addAliveAnimal(offspring);
+                simulation.getWorldMap().placeWorldElement(offspring);
+            }
+        }
+    }
+
+    /**
+     * Establishes the animal that will consume the Plant, resolves conflicts in case of multiple animals on a position.
+     * Handles the simulation update post plant consumption
+     *
+     */
+    public void consumePlants() {
+        int energyPerPlant = simulation.getConfig().energyPerPlant();
+
+        for (Plant plant : new ArrayList<>(simulation.getWorldMap().getPlants().values())) { // Avoid concurrent modification
+            Vector2d plantPosition = plant.getPosition();
+
+            if (worldMap.getAnimals().containsKey(plantPosition)) {
+                List<Animal> animalsAtPosition = worldMap.getAnimals().get(plantPosition);
+                Animal highestPriorityAnimal = animalsAtPosition.stream()
+                        .max(Comparator.comparingInt(Animal::getRemainingEnergy)
+                                .thenComparingInt(Animal::getAge))
+                        .orElse(null);
+
+                if (highestPriorityAnimal != null) {
+                    highestPriorityAnimal.eat(energyPerPlant);
+                    simulation.getWorldMap().getPlants().remove(plantPosition);
+                    simulation.getPlants().remove(plant);
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes dead animals from the map
+     *
+     */
+    public void removeDeadAnimals() {
+        Iterator<Animal> aliveAnimalsIterator = simulation.getAliveAnimals().iterator();
+        while (aliveAnimalsIterator.hasNext()) {
+            Animal animal = aliveAnimalsIterator.next();
+            if (animal.isDead()) {
+                aliveAnimalsIterator.remove();
+                simulation.addDeadAnimal(animal);
+                System.out.println("Zwierzak umarł!! w wieku" + animal.getAge());
+                worldMap.removeElement(animal, animal.getPosition());
+            }
+        }
+
     }
 }

@@ -20,6 +20,11 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animals;
     }
 
+    public Map<Vector2d, Plant> getPlants() {
+        return plants;
+    }
+
+
     @Override
     public void subscribe(MapChangeListener listener) {
         mapChangeListeners.add(listener);

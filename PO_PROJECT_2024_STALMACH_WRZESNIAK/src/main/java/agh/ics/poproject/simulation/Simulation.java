@@ -11,7 +11,7 @@ import agh.ics.poproject.util.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation implements Runnable {
+public class Simulation  {
     //to tak jakby nasz engine do backendu, tu powinny być wszystkie listy zwierząt itd
     private final Configuration config;
     private Stats stats;
@@ -63,7 +63,7 @@ public class Simulation implements Runnable {
     }
 
     // TODO: osbługa errorów
-    @Override
+
     public void run()  {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);

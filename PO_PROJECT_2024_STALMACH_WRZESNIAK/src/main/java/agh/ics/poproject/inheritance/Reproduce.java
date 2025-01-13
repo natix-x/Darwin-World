@@ -11,12 +11,14 @@ public class Reproduce {
 
     // TODO: połączyć te wartości z wartościami przekazywanej do symulacji konfiguracji
     int energyNeededToReproduce;
-
+    public Reproduce(int energyNeededToReproduce) {
+        this.energyNeededToReproduce = energyNeededToReproduce;
+    }
 
     /**
     Checks if two animals have enough energy to reproduce based on parameters set in configuration
      */
-    public boolean canReproduce(Animal animal1, Animal animal2, int energyNeededToReproduce) {
+    public boolean canReproduce(Animal animal1, Animal animal2) {
         return animal1.getRemainingEnergy() >= energyNeededToReproduce && animal2.getRemainingEnergy() >= energyNeededToReproduce;
     }
 
@@ -61,12 +63,12 @@ public class Reproduce {
      */
     // TODO: dodać mutacje
     public Animal reproduce (Animal animal1, Animal animal2){
-        if (canReproduce(animal1, animal2, energyNeededToReproduce)) {
+        if (canReproduce(animal1, animal2)) {
             animal1.changeEnergy(-energyNeededToReproduce);
             animal2.changeEnergy(-energyNeededToReproduce);
             animal1.addAChild();
             animal2.addAChild();
-
+            System.out.println("baby made");
             Genome babyGenome = shuffleGenome(animal1, animal2);
             return new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
         }

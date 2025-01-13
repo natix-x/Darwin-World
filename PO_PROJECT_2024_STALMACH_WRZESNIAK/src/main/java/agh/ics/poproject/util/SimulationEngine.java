@@ -8,18 +8,15 @@ import java.util.List;
 public class SimulationEngine {
 
     private final List<Simulation> simulations;
-    private final List<Thread> startedThreads;
 
     public SimulationEngine(List<Simulation> simulations) {
         this.simulations = simulations;
-        this.startedThreads = new ArrayList<>();
     }
 
     public void runAsync() {
         for (Simulation simulation : simulations) {
-            Thread thread = new Thread(simulation);
-            startedThreads.add(thread);
-            thread.start();
+            Thread simulationThread = new Thread(simulation::run);
+            simulationThread.start();
         }
         System.out.println("debugging: finished engine calculations");
     }

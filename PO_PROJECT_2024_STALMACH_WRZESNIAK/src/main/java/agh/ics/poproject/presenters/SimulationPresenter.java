@@ -146,13 +146,4 @@ public class SimulationPresenter implements MapChangeListener {
             getCurrentStats();
         });
     }
-
-    @FXML
-    public void startSimulation() {
-        System.out.println("TUTAJ OZNACZA ZE DZIALA POLACZENIE PREZENTERA");
-
-        setSimulationParameters(simulation);
-
-        simulation.run();
-    }
 }
