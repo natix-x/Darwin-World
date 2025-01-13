@@ -1,18 +1,18 @@
 package agh.ics.poproject.inheritance;
 
-import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-public class Reproduce {
+public class Reproduction {
 
-    // TODO: połączyć te wartości z wartościami przekazywanej do symulacji konfiguracji
-    int energyNeededToReproduce;
-    public Reproduce(int energyNeededToReproduce) {
+    private final int energyNeededToReproduce;
+    MutationMethod mutationMethod;
+
+    public Reproduction(int energyNeededToReproduce, MutationMethod mutationMethod) {
         this.energyNeededToReproduce = energyNeededToReproduce;
+        this.mutationMethod = mutationMethod;
     }
 
     /**
@@ -53,6 +53,7 @@ public class Reproduce {
             babyGenomeList.addAll(gene2.getGenesSequence().subList(0, splitIndex));
             babyGenomeList.addAll(gene1.getGenesSequence().subList(splitIndex, genomeLength));
         }
+        mutationMethod.mutateGenome(babyGenomeList);
 
         return new Genome(babyGenomeList);
     }
@@ -68,7 +69,6 @@ public class Reproduce {
             animal2.changeEnergy(-energyNeededToReproduce);
             animal1.addAChild();
             animal2.addAChild();
-            System.out.println("baby made");
             Genome babyGenome = shuffleGenome(animal1, animal2);
             return new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
         }

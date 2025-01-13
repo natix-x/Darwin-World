@@ -3,7 +3,7 @@ package agh.ics.poproject.inheritance;
 
 public class FullRandomMutation extends AbstractMutationMethod {
 
-    FullRandomMutation(int minMutations, int maxMutations) {
+    public FullRandomMutation(int minMutations, int maxMutations) {
         super(minMutations, maxMutations);
 
     }

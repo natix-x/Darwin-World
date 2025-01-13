@@ -97,11 +97,12 @@ public class Animal implements WorldElement {
 
     public void eat(int energyPerPlant) {
         this.remainingEnergy += energyPerPlant;
+        this.consumedPlants ++;
         // TODO: implement
     }
 
     public void addAChild () {
-        this.amountOfChildren++;
+        this.amountOfChildren ++;
     }
 
     public void ageAnimal() {

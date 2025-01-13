@@ -1,5 +1,7 @@
 package agh.ics.poproject.simulation;
 
+import agh.ics.poproject.inheritance.MutationMethod;
+import agh.ics.poproject.inheritance.Reproduction;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
@@ -18,9 +20,12 @@ public class Simulation  {
 
 
     private GlobeMap worldMap;
-    private ArrayList<Animal> aliveAnimals;
-    private ArrayList<Animal> deadAnimals;
-    private ArrayList<Plant> plants;
+    private ArrayList<Animal> aliveAnimals = new ArrayList<>();
+    private ArrayList<Animal> deadAnimals = new ArrayList<>();
+    private ArrayList<Plant> plants = new ArrayList<>();
+    private Reproduction reproduction;
+    private MutationMethod mutationMethod;
+
     private int dayCount = 0;
 
     public Simulation(Configuration config) {
@@ -29,9 +34,6 @@ public class Simulation  {
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
         }
-        this.aliveAnimals = new ArrayList<>();
-        this.deadAnimals = new ArrayList<>();
-        this.plants = new ArrayList<>();
     }
 
     public List<Animal> getAliveAnimals() {
@@ -98,10 +100,6 @@ public class Simulation  {
         aliveAnimals.add(animal);
     }
 
-    public void removeFromAliveAnimal(Animal animal) {
-        aliveAnimals.remove(animal);
-    }
-
     public void addDeadAnimal(Animal animal) {
         deadAnimals.add(animal);
     }
@@ -110,5 +108,8 @@ public class Simulation  {
         plants.add(plant);
     }
 
+    public void removePlant(Plant plant) {
+        plants.remove(plant);
+    }
 
 }

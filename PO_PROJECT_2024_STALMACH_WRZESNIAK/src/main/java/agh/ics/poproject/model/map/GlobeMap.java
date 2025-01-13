@@ -2,7 +2,6 @@ package agh.ics.poproject.model.map;
 
 
 import agh.ics.poproject.inheritance.Genome;
-import agh.ics.poproject.inheritance.Reproduce;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
@@ -115,6 +114,7 @@ public class GlobeMap extends AbstractWorldMap {
         return plants.get(position) == null;
     }
 
+    // TODO: zastosować wzorzec projektowy
     /**
      Removes element from world map, first checking if its type is animal or plant
      */
@@ -134,6 +134,7 @@ public class GlobeMap extends AbstractWorldMap {
         }
     }
 
+    // można dopytać czy to powinno tu być
     public void generateAnimals(Simulation simulation) throws IncorrectPositionException {
         Configuration config = simulation.getConfig();
 
@@ -148,6 +149,7 @@ public class GlobeMap extends AbstractWorldMap {
         }
     }
 
+    // i to
     public void generatePlants(Simulation simulation) throws IncorrectPositionException {
         Configuration config = simulation.getConfig();
         int numberOfPlantsToGenerate = config.initialPlants();
@@ -182,8 +184,10 @@ public class GlobeMap extends AbstractWorldMap {
         Configuration config = simulation.getConfig();
         int numberOfPlants = config.dailyPlantGrowth();
 
+
         // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
     }
+
 
 
 

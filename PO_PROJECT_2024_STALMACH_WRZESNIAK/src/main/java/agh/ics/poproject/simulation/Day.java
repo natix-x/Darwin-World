@@ -1,12 +1,11 @@
 package agh.ics.poproject.simulation;
 
-import agh.ics.poproject.inheritance.Reproduce;
+import agh.ics.poproject.inheritance.*;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
-import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.util.Configuration;
 
 import java.util.*;
@@ -19,19 +18,33 @@ import java.util.*;
 public class Day {
     private final Simulation simulation;
     private final Configuration config;
-    private GlobeMap worldMap;
+    private final GlobeMap worldMap;
+    private Reproduction reproduction;
 
     public Day(Simulation simulation) {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
+        setReproductionParameters();
+    }
+
+    private void setReproductionParameters() {
+        MutationMethodType mutationMethodType = config.isFullRandomMutation() ? MutationMethodType.FULL_RANDOM : MutationMethodType.SLIGHT_CORRECTION;
+        int minMutations = config.minMutations();
+        int maxMutations = config.maxMutations();
+
+        MutationMethod mutationMethod = switch (mutationMethodType) {
+            case FULL_RANDOM -> new FullRandomMutation(minMutations, maxMutations);
+            case SLIGHT_CORRECTION -> new SlightCorrectionMutation(minMutations, maxMutations);
+        };
+        this.reproduction = new Reproduction(config.neededEnergyForReproduction(), mutationMethod);
     }
 
     /**
      * Generates all necessary elements for simulation launch
      */
     void firstDayActivities() throws IncorrectPositionException {
-        worldMap.generateAnimals(simulation);
+        worldMap.generateAnimals(simulation);  // TODO zastanowic sie czy powinno sie tu przekazywac cala symulacje
         worldMap.generatePlants(simulation);
     }
 
@@ -61,9 +74,7 @@ public class Day {
     private void moveAndRotateAnimals() {
         List<Animal> animals = simulation.getAliveAnimals();
         for (Animal animal : animals) {
-            simulation.getWorldMap().move(animal);
-            System.out.println(animal.getRemainingEnergy());
-            System.out.println(animal.isDead());
+            worldMap.move(animal);
         }
     }
 
@@ -73,7 +84,8 @@ public class Day {
      *
      */
     public void reproduceAnimals() throws IncorrectPositionException {
-        for (Map.Entry<Vector2d, List<Animal>> entry : simulation.getWorldMap().getAnimals().entrySet()) {
+
+        for (Map.Entry<Vector2d, List<Animal>> entry : worldMap.getAnimals().entrySet()) {
 
             List<Animal> animalsAtPosition = entry.getValue().stream()
                     .filter(animal -> animal.getRemainingEnergy() >= config.neededEnergyForReproduction())
@@ -85,12 +97,9 @@ public class Day {
                 Animal parent1 = animalsAtPosition.get(0);
                 Animal parent2 = animalsAtPosition.get(1);
 
-                Reproduce reproduction = new Reproduce(config.neededEnergyForReproduction());
                 Animal offspring = reproduction.reproduce(parent1, parent2);
-                System.out.println(offspring.getAge());
-                System.out.println(offspring.getRemainingEnergy());
                 simulation.addAliveAnimal(offspring);
-                simulation.getWorldMap().placeWorldElement(offspring);
+                worldMap.placeWorldElement(offspring);
             }
         }
     }
@@ -101,9 +110,9 @@ public class Day {
      *
      */
     public void consumePlants() {
-        int energyPerPlant = simulation.getConfig().energyPerPlant();
+        int energyPerPlant = config.energyPerPlant();
 
-        for (Plant plant : new ArrayList<>(simulation.getWorldMap().getPlants().values())) { // Avoid concurrent modification
+        for (Plant plant : new ArrayList<>(worldMap.getPlants().values())) { // Avoid concurrent modification
             Vector2d plantPosition = plant.getPosition();
 
             if (worldMap.getAnimals().containsKey(plantPosition)) {
@@ -115,8 +124,8 @@ public class Day {
 
                 if (highestPriorityAnimal != null) {
                     highestPriorityAnimal.eat(energyPerPlant);
-                    simulation.getWorldMap().getPlants().remove(plantPosition);
-                    simulation.getPlants().remove(plant);
+                    worldMap.getPlants().remove(plantPosition);
+                    simulation.removePlant(plant);
                 }
             }
         }
@@ -133,10 +142,8 @@ public class Day {
             if (animal.isDead()) {
                 aliveAnimalsIterator.remove();
                 simulation.addDeadAnimal(animal);
-                System.out.println("Zwierzak umarł!! w wieku" + animal.getAge());
                 worldMap.removeElement(animal, animal.getPosition());
             }
         }
-
     }
 }
