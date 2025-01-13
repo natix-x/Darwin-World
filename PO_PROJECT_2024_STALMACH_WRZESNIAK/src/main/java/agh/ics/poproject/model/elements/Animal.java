@@ -89,6 +89,7 @@ public class Animal implements WorldElement {
         else {
             this.direction = direction.opposite();
         }
+        this.changeEnergy(-1);
         genome.activateNextGene();
     }
 

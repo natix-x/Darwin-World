@@ -30,6 +30,7 @@ public class Simulation implements Runnable {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
         }
         this.aliveAnimals = new ArrayList<>();
+        this.deadAnimals = new ArrayList<>();
         this.plants = new ArrayList<>();
     }
 
@@ -95,6 +96,10 @@ public class Simulation implements Runnable {
 
     public void addAliveAnimal(Animal animal) {
         aliveAnimals.add(animal);
+    }
+
+    public void removeFromAliveAnimal(Animal animal) {
+        aliveAnimals.remove(animal);
     }
 
     public void addDeadAnimal(Animal animal) {
