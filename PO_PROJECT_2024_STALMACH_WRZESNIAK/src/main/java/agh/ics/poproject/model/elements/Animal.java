@@ -69,14 +69,11 @@ public class Animal implements WorldElement {
     }
 
     public boolean isDead() {
-        return age > remainingEnergy;
+        return remainingEnergy <= 0;
     }
 
     public void changeEnergy(int amount) {
         remainingEnergy += amount;
-        if (remainingEnergy <= 0) {
-            remainingEnergy = 0;
-        }
     }
 
     public void rotateAndMove(int steps, MoveValidator validator) {
@@ -89,6 +86,7 @@ public class Animal implements WorldElement {
             this.direction = direction.opposite();
         }
         genome.activateNextGene();
+        remainingEnergy--;
     }
 
     public void reproduce(Animal reproductionPartner, int energyNeededForReproduce) {

@@ -80,12 +80,12 @@ public class Stats {
      * If there are no animals with children returns 0.
      *
      */
-    public int countAverageNumberOfChildrenForAliveAnimals() {
+    public double countAverageNumberOfChildrenForAliveAnimals() {
         List<Animal> aliveAnimals = simulation.getAliveAnimals();
         if (aliveAnimals == null || aliveAnimals.isEmpty()) {
             return 0;
         }
-        int childrenSum = 0;
+        double childrenSum = 0;
         for (Animal animal : aliveAnimals) {
             childrenSum += animal.getAmountOfChildren();
         }

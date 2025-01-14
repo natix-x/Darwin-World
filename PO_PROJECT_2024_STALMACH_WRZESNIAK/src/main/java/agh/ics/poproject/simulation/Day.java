@@ -99,6 +99,7 @@ public class Day {
 
                 Animal offspring = reproduction.reproduce(parent1, parent2);
                 simulation.addAliveAnimal(offspring);
+                System.out.println("babyMade" + offspring.getRemainingEnergy());
                 worldMap.placeWorldElement(offspring);
             }
         }
@@ -142,6 +143,7 @@ public class Day {
             if (animal.isDead()) {
                 aliveAnimalsIterator.remove();
                 simulation.addDeadAnimal(animal);
+                System.out.println("umarł" + animal.getAge());
                 worldMap.removeElement(animal, animal.getPosition());
             }
         }
