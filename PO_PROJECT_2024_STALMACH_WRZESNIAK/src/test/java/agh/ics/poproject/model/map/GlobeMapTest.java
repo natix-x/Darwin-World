@@ -33,8 +33,8 @@ class GlobeMapTest {
         worldMap.placeWorldElement(plant2);
         worldMap.placeWorldElement(plant3);
         // then
-        assertEquals(4, worldMap.animals.size());
-        assertEquals(3, worldMap.plants.size());
+        assertEquals(4, worldMap.getAnimals().size());
+        assertEquals(3, worldMap.getPlants().size());
         assertEquals(animal1, worldMap.objectAt(new Vector2d(2,2)));
         assertEquals(plant1, worldMap.objectAt(new Vector2d(4,7)));
     }

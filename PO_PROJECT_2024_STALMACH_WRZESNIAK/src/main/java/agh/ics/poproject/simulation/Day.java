@@ -44,8 +44,8 @@ public class Day {
      * Generates all necessary elements for simulation launch
      */
     void firstDayActivities() throws IncorrectPositionException {
-        worldMap.generateAnimals(simulation);  // TODO zastanowic sie czy powinno sie tu przekazywac cala symulacje
-        worldMap.generatePlants(simulation);
+        generateInitialAnimals();  // TODO zastanowic sie czy powinno sie tu przekazywac cala symulacje
+        generateInitialPlants();
     }
 
     // TODO refaktoryzacja metod - wszystkie wywoływane z Day a później aktualizowane w GLobe (jak moveAndRotate)
@@ -143,9 +143,48 @@ public class Day {
             if (animal.isDead()) {
                 aliveAnimalsIterator.remove();
                 simulation.addDeadAnimal(animal);
-                System.out.println("umarł" + animal.getAge());
                 worldMap.removeElement(animal, animal.getPosition());
             }
         }
+    }
+
+    public void generateInitialAnimals() throws IncorrectPositionException {
+
+        int numberOfAnimalsToGenerate = config.initialAnimals();
+        Set<Vector2d> generatedAnimalsRandomPositions = getRandomPositions(numberOfAnimalsToGenerate);
+        for (Vector2d position : generatedAnimalsRandomPositions) {
+            Genome genome = new Genome(config.genomeLength());
+            Animal animal = new Animal(position, genome, config.initialEnergy());
+            simulation.addAliveAnimal(animal);
+            simulation.getWorldMap().placeWorldElement(animal);
+        }
+    }
+
+    public void generateInitialPlants() throws IncorrectPositionException {
+        Configuration config = simulation.getConfig();
+        int numberOfPlantsToGenerate = config.initialPlants();
+        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
+        for (Vector2d position : generatedPlantsRandomPositions) {
+            Plant plant = new Plant(position);
+            simulation.addPlant(plant);
+            simulation.getWorldMap().placeWorldElement(plant);
+        }
+
+    }
+
+    /**
+     * Generate random position of elements knowing that only one element from one category can be on each position.
+     * @param numberOfElementsToGenerate is the number of map elements that are going be placed on the map
+     */
+    private Set<Vector2d> getRandomPositions (int numberOfElementsToGenerate) {
+        Random random = new Random();
+        Set<Vector2d> uniquePositions = new HashSet<>();
+        while (uniquePositions.size() < numberOfElementsToGenerate) {
+            int x = random.nextInt(config.mapWidth());
+            int y = random.nextInt(config.mapHeight());
+            Vector2d position = new Vector2d(x, y);
+            uniquePositions.add(position);
+        }
+        return uniquePositions;
     }
 }
