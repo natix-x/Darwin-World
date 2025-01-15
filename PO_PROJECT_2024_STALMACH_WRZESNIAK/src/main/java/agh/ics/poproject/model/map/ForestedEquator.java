@@ -1,14 +1,9 @@
 package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.elements.Plant;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 // TODO: refaktoryzacja, przeniesienie części kodu do AbstractPlantGrowingMethod
-public class ForestedEquator extends AbstractPlantGrowingMethod {
+public class ForestedEquator extends AbstractPlantGrowthMethod {
 
     int equatorBottom;
     int equatorTop;
@@ -19,32 +14,10 @@ public class ForestedEquator extends AbstractPlantGrowingMethod {
     }
 
     @Override
-    public Set<Vector2d> generatePlantPositions(int numberOfPlantsToGenerate) {
-        if (allPositionsOccupied()) {
-            return Collections.emptySet();
-        }
-
-        Set<Vector2d> uniquePositions = new HashSet<>();
-        long PositionsUnoccupiedByPlants = worldMap.calculateCurrentSurface() - numberOfPositionOccupiedByPlants();
-
-        if (PositionsUnoccupiedByPlants < numberOfPlantsToGenerate) {
-            numberOfPlantsToGenerate = (int) PositionsUnoccupiedByPlants;
-        }
-
-        while (uniquePositions.size() < numberOfPlantsToGenerate) {
-            int x = random.nextInt(worldMap.getCurrentBounds().UpperBound().x());
-            int y = calculateYCoordinate();
-
-            Vector2d position = new Vector2d(x, y);
-            if (! canGrowAt(position)) {
-                continue;
-            }
-            uniquePositions.add(position);
-            if (allPositionsOccupied()) {
-                break;
-            }
-        }
-        return uniquePositions;
+    public Vector2d calculatePositionWithParetoPrinciple() {
+        int x = random.nextInt(worldMap.getCurrentBounds().UpperBound().x());
+        int y = calculateYCoordinate();
+        return new Vector2d(x, y);
     }
 
     private int calculateYCoordinate() {
@@ -59,27 +32,10 @@ public class ForestedEquator extends AbstractPlantGrowingMethod {
         }
     }
 
-        //for (Vector2d position : generatedPlantsRandomPositions) {
-        //    Plant plant = new Plant(position);
-        //}  -> ta część pójdzie do worldmapy -> do metody generate plants
-        // i do dnia -> generateInitial oraz genereteplants (na koniec każdego dnia)
-
-
-    // TODO: jak duży powinien być równik?
-    // zakładam na razie dała 30%
     private void calculateEquatorBorders() {
         Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
         equatorBottom = (int) (upperBound.y() * 0.3);
         equatorTop = (int) (upperBound.y() * 0.7);
     }
 
-    private boolean allPositionsOccupied() {
-        return numberOfPositionOccupiedByPlants() >= worldMap.calculateCurrentSurface();
-    }
-
-    private long numberOfPositionOccupiedByPlants() {
-        return worldMap.getElements().stream()
-                .filter(element -> element instanceof Plant)
-                .count();
-    }
 }
