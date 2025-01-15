@@ -7,6 +7,7 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.WorldElement;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -58,7 +59,7 @@ public interface WorldMap extends MoveValidator {
      *
      * @return Collection of elements placed on the map.
      */
-    Collection<WorldElement> getElements();
+    List<WorldElement> getElements();
 
     /**
      * Return Boundary Object storing map's current bounds.
@@ -78,4 +79,16 @@ public interface WorldMap extends MoveValidator {
      * Removes a map element on a given position
      */
     void removeElement(WorldElement worldElement, Vector2d position);
+
+    /**
+     * Calculates surface area.
+     * @return Calculated surface of the map.
+     */
+    default int calculateCurrentSurface() {
+        Vector2d upperBound = getCurrentBounds().UpperBound();
+        Vector2d lowerBound = getCurrentBounds().LowerBound();
+        int width = upperBound.x() - lowerBound.x() + 1;
+        int height = upperBound.y() - lowerBound.y() + 1;
+        return width * height;
+    }
 }
