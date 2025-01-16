@@ -10,11 +10,15 @@ import agh.ics.poproject.statistics.Stats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventType;
+
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -78,6 +82,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     private Simulation simulation;
     private WorldMap worldMap;
+    private Animal trackedAnimal;
 
     @FXML
     public void initialize() {
@@ -86,8 +91,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
-
-        System.out.println("GlobeMap");
         this.worldMap = simulation.getWorldMap();
         this.worldMap.subscribe(this);
         drawMap();
@@ -146,8 +149,17 @@ public class SimulationPresenter implements MapChangeListener {
 
         Object objectAtPosition = worldMap.objectAt(position);
         if (objectAtPosition != null) {
-            if (objectAtPosition instanceof Animal) {
+            if (objectAtPosition instanceof Animal animal) {
+                if (animal.equals(trackedAnimal)) {
+                    cellLabel.getStyleClass().add("cell-tracked-animal");
+                } else {
                 cellLabel.getStyleClass().add("cell-animal");
+                }
+                cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> {
+                    trackedAnimal = animal;
+                    getCurrentAnimalStats(trackedAnimal);
+                });
+                cellLabel.disableProperty().unbind();
             }
             else if (objectAtPosition instanceof Plant) {
                 cellLabel.getStyleClass().add("cell-plant");
@@ -180,7 +192,7 @@ public class SimulationPresenter implements MapChangeListener {
             isAnimalAliveLabel.setText("Selected animal is alive.");
         }
         animalGenomeTitleLabel.setText("Genome:");
-        animalGenomeValueLabel.setText(String.valueOf(animal.getGenome()));
+        animalGenomeValueLabel.setText(String.valueOf(animal.getGenome().getGenesSequence()));
         animalActiveGeneTitleLabel.setText("Active gene:");
         animalActiveGeneValueLabel.setText(String.valueOf(animal.getGenome().getActiveGene()));
         animalEnergyTitleLabel.setText("Remaining energy:");
@@ -201,6 +213,9 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             drawMap();
             getCurrentSimulationStats();
+            if (trackedAnimal != null) {
+                getCurrentAnimalStats(trackedAnimal);
+            }
         });
     }
 
@@ -227,6 +242,4 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
-    public void trackClickedAnimal() {
-    }
 }
