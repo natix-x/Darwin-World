@@ -42,6 +42,25 @@
             <Label fx:id="averageChildrenNumberLabel"/>
         </VBox>
     </right>
+    <left>
+        <VBox alignment="CENTER" style="-fx-padding: 10; -fx-min-width: 200;">
+            <Label fx:id="isAnimalAliveLabel"/>
+            <Label fx:id="animalGenomeTitleLabel"/>
+            <Label fx:id="animalGenomeValueLabel"/>
+            <Label fx:id="animalActiveGeneTitleLabel"/>
+            <Label fx:id="animalActiveGeneValueLabel"/>
+            <Label fx:id="animalEnergyTitleLabel"/>
+            <Label fx:id="animalEnergyValueLabel"/>
+            <Label fx:id="animalPlantsConsumedTitleLabel"/>
+            <Label fx:id="animalPlantsConsumedValueLabel"/>
+            <Label fx:id="animalChildrenNumberTitleLabel"/>
+            <Label fx:id="animalChildrenNumberValueLabel"/>
+            <Label fx:id="animalAncestorsNumberTitleLabel"/>
+            <Label fx:id="animalAncestorsNumberValueLabel"/>
+            <Label fx:id="animalAgeTitleLabel"/>
+            <Label fx:id="animalAgeValueLabel"/>
+    </VBox>
+    </left>
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
             <Button fx:id="resumeButton" text="Resume" onAction="#onResumeClicked"/>

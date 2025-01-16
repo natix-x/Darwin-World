@@ -7,6 +7,7 @@ import agh.ics.poproject.model.Vector2d;
 
 import java.util.UUID;
 
+// TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
 public class Animal implements WorldElement {
 
     private MapDirection direction;
@@ -96,7 +97,6 @@ public class Animal implements WorldElement {
     public void eat(int energyPerPlant) {
         this.remainingEnergy += energyPerPlant;
         this.consumedPlants ++;
-        // TODO: implement
     }
 
     public void addAChild () {

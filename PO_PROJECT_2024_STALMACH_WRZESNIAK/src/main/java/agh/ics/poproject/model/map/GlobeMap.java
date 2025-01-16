@@ -7,8 +7,6 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.elements.WorldElement;
 import agh.ics.poproject.model.util.MapVisualizer;
-import agh.ics.poproject.simulation.Simulation;
-import agh.ics.poproject.util.Configuration;
 
 import java.util.*;
 

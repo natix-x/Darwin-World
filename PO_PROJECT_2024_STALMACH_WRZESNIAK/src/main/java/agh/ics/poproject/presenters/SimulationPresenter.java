@@ -8,7 +8,6 @@ import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.statistics.Stats;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -24,32 +23,56 @@ public class SimulationPresenter implements MapChangeListener {
     private static final double CELL_WIDTH = 25.0;
 
     @FXML
+    private Label isAnimalAliveLabel;
+    @FXML
+    private Label animalGenomeTitleLabel;
+    @FXML
+    private Label animalGenomeValueLabel;
+    @FXML
+    private Label animalActiveGeneValueLabel;
+    @FXML
+    private Label animalActiveGeneTitleLabel;
+    @FXML
+    private Label animalEnergyTitleLabel;
+    @FXML
+    private Label animalEnergyValueLabel;
+    @FXML
+    private Label animalPlantsConsumedTitleLabel;
+    @FXML
+    private Label animalChildrenNumberTitleLabel;
+    @FXML
+    private Label animalPlantsConsumedValueLabel;
+    @FXML
+    private Label animalChildrenNumberValueLabel;
+    @FXML
+    private Label animalAncestorsNumberTitleLabel;
+    @FXML
+    private Label animalAncestorsNumberValueLabel;
+    @FXML
+    private Label animalAgeTitleLabel;
+    @FXML
+    private Label animalAgeValueLabel;
+
+    @FXML
     private GridPane mapGrid;
 
     @FXML
     private Label numberOfAnimalsLabel;
-
     @FXML
     private Label numberOfPlantsLabel;
-
     @FXML
     private Label numberOfUnoccupiedPositions;
-
     @FXML
     private Label mostPopularGenomesLabel;
-
     @FXML
     private Label averageAnimalEnergyLabel;
-
     @FXML
     private Label averageAnimalLifespanLabel;
-
     @FXML
     private Label averageChildrenNumberLabel;
 
     @FXML
     private Button resumeButton;
-
     @FXML
     private Button stopButton;
 
@@ -136,7 +159,7 @@ public class SimulationPresenter implements MapChangeListener {
         return cellLabel;
     }
 
-    private void getCurrentStats() {
+    private void getCurrentSimulationStats() {
         Stats stats = simulation.getStats();
         numberOfAnimalsLabel.setText(String.valueOf(stats.countAnimalsNumber()));
         numberOfPlantsLabel.setText(String.valueOf(stats.countPlantsNumber()));
@@ -147,24 +170,63 @@ public class SimulationPresenter implements MapChangeListener {
         averageChildrenNumberLabel.setText(String.valueOf(stats.countAverageNumberOfChildrenForAliveAnimals()));
     }
 
+    /**
+     * Displays currents stats for selected animal.
+     */
+    private void getCurrentAnimalStats(Animal animal) {
+        if ((animal.isDead())) {
+            isAnimalAliveLabel.setText("Selected animal is dead.");
+        } else {
+            isAnimalAliveLabel.setText("Selected animal is alive.");
+        }
+        animalGenomeTitleLabel.setText("Genome:");
+        animalGenomeValueLabel.setText(String.valueOf(animal.getGenome()));
+        animalActiveGeneTitleLabel.setText("Active gene:");
+        animalActiveGeneValueLabel.setText(String.valueOf(animal.getGenome().getActiveGene()));
+        animalEnergyTitleLabel.setText("Remaining energy:");
+        animalEnergyValueLabel.setText(String.valueOf(animal.getRemainingEnergy()));
+        animalPlantsConsumedTitleLabel.setText("Plants consumed:");
+        animalPlantsConsumedValueLabel.setText(String.valueOf(animal.getConsumedPlants()));
+        animalChildrenNumberTitleLabel.setText("Number of children:");
+        animalChildrenNumberValueLabel.setText(String.valueOf(animal.getAmountOfChildren()));
+        animalAncestorsNumberTitleLabel.setText("Number of ancestors:");
+        // TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
+        animalAgeTitleLabel.setText("Age:");
+        animalAgeValueLabel.setText(String.valueOf(animal.getAge()));
+    }
+
 
     @Override
     public void mapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             drawMap();
-            getCurrentStats();
+            getCurrentSimulationStats();
         });
     }
 
+    /**
+     * Stops simulation. Disables Stop Button. Enables Resume Button. Maks map clickable (for selecting animal for tracking process)
+     */
     public void onStoppedClicked() {
         simulation.stop();
         stopButton.setDisable(true);
         resumeButton.setDisable(false);
+        makeAnimalsClickable();
     }
 
     public void onResumeClicked() {
         simulation.resume();
         resumeButton.setDisable(true);
         stopButton.setDisable(false);
+    }
+
+    /**
+     * Makes fields on the map containing animals clickable making them possible to select for tracking.
+     */
+    private void makeAnimalsClickable() {
+    }
+
+
+    public void trackClickedAnimal() {
     }
 }

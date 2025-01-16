@@ -12,7 +12,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation implements Runnable {
+// TODO: obsłużyć to że jak zamykamy okno to symulacja się kończy (tak to nadal działa)
+public class Simulation {
     private final Configuration config;
     private final BooleanProperty stopped = new SimpleBooleanProperty(false);
     private Stats stats;
@@ -112,7 +113,6 @@ public class Simulation implements Runnable {
     }
 
     public void resume() {
-        System.out.println("CLICKED");
         this.stopped.set(false);
     }
 
