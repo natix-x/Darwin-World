@@ -44,7 +44,8 @@
     </right>
     <bottom>
         <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Button fx:id="startButton" text="Start!"/>
+            <Button fx:id="resumeButton" text="Resume" onAction="#onResumeClicked"/>
+            <Button fx:id="stopButton" text="Stop" onAction="#onStoppedClicked"/>
         </HBox>
     </bottom>
 </BorderPane>

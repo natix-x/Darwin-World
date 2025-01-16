@@ -8,6 +8,7 @@ import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.statistics.Stats;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,6 +22,9 @@ public class SimulationPresenter implements MapChangeListener {
     // TODO: rozmiary komórek dostosowane do rozmiaru okna
     private static final double CELL_HEIGHT = 25.0;
     private static final double CELL_WIDTH = 25.0;
+
+    @FXML
+    private GridPane mapGrid;
 
     @FXML
     private Label numberOfAnimalsLabel;
@@ -44,13 +48,18 @@ public class SimulationPresenter implements MapChangeListener {
     private Label averageChildrenNumberLabel;
 
     @FXML
-    private Button startButton;
+    private Button resumeButton;
+
+    @FXML
+    private Button stopButton;
 
     private Simulation simulation;
     private WorldMap worldMap;
 
     @FXML
-    private GridPane mapGrid;
+    public void initialize() {
+        resumeButton.setDisable(true);
+    }
 
     public void setSimulationParameters(Simulation simulation) {
         this.simulation = simulation;
@@ -145,5 +154,17 @@ public class SimulationPresenter implements MapChangeListener {
             drawMap();
             getCurrentStats();
         });
+    }
+
+    public void onStoppedClicked() {
+        simulation.stop();
+        stopButton.setDisable(true);
+        resumeButton.setDisable(false);
+    }
+
+    public void onResumeClicked() {
+        simulation.resume();
+        resumeButton.setDisable(true);
+        stopButton.setDisable(false);
     }
 }

@@ -1,31 +1,25 @@
 package agh.ics.poproject.simulation;
 
-import agh.ics.poproject.inheritance.MutationMethod;
-import agh.ics.poproject.inheritance.Reproduction;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
-import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation  {
-    //to tak jakby nasz engine do backendu, tu powinny być wszystkie listy zwierząt itd
+public class Simulation implements Runnable {
     private final Configuration config;
+    private final BooleanProperty stopped = new SimpleBooleanProperty(false);
     private Stats stats;
-
-
     private GlobeMap worldMap;
     private ArrayList<Animal> aliveAnimals = new ArrayList<>();
     private ArrayList<Animal> deadAnimals = new ArrayList<>();
     private ArrayList<Plant> plants = new ArrayList<>();
-    private Reproduction reproduction;
-    private MutationMethod mutationMethod;
-
     private int dayCount = 0;
 
     public Simulation(Configuration config) {
@@ -66,26 +60,27 @@ public class Simulation  {
 
     // TODO: osbługa errorów
 
-    public void run()  {
+    public void run() {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);
         this.stats = new Stats(this);
         try {
             simulationDay.firstDayActivities();
-            dayCount ++;
+            dayCount++;
             System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
 
         while (!aliveAnimals.isEmpty()) {
+            if (isStopped()) {
+                continue;
+            }
             try {
                 simulationDay.everyDayActivities();
-                dayCount ++;
-                System.out.println(dayCount);
-                System.out.println("_________");
-
+                dayCount++;
                 // Wait for 1 second
+                System.out.println(dayCount);
                 Thread.sleep(1000);
             } catch (IncorrectPositionException e) {
                 throw new RuntimeException(e);
@@ -112,4 +107,16 @@ public class Simulation  {
         plants.remove(plant);
     }
 
+    public void stop() {
+        this.stopped.set(true);
+    }
+
+    public void resume() {
+        System.out.println("CLICKED");
+        this.stopped.set(false);
+    }
+
+    public boolean isStopped() {
+        return stopped.get();
+    }
 }

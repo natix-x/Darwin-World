@@ -26,7 +26,7 @@ public class GlobeMap implements WorldMap {
     private final UUID mapID = UUID.randomUUID();
 
     public GlobeMap(int width, int height) {
-        this.upperBound = new Vector2d(width - 1, height - 1);
+        this.upperBound = new Vector2d(width, height);
         this.rightEdge = upperBound.x();
         this.topEdge = upperBound.y();
     }
@@ -208,12 +208,5 @@ public class GlobeMap implements WorldMap {
 //                        .thenComparingInt(Animal::getAge))
 //                .toList();
 //    }
-
-
-
-
-
-
-
 }
 
