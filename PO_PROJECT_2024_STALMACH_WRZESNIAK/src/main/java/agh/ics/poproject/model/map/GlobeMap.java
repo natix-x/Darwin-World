@@ -193,20 +193,6 @@ public class GlobeMap implements WorldMap {
         return null;
     }
 
-    // TODO: implenetacja PlantGrowingMethod
-    public void growNewPlants(Simulation simulation) {
-        Configuration config = simulation.getConfig();
-        int numberOfPlants = config.dailyPlantGrowth();
-
-
-        // TODO:wywołanie metody growPlants z worldMap -> implementacja  jej
-    }
-
-    public int calculateArea() {
-        return rightEdge * topEdge;
-    }
-
-
 
 
 

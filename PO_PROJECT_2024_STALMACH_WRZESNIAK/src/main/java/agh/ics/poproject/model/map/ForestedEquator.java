@@ -2,7 +2,7 @@ package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
 
-// TODO: refaktoryzacja, przeniesienie części kodu do AbstractPlantGrowingMethod
+// TODO: refaktoryzacja
 public class ForestedEquator extends AbstractPlantGrowthMethod {
 
     int equatorBottom;
@@ -32,6 +32,10 @@ public class ForestedEquator extends AbstractPlantGrowthMethod {
         }
     }
 
+    /**
+     Calculate bounds of the equator.
+     Positions within calculated bounds will be most desired by plants in defined growth method.
+     */
     private void calculateEquatorBorders() {
         Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
         equatorBottom = (int) (upperBound.y() * 0.3);

@@ -6,7 +6,6 @@ import agh.ics.poproject.model.elements.Animal;
 import java.util.*;
 
 public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
-    private List<Animal> animals;
 
     public ZyciodajneTruchla(WorldMap worldMap) {
         super(worldMap);

@@ -4,8 +4,7 @@ import agh.ics.poproject.inheritance.*;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
-import agh.ics.poproject.model.map.GlobeMap;
-import agh.ics.poproject.model.map.IncorrectPositionException;
+import agh.ics.poproject.model.map.*;
 import agh.ics.poproject.util.Configuration;
 
 import java.util.*;
@@ -20,12 +19,14 @@ public class Day {
     private final Configuration config;
     private final GlobeMap worldMap;
     private Reproduction reproduction;
+    private PlantGrowthMethod plantGrowthMethod;
 
     public Day(Simulation simulation) {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
         setReproductionParameters();
+        setPlantGrowthParameters();
     }
 
     private void setReproductionParameters() {
@@ -40,12 +41,21 @@ public class Day {
         this.reproduction = new Reproduction(config.neededEnergyForReproduction(), mutationMethod);
     }
 
+    private void setPlantGrowthParameters() {
+        PlantGrowthMethodType plantGrowthMethodType = config.isForestedEquator() ? PlantGrowthMethodType.FORESTED_EQUATOR : PlantGrowthMethodType.ZYCIODAJNE_TRUCHLA;
+
+        this.plantGrowthMethod = switch (plantGrowthMethodType) {
+            case FORESTED_EQUATOR -> new ForestedEquator(worldMap);
+            case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap);
+        };
+    }
+
     /**
      * Generates all necessary elements for simulation launch
      */
     void firstDayActivities() throws IncorrectPositionException {
         generateInitialAnimals();  // TODO zastanowic sie czy powinno sie tu przekazywac cala symulacje
-        generateInitialPlants();
+        growNewPlants(config.initialPlants());
     }
 
     // TODO refaktoryzacja metod - wszystkie wywoływane z Day a później aktualizowane w GLobe (jak moveAndRotate)
@@ -58,7 +68,7 @@ public class Day {
         consumePlants();
         reproduceAnimals();
         ageAllAnimals();
-        //simulation.getWorldMap().growNewPlants(simulation);
+        growNewPlants(config.dailyPlantGrowth());
     }
 
 
@@ -160,16 +170,13 @@ public class Day {
         }
     }
 
-    public void generateInitialPlants() throws IncorrectPositionException {
-        Configuration config = simulation.getConfig();
-        int numberOfPlantsToGenerate = config.initialPlants();
-        Set<Vector2d> generatedPlantsRandomPositions = getRandomPositions(numberOfPlantsToGenerate);
-        for (Vector2d position : generatedPlantsRandomPositions) {
+    public void growNewPlants(int numberOfPlants) throws IncorrectPositionException {
+        Set<Vector2d> plantsPositions = plantGrowthMethod.generatePlantPositions(numberOfPlants);
+        for (Vector2d position : plantsPositions) {
             Plant plant = new Plant(position);
             simulation.addPlant(plant);
-            simulation.getWorldMap().placeWorldElement(plant);
+            worldMap.placeWorldElement(plant);
         }
-
     }
 
     /**

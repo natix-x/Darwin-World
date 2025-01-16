@@ -13,9 +13,12 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
         this.worldMap = worldMap;
     }
 
+    /**
+     Generates random plant positions according to Pareto Principle.
+     */
     @Override
     public Set<Vector2d> generatePlantPositions(int numberOfPlantsToGenerate) {
-        if (allPositionsOccupiedByPlants()) {
+        if (areAllPositionsOccupiedByPlants()) {
             return Collections.emptySet();
         }
 
@@ -28,7 +31,6 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
 
         while (uniquePositions.size() < numberOfPlantsToGenerate) {
 
-
             Vector2d position = calculatePositionWithParetoPrinciple();
             if (! canGrowAt(position)) {
                 continue;
@@ -38,6 +40,9 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
         return uniquePositions;
     }
 
+    /**
+     Defines which positions are more attractive (80% of likelihood) and which are less.
+     */
     public abstract Vector2d calculatePositionWithParetoPrinciple();
 
     @Override
@@ -47,13 +52,19 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
                 .noneMatch(element -> element.getPosition().equals(position));
     }
 
+    /**
+     Counts the number of positions from the map occupied by plants.
+     */
     private int numberOfPositionOccupiedByPlants() {
         return (int) worldMap.getElements().stream()
                 .filter(element -> element instanceof Plant)
                 .count();
     }
 
-    private boolean allPositionsOccupiedByPlants() {
+    /**
+     Removes element from world map, first checking if its type is animal or plant
+     */
+    private boolean areAllPositionsOccupiedByPlants() {
         return numberOfPositionOccupiedByPlants() >= worldMap.calculateCurrentSurface();
     }
 }
