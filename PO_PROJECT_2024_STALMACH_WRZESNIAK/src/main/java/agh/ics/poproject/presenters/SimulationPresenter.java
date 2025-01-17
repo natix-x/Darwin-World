@@ -83,6 +83,7 @@ public class SimulationPresenter implements MapChangeListener {
     private Simulation simulation;
     private WorldMap worldMap;
     private Animal trackedAnimal;
+    private Label selectedCellLabel;
 
     @FXML
     public void initialize() {
@@ -158,8 +159,12 @@ public class SimulationPresenter implements MapChangeListener {
                 cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> {
                     trackedAnimal = animal;
                     getCurrentAnimalStats(trackedAnimal);
+                    if (selectedCellLabel != null) {
+                        selectedCellLabel.getStyleClass().remove("cell-selected");
+                    }
+                    cellLabel.getStyleClass().add("cell-selected");
+                    selectedCellLabel = cellLabel;
                 });
-                cellLabel.disableProperty().unbind();
             }
             else if (objectAtPosition instanceof Plant) {
                 cellLabel.getStyleClass().add("cell-plant");
@@ -239,7 +244,10 @@ public class SimulationPresenter implements MapChangeListener {
      * Makes fields on the map containing animals clickable making them possible to select for tracking.
      */
     private void makeAnimalsClickable() {
+        for (Node node : mapGrid.getChildren()) {
+            if (node instanceof Label cellLabel) {
+                cellLabel.getStyleClass().remove("cell-selected");
+            }
+        }
     }
-
-
 }

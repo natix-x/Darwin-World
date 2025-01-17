@@ -22,6 +22,12 @@
     -fx-font-size: 12px;
 }
 
+.cell-selected {
+    -fx-background-color: yellow;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+}
+
 GridPane {
     -fx-alignment: center;
     -fx-padding: 10;
