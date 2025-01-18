@@ -4,23 +4,23 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
-import agh.ics.poproject.model.map.WorldMap;
 import agh.ics.poproject.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation implements Runnable {
-    //to tak jakby nasz engine do backendu, tu powinny być wszystkie listy zwierząt itd
+// TODO: obsłużyć to że jak zamykamy okno to symulacja się kończy (tak to nadal działa)
+public class Simulation {
     private final Configuration config;
+    private final BooleanProperty stopped = new SimpleBooleanProperty(false);
     private Stats stats;
-
-
     private GlobeMap worldMap;
-    private ArrayList<Animal> aliveAnimals;
-    private ArrayList<Animal> deadAnimals;
-    private ArrayList<Plant> plants;
+    private ArrayList<Animal> aliveAnimals = new ArrayList<>();
+    private ArrayList<Animal> deadAnimals = new ArrayList<>();
+    private ArrayList<Plant> plants = new ArrayList<>();
     private int dayCount = 0;
 
     public Simulation(Configuration config) {
@@ -29,9 +29,6 @@ public class Simulation implements Runnable {
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
         }
-        this.aliveAnimals = new ArrayList<>();
-        this.deadAnimals = new ArrayList<>();
-        this.plants = new ArrayList<>();
     }
 
     public List<Animal> getAliveAnimals() {
@@ -63,27 +60,28 @@ public class Simulation implements Runnable {
     }
 
     // TODO: osbługa errorów
-    @Override
-    public void run()  {
+
+    public void run() {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);
         this.stats = new Stats(this);
         try {
             simulationDay.firstDayActivities();
-            dayCount ++;
+            dayCount++;
             System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
         }
 
         while (!aliveAnimals.isEmpty()) {
+            if (isStopped()) {
+                continue;
+            }
             try {
                 simulationDay.everyDayActivities();
-                dayCount ++;
-                System.out.println(dayCount);
-                System.out.println("_________");
-
+                dayCount++;
                 // Wait for 1 second
+                System.out.println(dayCount);
                 Thread.sleep(1000);
             } catch (IncorrectPositionException e) {
                 throw new RuntimeException(e);
@@ -98,10 +96,6 @@ public class Simulation implements Runnable {
         aliveAnimals.add(animal);
     }
 
-    public void removeFromAliveAnimal(Animal animal) {
-        aliveAnimals.remove(animal);
-    }
-
     public void addDeadAnimal(Animal animal) {
         deadAnimals.add(animal);
     }
@@ -110,5 +104,19 @@ public class Simulation implements Runnable {
         plants.add(plant);
     }
 
+    public void removePlant(Plant plant) {
+        plants.remove(plant);
+    }
 
+    public void stop() {
+        this.stopped.set(true);
+    }
+
+    public void resume() {
+        this.stopped.set(false);
+    }
+
+    public boolean isStopped() {
+        return stopped.get();
+    }
 }

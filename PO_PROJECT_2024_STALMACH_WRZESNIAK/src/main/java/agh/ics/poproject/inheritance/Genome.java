@@ -26,7 +26,7 @@ public class Genome {
     }
 
     public ArrayList<Integer> getGenesSequence() {
-        return new ArrayList<>(genesSequence);
+        return genesSequence;
     }
 
     /**

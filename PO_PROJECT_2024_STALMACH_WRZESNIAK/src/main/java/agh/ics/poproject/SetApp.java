@@ -1,12 +1,12 @@
 package agh.ics.poproject;
 
-import agh.ics.poproject.presenters.ConfigurationPresenter;
 import agh.ics.poproject.presenters.SimulationPresenter;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -14,6 +14,14 @@ import java.io.IOException;
 
 
 public class SetApp extends Application {
+
+    @FXML
+    private Button startSimulationButton;
+
+    public void initialize() {
+        startSimulationButton.setDisable(true);
+    }
+
     //he he SetApp(Up) :))
     public void start(Stage primaryStage) throws IOException {
         //initialise application

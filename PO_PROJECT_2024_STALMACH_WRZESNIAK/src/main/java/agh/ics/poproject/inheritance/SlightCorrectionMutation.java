@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class SlightCorrectionMutation extends AbstractMutationMethod {
 
-    SlightCorrectionMutation(int minMutations, int maxMutations) {
+    public SlightCorrectionMutation(int minMutations, int maxMutations) {
         super(minMutations, maxMutations);
     }
 

@@ -21,14 +21,12 @@ public class Stats {
     }
 
     public int countPlantsNumber() {
-        System.out.println(simulation.getPlants().size());
         return simulation.getPlants().size();
     }
 
     // liczba wolnych pól to chyba liczba niezajętych przez zwierzaki? rośliny nie mają znaczenia? można dopytać
     public int countNumberOfPositionsUnoccupiedByAnyAnimal() {
-        Configuration config = simulation.getConfig();
-        int allPositions = config.mapHeight() * config.mapWidth();
+        int allPositions = simulation.getWorldMap().calculateCurrentSurface();
         int occupiedPositionsByAnimals = simulation.getWorldMap().getAnimals().size();
         return allPositions - occupiedPositionsByAnimals;
     }
@@ -80,12 +78,12 @@ public class Stats {
      * If there are no animals with children returns 0.
      *
      */
-    public int countAverageNumberOfChildrenForAliveAnimals() {
+    public double countAverageNumberOfChildrenForAliveAnimals() {
         List<Animal> aliveAnimals = simulation.getAliveAnimals();
         if (aliveAnimals == null || aliveAnimals.isEmpty()) {
             return 0;
         }
-        int childrenSum = 0;
+        double childrenSum = 0;
         for (Animal animal : aliveAnimals) {
             childrenSum += animal.getAmountOfChildren();
         }

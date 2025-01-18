@@ -7,6 +7,7 @@ import agh.ics.poproject.model.Vector2d;
 
 import java.util.UUID;
 
+// TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
 public class Animal implements WorldElement {
 
     private MapDirection direction;
@@ -65,19 +66,15 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        System.out.println(direction.getDirection());
         return direction.getDirection();
     }
 
     public boolean isDead() {
-        return age > remainingEnergy;
+        return remainingEnergy <= 0;
     }
 
     public void changeEnergy(int amount) {
         remainingEnergy += amount;
-        if (remainingEnergy <= 0) {
-            remainingEnergy = 0;
-        }
     }
 
     public void rotateAndMove(int steps, MoveValidator validator) {
@@ -89,8 +86,8 @@ public class Animal implements WorldElement {
         else {
             this.direction = direction.opposite();
         }
-        this.changeEnergy(-1);
         genome.activateNextGene();
+        remainingEnergy--;
     }
 
     public void reproduce(Animal reproductionPartner, int energyNeededForReproduce) {
@@ -98,12 +95,12 @@ public class Animal implements WorldElement {
     }
 
     public void eat(int energyPerPlant) {
-        this.consumedPlants += energyPerPlant;
-        // TODO: implement
+        this.remainingEnergy += energyPerPlant;
+        this.consumedPlants ++;
     }
 
     public void addAChild () {
-        this.amountOfChildren++;
+        this.amountOfChildren ++;
     }
 
     public void ageAnimal() {
