@@ -57,6 +57,15 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label animalAgeValueLabel;
 
+
+    @FXML
+    private Label animalPositionLabel;
+    @FXML
+    private Label animalPositionValueLabel;
+
+
+
+
     @FXML
     private GridPane mapGrid;
 
@@ -210,6 +219,11 @@ public class SimulationPresenter implements MapChangeListener {
         // TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
         animalAgeTitleLabel.setText("Age:");
         animalAgeValueLabel.setText(String.valueOf(animal.getAge()));
+
+
+        animalPositionLabel.setText("Animal position");
+        animalPositionValueLabel.setText(String.valueOf(animal.getPosition()));
+
     }
 
 

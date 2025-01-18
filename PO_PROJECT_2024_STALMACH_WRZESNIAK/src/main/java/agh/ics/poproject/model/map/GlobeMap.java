@@ -72,7 +72,7 @@ public class GlobeMap implements WorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !isBeyondTopOrBottomEdge(position) && (position.follows(LOWER_BOUND) && position.precedes(upperBound));
+        return !isBeyondTopOrBottomEdge(position);
     }
 
     @Override
@@ -80,20 +80,35 @@ public class GlobeMap implements WorldMap {
         return new Boundary(LOWER_BOUND, upperBound);
     }
 
+    /**
+     * Verifies if animal has surpassed the bottom or the upper map edge.
+     * @param  position animal's placement on the map
+     * @return true if animal is beyond the map, false is it's inside the map bounds
+     */
     private boolean isBeyondTopOrBottomEdge(Vector2d position) {
         return position.y() > topEdge || position.y() < BOTTOM_EDGE;
     }
 
+    /**
+     * Verifies if animal has surpassed the right map edge.
+     * @param position animal's placement on the map
+     * @return true if animal is beyond the map, false is it's inside the map bounds
+     */
     private boolean isBeyondRightEdge(Vector2d position) {
         return position.x() > rightEdge;
     }
 
+    /**
+     * Verifies if animal has surpassed the left map edge.
+     * @param position animal's placement on the map
+     * @return true if animal is beyond the map, false is it's inside the map bounds
+     */
     private boolean isBeyondLeftEdge(Vector2d position) {
         return position.x() < LEFT_EDGE;
     }
 
     /**
-     Moves the specified animal to a new position on the map.
+     Moves the specified animal to a new position on the map ensuring it stays within map bounds
      Throws an exception if the animal is not found at its current position.
      @param animal animal that will be moved
      */
@@ -101,19 +116,24 @@ public class GlobeMap implements WorldMap {
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         List<Animal> animalsAtSelectedPosition = animals.get(currentPosition);
-        if (animalsAtSelectedPosition !=null && animalsAtSelectedPosition.contains(animal)) {
+
+        if (animalsAtSelectedPosition != null && animalsAtSelectedPosition.contains(animal)) {
             animalsAtSelectedPosition.remove(animal);
             if (animalsAtSelectedPosition.isEmpty()) {
                 animals.remove(currentPosition);
             }
+
             animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
+
             if (isBeyondLeftEdge(animalNewPosition)) {
                 animalNewPosition = new Vector2d(rightEdge, animalNewPosition.y());
             } else if (isBeyondRightEdge(animalNewPosition)) {
                 animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.y());
             }
+
             animal.setPosition(animalNewPosition);
+
             animals.computeIfAbsent(animalNewPosition, k -> new ArrayList<>()).add(animal);
             mapChanged("Animal moved to the position " + animal.getPosition());
         } else {
