@@ -62,8 +62,9 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
         // Generate all valid neighboring positions.
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0) continue; // Skip the central position itself.
-
+                if (x == 0 && y == 0) {
+                    neighbouringPositions.add(position);
+                };
                 Vector2d newNeighbour = position.add(new Vector2d(x, y));
                 if (newNeighbour.follows(lowerBound) && newNeighbour.precedes(upperBound)) {
                     neighbouringPositions.add(newNeighbour);
@@ -95,7 +96,7 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
         Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Vector2d, Integer> entry = iterator.next();
-            if (entry.getValue() > 5) {
+            if (entry.getValue() > 8) {
                 iterator.remove();
             } else {
                 carcasses.put(entry.getKey(), entry.getValue() + 1);
