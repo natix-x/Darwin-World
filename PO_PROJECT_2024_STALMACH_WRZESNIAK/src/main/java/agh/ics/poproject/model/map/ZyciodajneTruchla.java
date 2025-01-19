@@ -57,12 +57,8 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
         }
     }
 
-    /**
-     * Generates positions for plant placement
-     * @return set of positions
-     */
-    private Set<Vector2d> generateFertilisedPositions() {
-        Set<Vector2d> fertilisedPositions = new HashSet<>();
+    @Override
+    public Vector2d calculatePositionWithParetoPrinciple() {
         Map.Entry<Vector2d, Integer> minEntry = null;
 
         //szukanie minimum bo Integer to priority trupa
@@ -80,32 +76,10 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
             //iterate over neighbouring positions with 80% chance of generating a fertilised position
             for (Vector2d neighbour : neighbouringPositions) {
                 if (random.nextDouble() <= 0.8) { // 80% chance
-                    fertilisedPositions.add(neighbour);
+                    return neighbour;
                 }
             }
         }
-        return fertilisedPositions;
-    }
-
-    /**
-     *
-     * @param numberOfPlantsToGenerate passed and set via map configuration
-     * @return
-     */
-    @Override
-    public Set<Vector2d> generatePlantPositions(int numberOfPlantsToGenerate) {
-        Set<Vector2d> positions = generateFertilisedPositions();
-
-        // if there are more plants to generate, keep generating
-        while (positions.size() < numberOfPlantsToGenerate) {
-            positions.addAll(generateFertilisedPositions());
-        }
-
-        return positions;
-    }
-
-    @Override
-    public Vector2d calculatePositionWithParetoPrinciple() {
         return null;
     }
 }
