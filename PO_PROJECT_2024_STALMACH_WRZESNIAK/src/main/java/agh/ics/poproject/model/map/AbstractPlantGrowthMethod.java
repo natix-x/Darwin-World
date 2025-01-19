@@ -15,6 +15,7 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
 
     /**
      Generates random plant positions according to Pareto Principle.
+     @param numberOfPlantsToGenerate passed and set via map configuration
      */
     @Override
     public Set<Vector2d> generatePlantPositions(int numberOfPlantsToGenerate) {

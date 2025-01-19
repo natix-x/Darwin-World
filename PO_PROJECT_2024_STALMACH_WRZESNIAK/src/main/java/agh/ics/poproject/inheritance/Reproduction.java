@@ -16,7 +16,10 @@ public class Reproduction {
     }
 
     /**
-    Checks if two animals have enough energy to reproduce based on parameters set in configuration
+     * Checks if two animals have enough energy to reproduce based on parameters set in configuration
+     * @param animal1 first potential parent
+     * @param animal2 second potential parent
+     * @return true if animals can reproduce, false if they cannot
      */
     public boolean canReproduce(Animal animal1, Animal animal2) {
         return animal1.getRemainingEnergy() >= energyNeededToReproduce && animal2.getRemainingEnergy() >= energyNeededToReproduce;
@@ -30,7 +33,6 @@ public class Reproduction {
      * @param animal2 second parent
      * @return Genome of the baby animal
      */
-
     public Genome shuffleGenome(Animal animal1, Animal animal2) {
         ArrayList<Integer> babyGenomeList = new ArrayList<>();
 
@@ -62,7 +64,6 @@ public class Reproduction {
     Animals reproduce, their energy level goes down and genes are shuffled.
     @return Animal object with inherited genes and initial energy on the parents' position
      */
-    // TODO: dodać mutacje
     public Animal reproduce (Animal animal1, Animal animal2){
         if (canReproduce(animal1, animal2)) {
             animal1.changeEnergy(-energyNeededToReproduce);

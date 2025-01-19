@@ -3,9 +3,11 @@ package agh.ics.poproject.statistics;
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.simulation.Simulation;
-import agh.ics.poproject.util.Configuration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Stats {
 
@@ -33,9 +35,29 @@ public class Stats {
 
     // ile??
     public Genome getMostPopularGenotype() {
-        // TODO: implement
-        return null;
+        ArrayList<Animal> allAnimals = simulation.getAliveAnimals();
+
+        Map<Genome, Integer> genotypeCounts = new HashMap<>();
+        for (Animal animal : allAnimals) {
+            Genome genotype = animal.getGenome();
+            genotypeCounts.put(genotype, genotypeCounts.getOrDefault(genotype, 0) + 1);
+        }
+
+        Genome mostPopularGenotype = null;
+        int maxCount = 0;
+        for (Map.Entry<Genome, Integer> entry : genotypeCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostPopularGenotype = entry.getKey();
+            }
+        }
+        return mostPopularGenotype;
     }
+
+
+
+
+
 
     // TODO: refaktoryzacja powtarzającego się kodu
     /**

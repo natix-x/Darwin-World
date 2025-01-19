@@ -19,6 +19,9 @@ public class GlobeMap implements WorldMap {
     private final int rightEdge;
     private final int topEdge;
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
+
+    private Map<Vector2d, Integer> carcasses = new HashMap<>();
+
     private final Map<Vector2d, Plant> plants = new HashMap<>();
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID mapID = UUID.randomUUID();
@@ -30,7 +33,7 @@ public class GlobeMap implements WorldMap {
     }
 
     @Override
-    public List<WorldElement> getElements() {;
+    public List<WorldElement> getElements() {
         List<WorldElement> elements = new ArrayList<>();
         animals.values().forEach(elements::addAll);
         elements.addAll(plants.values());
@@ -49,6 +52,13 @@ public class GlobeMap implements WorldMap {
     public UUID getId() {
         return mapID;
     }
+
+    @Override
+    public Map<Vector2d, Integer> getCarcasses() {
+        return carcasses;
+    }
+
+
 
     @Override
     public void subscribe(MapChangeListener listener) {
@@ -80,31 +90,31 @@ public class GlobeMap implements WorldMap {
         return new Boundary(LOWER_BOUND, upperBound);
     }
 
-    /**
-     * Verifies if animal has surpassed the bottom or the upper map edge.
-     * @param  position animal's placement on the map
-     * @return true if animal is beyond the map, false is it's inside the map bounds
-     */
+
     private boolean isBeyondTopOrBottomEdge(Vector2d position) {
         return position.y() > topEdge || position.y() < BOTTOM_EDGE;
     }
 
-    /**
-     * Verifies if animal has surpassed the right map edge.
-     * @param position animal's placement on the map
-     * @return true if animal is beyond the map, false is it's inside the map bounds
-     */
     private boolean isBeyondRightEdge(Vector2d position) {
         return position.x() > rightEdge;
     }
 
-    /**
-     * Verifies if animal has surpassed the left map edge.
-     * @param position animal's placement on the map
-     * @return true if animal is beyond the map, false is it's inside the map bounds
-     */
     private boolean isBeyondLeftEdge(Vector2d position) {
         return position.x() < LEFT_EDGE;
+    }
+
+    /**
+     * Assigns position of an animal to move beyond left and right edge
+     * @param newPosition
+     * @return
+     */
+    private Vector2d assignNewXPosition(Vector2d newPosition) {
+        if (isBeyondLeftEdge(newPosition)) {
+            newPosition = new Vector2d(rightEdge, newPosition.y());
+        } else if (isBeyondRightEdge(newPosition)) {
+            newPosition = new Vector2d(LEFT_EDGE, newPosition.y());
+        };
+        return newPosition;
     }
 
     /**
@@ -126,15 +136,11 @@ public class GlobeMap implements WorldMap {
             animal.rotateAndMove(animal.getGenome().getActiveGene(), this);
             Vector2d animalNewPosition = animal.getPosition();
 
-            if (isBeyondLeftEdge(animalNewPosition)) {
-                animalNewPosition = new Vector2d(rightEdge, animalNewPosition.y());
-            } else if (isBeyondRightEdge(animalNewPosition)) {
-                animalNewPosition = new Vector2d(LEFT_EDGE, animalNewPosition.y());
-            }
+            animalNewPosition = assignNewXPosition(animalNewPosition);
 
             animal.setPosition(animalNewPosition);
 
-            animals.computeIfAbsent(animalNewPosition, k -> new ArrayList<>()).add(animal);
+            animals.computeIfAbsent(animalNewPosition, _ -> new ArrayList<>()).add(animal);
             mapChanged("Animal moved to the position " + animal.getPosition());
         } else {
             throw new IllegalArgumentException("Animal not found at position " + currentPosition);
@@ -154,7 +160,7 @@ public class GlobeMap implements WorldMap {
 
     private void placeAnimal(Vector2d position, Animal animal) throws IncorrectPositionException {
         if (canMoveTo(position)) {
-            animals.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
+            animals.computeIfAbsent(position, _ -> new ArrayList<>()).add(animal);
             mapChanged("Animal placed at position " + position);
         }
         else

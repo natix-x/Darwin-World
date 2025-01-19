@@ -73,10 +73,19 @@ public class Animal implements WorldElement {
         return remainingEnergy <= 0;
     }
 
+    /**
+     * Changes animal energy by a set amount
+     * @param amount added or subtracted amount of energy
+     */
     public void changeEnergy(int amount) {
         remainingEnergy += amount;
     }
 
+    /**
+     * Moves and rotates animal on the map
+     * @param steps rotates animal around itself
+     * @param validator passed validator checks if a particular move is allowed
+     */
     public void rotateAndMove(int steps, MoveValidator validator) {
         this.direction = direction.rotate(steps);
         Vector2d newPosition = this.position.add(this.direction.toUnitVector());
@@ -90,10 +99,10 @@ public class Animal implements WorldElement {
         remainingEnergy--;
     }
 
-    public void reproduce(Animal reproductionPartner, int energyNeededForReproduce) {
-        // TODO: implement
-    }
-
+    /**
+     * Provides animal with energy when a plant is eaten
+     * @param energyPerPlant passed from map configuration, will be added to animal's energy
+     */
     public void eat(int energyPerPlant) {
         this.remainingEnergy += energyPerPlant;
         this.consumedPlants ++;

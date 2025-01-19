@@ -33,7 +33,6 @@ public class ForestedEquator extends AbstractPlantGrowthMethod {
     }
 
     /**
-     Calculate bounds of the equator.
      Positions within calculated bounds will be most desired by plants in defined growth method.
      */
     private void calculateEquatorBorders() {
