@@ -33,7 +33,6 @@ public class Stats {
         return allPositions - occupiedPositionsByAnimals;
     }
 
-    // ile??
     public Genome getMostPopularGenotype() {
         ArrayList<Animal> allAnimals = simulation.getAliveAnimals();
 
@@ -53,11 +52,6 @@ public class Stats {
         }
         return mostPopularGenotype;
     }
-
-
-
-
-
 
     // TODO: refaktoryzacja powtarzającego się kodu
     /**

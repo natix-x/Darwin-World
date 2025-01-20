@@ -9,20 +9,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.UUID;
 
 public class SaveStats {
 
-    private Stats stats;
-    private UUID simulationId;
-    private Path savePath;
+    private final Stats stats;
+    private final Path savePath;
 
     public SaveStats(Stats stats, UUID simulationId) throws IOException {
         this.stats = stats;
-        this.simulationId = simulationId;
         Files.createDirectories(Paths.get("simulations_stats/" + simulationId + "/"));
-        savePath = Paths.get("simulations_stats/" + simulationId + "/" + "simulation_stats.csv");
-
+        savePath = Paths.get("simulations_stats/" + simulationId + "/" + simulationId + "_stats.csv");
+        if (!Files.exists(savePath)) {
+            try (FileWriter writer = new FileWriter(savePath.toFile(), true)) {
+                String headers = String.join(",", Arrays.asList(
+                        "Animal Count",
+                        "Plant Count",
+                        "Unoccupied Positions",
+                        "Most Popular Genotype",
+                        "Average Energy",
+                        "Average Life Span",
+                        "Average Number of Children"
+                ));
+                writer.write(headers + "\n");
+            }
+        }
     }
     public void saveDayStats() throws IOException {
 
@@ -34,9 +46,9 @@ public class SaveStats {
                     String.valueOf(stats.getMostPopularGenotype()),
                     String.valueOf(stats.countAverageEnergyOfAliveAnimals()),
                     String.valueOf(stats.countAverageAnimalLifeSpan()),
-                    String.valueOf(stats.countAverageNumberOfChildrenForAliveAnimals())
+                    String.format(Locale.US, "%.2f", stats.countAverageNumberOfChildrenForAliveAnimals())
             };
-            writer.write(String.join(",", Arrays.toString(values) + "\n"));
+            writer.write(String.join(",", values) + "\n");
 
         } catch (IOException e) {
             e.printStackTrace();

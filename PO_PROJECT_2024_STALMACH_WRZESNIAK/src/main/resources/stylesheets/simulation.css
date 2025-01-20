@@ -8,12 +8,43 @@
 .cell-plant {
     -fx-background-color: green;
     -fx-border-color: black;
+    -fx-text-fill: black;
 }
 
-.cell-animal {
+.cell-energy-lowest {
     -fx-background-color: white;
     -fx-border-color: black;
     -fx-font-size: 12px;
+    -fx-text-fill: #8B0000;
+}
+
+.cell-energy-low {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+    -fx-text-fill: #FF4500;
+}
+
+.cell-energy-medium {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+    -fx-text-fill: #FFA500;
+}
+
+.cell-energy-high {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+    -fx-text-fill: #32CD32;
+}
+
+/* Energia - najwyższa */
+.cell-energy-highest {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-font-size: 12px;
+    -fx-text-fill: #006400;
 }
 
 .cell-tracked-animal {

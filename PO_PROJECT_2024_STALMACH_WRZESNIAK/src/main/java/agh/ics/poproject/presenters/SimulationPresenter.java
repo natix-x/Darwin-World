@@ -1,11 +1,11 @@
 package agh.ics.poproject.presenters;
 
-import agh.ics.poproject.model.elements.Animal;
-import agh.ics.poproject.model.elements.Plant;
-import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
+import agh.ics.poproject.model.elements.Animal;
+import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.simulation.statistics.Stats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,10 +13,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.input.MouseEvent;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -61,8 +61,6 @@ public class SimulationPresenter implements MapChangeListener {
     private Label animalPositionLabel;
     @FXML
     private Label animalPositionValueLabel;
-
-
 
 
     @FXML
@@ -117,7 +115,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     /**
-    Clears space in the simulation window for printing the map
+     * Clears space in the simulation window for printing the map
      */
     private void clearMapGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
@@ -128,8 +126,8 @@ public class SimulationPresenter implements MapChangeListener {
     private void createNewMapGrid(Vector2d lowerBound, Vector2d upperBound) {
         clearMapGrid();
         mapGrid.alignmentProperty();
-        int width = Math.abs(lowerBound.x() - upperBound.x())-1;
-        int height = Math.abs(lowerBound.y() - upperBound.y())-1;
+        int width = Math.abs(lowerBound.x() - upperBound.x()) - 1;
+        int height = Math.abs(lowerBound.y() - upperBound.y()) - 1;
 
         for (int column = 0; column < width; column++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(CELL_WIDTH));
@@ -151,6 +149,7 @@ public class SimulationPresenter implements MapChangeListener {
             }
         }
     }
+
     private Label createCellLabel(Vector2d position) {
         Label cellLabel = new Label();
         cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
@@ -162,7 +161,7 @@ public class SimulationPresenter implements MapChangeListener {
                 if (animal.equals(trackedAnimal)) {
                     cellLabel.getStyleClass().add("cell-tracked-animal");
                 } else {
-                cellLabel.getStyleClass().add("cell-animal");
+                    highlightAnimalEnergy(animal, cellLabel);
                 }
                 cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> {
                     trackedAnimal = animal;
@@ -173,8 +172,7 @@ public class SimulationPresenter implements MapChangeListener {
                     cellLabel.getStyleClass().add("cell-selected");
                     selectedCellLabel = cellLabel;
                 });
-            }
-            else if (objectAtPosition instanceof Plant) {
+            } else if (objectAtPosition instanceof Plant) {
                 cellLabel.getStyleClass().add("cell-plant");
             }
             cellLabel.setText(objectAtPosition.toString());
@@ -192,7 +190,7 @@ public class SimulationPresenter implements MapChangeListener {
         mostPopularGenomesLabel.setText(String.valueOf(stats.getMostPopularGenotype()));
         averageAnimalEnergyLabel.setText(String.valueOf(stats.countAverageEnergyOfAliveAnimals()));
         averageAnimalLifespanLabel.setText(String.valueOf(stats.countAverageAnimalLifeSpan()));
-        averageChildrenNumberLabel.setText(String.valueOf(stats.countAverageNumberOfChildrenForAliveAnimals()));
+        averageChildrenNumberLabel.setText(String.format("%.2f", stats.countAverageNumberOfChildrenForAliveAnimals()));
     }
 
     /**
@@ -263,4 +261,20 @@ public class SimulationPresenter implements MapChangeListener {
             }
         }
     }
+
+    private void highlightAnimalEnergy(Animal animal, Label cellLabel) {
+        Stats stats = simulation.getStats();
+        if (animal.getRemainingEnergy() < 10) {
+            cellLabel.getStyleClass().add("cell-energy-lowest");
+        } else if (animal.getRemainingEnergy() < 30) {
+            cellLabel.getStyleClass().add("cell-energy-low");
+        } else if (animal.getRemainingEnergy() < 50) {
+            cellLabel.getStyleClass().add("cell-energy-medium");
+        } else if (animal.getRemainingEnergy() < 70) {
+            cellLabel.getStyleClass().add("cell-energy-high");
+        } else {
+            cellLabel.getStyleClass().add("cell-energy-highest");
+        }
+    }
+
 }
