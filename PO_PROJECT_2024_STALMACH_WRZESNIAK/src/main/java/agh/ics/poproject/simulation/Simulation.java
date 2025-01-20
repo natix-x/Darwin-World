@@ -7,12 +7,15 @@ import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.simulation.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.SaveStats;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 // TODO: obsłużyć to że jak zamykamy okno to symulacja się kończy (tak to nadal działa)
 public class Simulation {
@@ -23,14 +26,20 @@ public class Simulation {
     private ArrayList<Animal> aliveAnimals = new ArrayList<>();
     private ArrayList<Animal> deadAnimals = new ArrayList<>();
     private ArrayList<Plant> plants = new ArrayList<>();
+    private final UUID simulationId = UUID.randomUUID();
+    private SaveStats saveStats;
 
     private int dayCount = 0;
 
-    public Simulation(Configuration config) {
+    public Simulation(Configuration config) throws IOException {
         this.config = config;
 
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
+        }
+        this.stats = new Stats(this);
+        if (config.saveStats()) {
+            saveStats = new SaveStats(stats, simulationId);
         }
     }
 
@@ -67,7 +76,6 @@ public class Simulation {
     public void run() {
         System.out.println("Simulation started");
         Day simulationDay = new Day(this);
-        this.stats = new Stats(this);
         try {
             simulationDay.firstDayActivities();
             dayCount++;
@@ -82,6 +90,9 @@ public class Simulation {
             }
             try {
                 simulationDay.everyDayActivities();
+                if (saveStats != null) {
+                    saveStats.saveDayStats();
+                }
                 dayCount++;
                 // Wait for 1 second
                 System.out.println(dayCount);
@@ -91,6 +102,8 @@ public class Simulation {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Restore interrupt status
                 throw new RuntimeException("Thread was interrupted", e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
