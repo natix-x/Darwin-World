@@ -6,9 +6,7 @@ import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.WorldElement;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The interface responsible for interacting with the map of the world.
@@ -17,6 +15,10 @@ import java.util.UUID;
  * @author apohllo, idzik
  */
 public interface WorldMap extends MoveValidator {
+
+    Map<Vector2d, Integer> carcasses = new HashMap<>();
+
+    Map<Vector2d, Integer> getCarcasses();
 
     void subscribe(MapChangeListener listener);
 
@@ -91,4 +93,5 @@ public interface WorldMap extends MoveValidator {
         int height = upperBound.y() - lowerBound.y() + 1;
         return width * height;
     }
+
 }

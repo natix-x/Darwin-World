@@ -6,5 +6,4 @@ public record Boundary(
         Vector2d LowerBound,
         Vector2d UpperBound
 ) {
-
 }

@@ -59,6 +59,9 @@
             <Label fx:id="animalAncestorsNumberValueLabel"/>
             <Label fx:id="animalAgeTitleLabel"/>
             <Label fx:id="animalAgeValueLabel"/>
+
+            <Label fx:id="animalPositionLabel"/>
+            <Label fx:id="animalPositionValueLabel"/>
     </VBox>
     </left>
     <bottom>

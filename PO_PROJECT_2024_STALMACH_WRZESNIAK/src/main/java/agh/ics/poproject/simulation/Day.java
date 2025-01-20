@@ -133,6 +133,8 @@ public class Day {
                                 .thenComparingInt(Animal::getAge))
                         .orElse(null);
 
+
+
                 if (highestPriorityAnimal != null) {
                     highestPriorityAnimal.eat(energyPerPlant);
                     worldMap.getPlants().remove(plantPosition);
@@ -155,6 +157,11 @@ public class Day {
                 simulation.addDeadAnimal(animal);
                 worldMap.removeElement(animal, animal.getPosition());
             }
+        }
+
+        //TODO: brzydko fuj
+        if (plantGrowthMethod instanceof ZyciodajneTruchla) {
+            ((ZyciodajneTruchla) plantGrowthMethod).changeCarcassPriority(worldMap.getCarcasses());
         }
     }
 

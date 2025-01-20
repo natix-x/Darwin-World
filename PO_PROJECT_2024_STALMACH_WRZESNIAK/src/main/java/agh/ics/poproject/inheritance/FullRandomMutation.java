@@ -10,7 +10,7 @@ public class FullRandomMutation extends AbstractMutationMethod {
 
     /**
      Mutates the gene.
-     Changes gene to randomly selected different gene (number from 0 to 7).
+     Changes gene to randomly select and mutate a gene (number from 0 to 7).
      @return mutated gene
      */
     @Override

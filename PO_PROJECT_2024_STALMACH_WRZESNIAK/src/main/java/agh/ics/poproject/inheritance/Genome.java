@@ -7,7 +7,6 @@ import java.util.Random;
 public class Genome {
 
     private final ArrayList<Integer> genesSequence;
-
     private int activeGene;
 
     // for generated animals
@@ -30,7 +29,7 @@ public class Genome {
     }
 
     /**
-     Activates random gene in generated or born animals' genome.
+     Activates random gene in generated or born animal's genome.
      */
     private int activateRandomGene() {
         Random random = new Random();
@@ -56,5 +55,11 @@ public class Genome {
     public void activateNextGene() {
         activeGene = (activeGene + 1) % genesSequence.size();
     }
+
+    public String toString() {
+        return genesSequence.toString();
+    }
+
+
 
 }

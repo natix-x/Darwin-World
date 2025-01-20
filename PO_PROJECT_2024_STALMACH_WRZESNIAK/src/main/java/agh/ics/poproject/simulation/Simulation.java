@@ -1,5 +1,6 @@
 package agh.ics.poproject.simulation;
 
+import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
@@ -11,6 +12,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 // TODO: obsłużyć to że jak zamykamy okno to symulacja się kończy (tak to nadal działa)
 public class Simulation {
@@ -23,15 +25,18 @@ public class Simulation {
     private ArrayList<Plant> plants = new ArrayList<>();
     private int dayCount = 0;
 
+    private Map<Vector2d, Integer> carcasses;
+
     public Simulation(Configuration config) {
         this.config = config;
 
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
+            this.carcasses = worldMap.getCarcasses();
         }
     }
 
-    public List<Animal> getAliveAnimals() {
+    public ArrayList<Animal> getAliveAnimals() {
         return aliveAnimals;
     }
 
@@ -98,6 +103,7 @@ public class Simulation {
 
     public void addDeadAnimal(Animal animal) {
         deadAnimals.add(animal);
+        carcasses.put(animal.getPosition(), 1);
     }
 
     public void addPlant(Plant plant) {
