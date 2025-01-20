@@ -12,8 +12,8 @@ public class LoadConfigurationFromFile {
             if (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] configSettings = line.split(",");
-                if (configSettings.length != 20) {
-                    throw new RuntimeException("Invalid configuration file. Expected 20 fields.");
+                if (configSettings.length != 19) {
+                    throw new RuntimeException("Invalid configuration file. Expected 19 fields.");
                 }
 
                 int mapHeight = Integer.parseInt(configSettings[0].trim());
@@ -28,23 +28,19 @@ public class LoadConfigurationFromFile {
                 int minMutations = Integer.parseInt(configSettings[9].trim());
                 int maxMutations = Integer.parseInt(configSettings[10].trim());
                 int genomeLength = Integer.parseInt(configSettings[11].trim());
-
                 boolean isGlobeMap = Boolean.parseBoolean(configSettings[12].trim());
                 boolean isForestedEquator = Boolean.parseBoolean(configSettings[13].trim());
                 boolean isZyciodajneTruchla = Boolean.parseBoolean(configSettings[14].trim());
                 boolean isFullRandomMutation = Boolean.parseBoolean(configSettings[15].trim());
                 boolean isSlightCorrectionMutation = Boolean.parseBoolean(configSettings[16].trim());
                 boolean isFullPredestination = Boolean.parseBoolean(configSettings[17].trim());
-
-                boolean saveConfig = Boolean.parseBoolean(configSettings[18].trim());
-                boolean saveStats = Boolean.parseBoolean(configSettings[19].trim());
+                boolean saveStats = Boolean.parseBoolean(configSettings[18].trim());
 
                 return new Configuration(
                         mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                         initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                         minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator,
-                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination,
-                        saveConfig, saveStats
+                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
                 );
             }
         } catch (IOException e) {

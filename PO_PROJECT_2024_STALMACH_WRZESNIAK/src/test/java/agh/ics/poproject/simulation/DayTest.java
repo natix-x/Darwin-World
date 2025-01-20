@@ -29,7 +29,7 @@ class DayTest {
                                                 true,
                                                 false,
                                                 true,
-                                                true);
+            true);
     Simulation simulation = new Simulation(config);
     Day day = new Day(simulation);
 

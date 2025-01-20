@@ -1,6 +1,5 @@
 package agh.ics.poproject;
 
-import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.presenters.SimulationPresenter;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.util.Configuration;
@@ -24,7 +23,7 @@ import java.util.List;
 
 public class SetApp extends Application {
 
-    private LoadConfigurationFromFile loadConfiguration = new LoadConfigurationFromFile();
+    private final LoadConfigurationFromFile loadConfiguration = new LoadConfigurationFromFile();
 
     @FXML
     private Button startSimulationButton;

@@ -3,11 +3,16 @@ package agh.ics.poproject.presenters;
 import agh.ics.poproject.SetApp;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.SaveConfigurationToFile;
 import agh.ics.poproject.util.SimulationEngine;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +31,6 @@ public class ConfigurationPresenter {
     private RadioButton fullPredestinationButton;
     @FXML
     private RadioButton globeMapButton;
-    @FXML
-    private RadioButton noSaveConfigButton;
-    @FXML
-    private RadioButton yesSaveConfigButton;
     @FXML
     private RadioButton slightCorrectionButton;
     @FXML
@@ -94,15 +95,27 @@ public class ConfigurationPresenter {
         ToggleGroup animalBehaviourVariant = new ToggleGroup();  // in case any other variant adds
         fullPredestinationButton.setToggleGroup(animalBehaviourVariant);
 
-        ToggleGroup saveConfig = new ToggleGroup();
-        yesSaveConfigButton.setToggleGroup(saveConfig);
-        noSaveConfigButton.setToggleGroup(saveConfig);
+        ToggleGroup saveStats = new ToggleGroup();
+        yesSaveStatsButton.setToggleGroup(saveStats);
+        noSaveStatsButton.setToggleGroup(saveStats);
+
     }
 
 
     @FXML
     public void startSimulationOnClick() throws IOException { //save config params
         // Fetch values from the UI
+        Configuration newConfiguration = getConfigurationFromUser();
+
+        this.configurationList.add(newConfiguration);
+
+        System.out.println("Simulation config:");
+        System.out.println(newConfiguration);
+
+        startSimulation();
+    }
+
+    private Configuration getConfigurationFromUser() {
         int mapHeight = mapHeightSpinner.getValue();
         int mapWidth = mapWidthSpinner.getValue();
         int initialPlants = initialNumberOfPlantsSpinner.getValue();
@@ -122,22 +135,14 @@ public class ConfigurationPresenter {
         boolean isFullRandomMutation = fullRandomButton.isSelected();
         boolean isSlightCorrectionMutation = slightCorrectionButton.isSelected();
         boolean isFullPredestination = fullPredestinationButton.isSelected();
-        boolean saveConfig = yesSaveConfigButton.isSelected();
         boolean saveStats = yesSaveStatsButton.isSelected();
 
-        Configuration configuration = new Configuration(
+        return new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
-                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig, saveStats
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
         );
-
-        this.configurationList.add(configuration);
-
-        System.out.println("Simulation config:");
-        System.out.println(configuration);
-
-        startSimulation();
     }
 
     /**
@@ -154,8 +159,18 @@ public class ConfigurationPresenter {
 
             SimulationPresenter presenter = SetApp.startSimulationStage();
             presenter.setSimulationParameters(simulation);
-
         }
     }
 
+    public void saveConfigOnClick(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save configuration");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Save your file (*.csv)", "*.csv*"));
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            SaveConfigurationToFile saveConfig = new SaveConfigurationToFile();
+            saveConfig.saveConfig(getConfigurationFromUser(), file);
+        }
+
+    }
 }

@@ -18,7 +18,7 @@ public record Configuration( int mapHeight,
                              boolean isFullRandomMutation,
                              boolean isSlightCorrectionMutation,
                              boolean isFullPredestination,
-                             boolean saveConfig,
                              boolean saveStats
-) { }
+)
+{ }
 
