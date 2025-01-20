@@ -46,7 +46,7 @@ public class Carcasses {
         Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Vector2d, Integer> entry = iterator.next();
-            if (entry.getValue() > numberOfDaysAfterCarcassIsRemoved) {
+            if (entry.getValue() >= numberOfDaysAfterCarcassIsRemoved) {
                 iterator.remove();
             } else {
                 carcasses.put(entry.getKey(), entry.getValue() + 1);

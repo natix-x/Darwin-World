@@ -12,15 +12,13 @@ public record Configuration( int mapHeight,
                              int minMutations,
                              int maxMutations,
                              int genomeLength,
-
                              boolean isGlobeMap,
                              boolean isForestedEquator,
                              boolean isZyciodajneTruchla,
                              boolean isFullRandomMutation,
                              boolean isSlightCorrectionMutation,
                              boolean isFullPredestination,
-                             boolean saveConfig
-
-) {
-}
+                             boolean saveConfig,
+                             boolean saveStats
+) { }
 

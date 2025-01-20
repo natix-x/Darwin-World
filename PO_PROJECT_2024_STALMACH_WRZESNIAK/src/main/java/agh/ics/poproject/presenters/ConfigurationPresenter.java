@@ -14,70 +14,54 @@ import java.util.List;
 
 public class ConfigurationPresenter {
 
-    ArrayList<Configuration> configurationList = new ArrayList<>();
-
+    @FXML
+    private RadioButton yesSaveStatsButton;
+    @FXML
+    public RadioButton noSaveStatsButton;
     @FXML
     public Button startSimulationButton;
-
     @FXML
     private Spinner<Integer> lengthOfGenome;
-
     @FXML
     private RadioButton fullPredestinationButton;
-
     @FXML
     private RadioButton globeMapButton;
-
     @FXML
     private RadioButton noSaveConfigButton;
-
     @FXML
     private RadioButton yesSaveConfigButton;
-
     @FXML
     private RadioButton slightCorrectionButton;
-
     @FXML
     private RadioButton fullRandomButton;
-
     @FXML
     private Spinner<Integer> maxNumberOfMutationsSpinner;
-
     @FXML
     private Spinner<Integer> minNumberOfMutationsSpinner;
-
     @FXML
     private Spinner<Integer> reproductionEnergyLostSpinner;
-
     @FXML
     private Spinner<Integer> neededEnergyForReproductionSpinner;
-
     @FXML
     private Spinner<Integer> initialEnergyOfAnimalsSpinner;
-
     @FXML
     private Spinner<Integer> initialNumberOfAnimalsSpinner;
-
     @FXML
     private Spinner<Integer> initialNumberOfPlantsSpinner;
-
     @FXML
     private Spinner<Integer> energyPerPlantsSpinner;
-
     @FXML
     private Spinner<Integer> dailyPlantGrowthSpinner;
-
     @FXML
     private RadioButton forestedEquatorButton;
-
     @FXML
     private RadioButton zyciodajneTruchlaButton;
-
     @FXML
     private Spinner<Integer> mapWidthSpinner;
-
     @FXML
     private Spinner<Integer> mapHeightSpinner;
+
+    ArrayList<Configuration> configurationList = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -139,15 +123,16 @@ public class ConfigurationPresenter {
         boolean isSlightCorrectionMutation = slightCorrectionButton.isSelected();
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveConfig = yesSaveConfigButton.isSelected();
+        boolean saveStats = yesSaveStatsButton.isSelected();
 
         Configuration configuration = new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
-                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig, saveStats
         );
 
-        this.configurationList.add(configuration); //dodanie do listy
+        this.configurationList.add(configuration);
 
         System.out.println("Simulation config:");
         System.out.println(configuration);
@@ -159,17 +144,16 @@ public class ConfigurationPresenter {
     Sets up the UI and the engine.
     Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
      */
-    //TODO: try catch do tego asyncha coś tu pewnie, zastanowić się bo race condition?
     public void startSimulation() throws IOException {
         if (!configurationList.isEmpty()) {
             Configuration configuration = configurationList.getLast();
-            Simulation simulation = new Simulation(configuration); //symulacja teraz ma wszystkie param config
+            Simulation simulation = new Simulation(configuration);
 
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
             SimulationPresenter presenter = SetApp.startSimulationStage();
-            presenter.setSimulationParameters(simulation); //wyswietlamy okienko symulacji
+            presenter.setSimulationParameters(simulation);
 
         }
     }
