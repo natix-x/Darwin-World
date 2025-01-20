@@ -16,9 +16,9 @@ import java.util.*;
  */
 public interface WorldMap extends MoveValidator {
 
-    Map<Vector2d, Integer> carcasses = new HashMap<>();
+    //Map<Vector2d, Integer> carcasses = new HashMap<>();
 
-    Map<Vector2d, Integer> getCarcasses();
+    //Map<Vector2d, Integer> getCarcasses();
 
     void subscribe(MapChangeListener listener);
 

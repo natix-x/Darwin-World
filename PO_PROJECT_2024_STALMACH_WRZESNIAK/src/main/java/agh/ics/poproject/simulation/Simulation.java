@@ -5,7 +5,7 @@ import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
-import agh.ics.poproject.statistics.Stats;
+import agh.ics.poproject.simulation.statistics.Stats;
 import agh.ics.poproject.util.Configuration;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,16 +23,14 @@ public class Simulation {
     private ArrayList<Animal> aliveAnimals = new ArrayList<>();
     private ArrayList<Animal> deadAnimals = new ArrayList<>();
     private ArrayList<Plant> plants = new ArrayList<>();
-    private int dayCount = 0;
 
-    private Map<Vector2d, Integer> carcasses;
+    private int dayCount = 0;
 
     public Simulation(Configuration config) {
         this.config = config;
 
         if (config.isGlobeMap()) {
             this.setWorldMap(new GlobeMap(config.mapWidth(), config.mapHeight()));
-            this.carcasses = worldMap.getCarcasses();
         }
     }
 
@@ -103,7 +101,6 @@ public class Simulation {
 
     public void addDeadAnimal(Animal animal) {
         deadAnimals.add(animal);
-        carcasses.put(animal.getPosition(), 1);
     }
 
     public void addPlant(Plant plant) {

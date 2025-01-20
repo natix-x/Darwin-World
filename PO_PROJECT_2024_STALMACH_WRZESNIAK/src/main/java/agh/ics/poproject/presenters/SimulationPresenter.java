@@ -6,7 +6,7 @@ import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.map.WorldMap;
-import agh.ics.poproject.statistics.Stats;
+import agh.ics.poproject.simulation.statistics.Stats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -17,7 +17,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.input.MouseEvent;
-import javafx.event.EventType;
 
 
 public class SimulationPresenter implements MapChangeListener {

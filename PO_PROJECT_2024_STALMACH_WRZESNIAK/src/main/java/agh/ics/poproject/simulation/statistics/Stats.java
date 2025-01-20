@@ -1,4 +1,4 @@
-package agh.ics.poproject.statistics;
+package agh.ics.poproject.simulation.statistics;
 
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
