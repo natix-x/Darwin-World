@@ -26,7 +26,7 @@ public class Day {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
-        this.carcasses = new Carcasses(10);  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
+        this.carcasses = new Carcasses(config.corpseDecompostion());  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
         setReproductionParameters();
         setPlantGrowthParameters();
     }
@@ -111,6 +111,7 @@ public class Day {
                 Animal parent2 = animalsAtPosition.get(1);
 
                 Animal offspring = reproduction.reproduce(parent1, parent2);
+                simulation.addDescendant(offspring);
                 simulation.addAliveAnimal(offspring);
                 System.out.println("babyMade" + offspring.getRemainingEnergy());
                 worldMap.placeWorldElement(offspring);
@@ -172,6 +173,7 @@ public class Day {
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
+            simulation.addDescendant(animal); //first animals on map are added to the base of genealogical tree
             simulation.addAliveAnimal(animal);
             simulation.getWorldMap().placeWorldElement(animal);
         }
@@ -201,4 +203,9 @@ public class Day {
         }
         return uniquePositions;
     }
+
+//    public Carcasses getCarcasses() {
+//        return this.carcasses;
+//    }
+
 }

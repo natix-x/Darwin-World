@@ -68,10 +68,12 @@ public class Reproduction {
         if (canReproduce(animal1, animal2)) {
             animal1.changeEnergy(-energyNeededToReproduce);
             animal2.changeEnergy(-energyNeededToReproduce);
-            animal1.addAChild();
-            animal2.addAChild();
             Genome babyGenome = shuffleGenome(animal1, animal2);
-            return new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
+            Animal babyAnimal = new Animal(animal1.getPosition(), babyGenome, energyNeededToReproduce * 2);
+            animal1.addAChild(babyAnimal);
+            animal2.addAChild(babyAnimal);
+
+            return babyAnimal;
         }
         return null;
     };

@@ -9,10 +9,10 @@ public class Carcasses {
 
     private final Map<Vector2d, Integer> carcasses = new HashMap<>();  // positionOfCarcass
     private final List<ZyciodajneTruchla> listeners = new ArrayList<>();
-    private final int numberOfDaysAfterCarcassIsRemoved;
+    private final int carcassDecomposition;
 
-    public Carcasses(int numberOfDaysAfterCarcassIsRemoved) {
-        this.numberOfDaysAfterCarcassIsRemoved = numberOfDaysAfterCarcassIsRemoved;
+    public Carcasses(int carcassDecomposition) {
+        this.carcassDecomposition = carcassDecomposition;
     }
 
     /**
@@ -29,10 +29,6 @@ public class Carcasses {
         listeners.add(listener);
     }
 
-    public void unsubscribe(ZyciodajneTruchla listener) {
-        listeners.remove(listener);
-    }
-
     private void notifyListenersAboutCarcassesUpdate() {
         listeners.forEach(listener -> listener.updateCarcasses(this));
     }
@@ -40,13 +36,12 @@ public class Carcasses {
     /**
      * To prioritise recently deceased carcasses. Those older than 8 days old are removed from
      * the priority list.
-     *
      */
     public void changeCarcassPriority() {
         Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Vector2d, Integer> entry = iterator.next();
-            if (entry.getValue() >= numberOfDaysAfterCarcassIsRemoved) {
+            if (entry.getValue() >= carcassDecomposition) {
                 iterator.remove();
             } else {
                 carcasses.put(entry.getKey(), entry.getValue() + 1);

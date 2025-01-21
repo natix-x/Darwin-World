@@ -12,7 +12,7 @@ public class LoadConfigurationFromFile {
             if (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] configSettings = line.split(",");
-                if (configSettings.length != 19) {
+                if (configSettings.length != 21) {
                     throw new RuntimeException("Invalid configuration file. Expected 19 fields.");
                 }
 
@@ -28,19 +28,22 @@ public class LoadConfigurationFromFile {
                 int minMutations = Integer.parseInt(configSettings[9].trim());
                 int maxMutations = Integer.parseInt(configSettings[10].trim());
                 int genomeLength = Integer.parseInt(configSettings[11].trim());
-                boolean isGlobeMap = Boolean.parseBoolean(configSettings[12].trim());
-                boolean isForestedEquator = Boolean.parseBoolean(configSettings[13].trim());
-                boolean isZyciodajneTruchla = Boolean.parseBoolean(configSettings[14].trim());
-                boolean isFullRandomMutation = Boolean.parseBoolean(configSettings[15].trim());
-                boolean isSlightCorrectionMutation = Boolean.parseBoolean(configSettings[16].trim());
-                boolean isFullPredestination = Boolean.parseBoolean(configSettings[17].trim());
-                boolean saveStats = Boolean.parseBoolean(configSettings[18].trim());
+                int corpseDecomposition = Integer.parseInt(configSettings[12].trim());
+                boolean isGlobeMap = Boolean.parseBoolean(configSettings[13].trim());
+                boolean isForestedEquator = Boolean.parseBoolean(configSettings[14].trim());
+                boolean isZyciodajneTruchla = Boolean.parseBoolean(configSettings[15].trim());
+                boolean isFullRandomMutation = Boolean.parseBoolean(configSettings[16].trim());
+                boolean isSlightCorrectionMutation = Boolean.parseBoolean(configSettings[17].trim());
+                boolean isFullPredestination = Boolean.parseBoolean(configSettings[18].trim());
+                boolean saveStats = Boolean.parseBoolean(configSettings[19].trim());
+
+                int simulationSpeed = Integer.parseInt(configSettings[20].trim());
 
                 return new Configuration(
                         mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                         initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
-                        minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator,
-                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
+                        minMutations, maxMutations, genomeLength, corpseDecomposition, isGlobeMap, isForestedEquator,
+                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats, simulationSpeed
                 );
             }
         } catch (IOException e) {

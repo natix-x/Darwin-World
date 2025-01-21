@@ -58,6 +58,14 @@
     -fx-font-size: 12px;
 }
 
+.cell-carcass {
+    -fx-background-color: brown;
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+}
+
 GridPane {
     -fx-alignment: center;
     -fx-padding: 10;

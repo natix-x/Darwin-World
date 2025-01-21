@@ -23,7 +23,7 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
         for (Map.Entry<Vector2d, Integer> entry : sortedCarcasses) {
             Vector2d carcassPosition = entry.getKey();
 
-            // Attempt to find a neighboring position with an 80% chance.
+            //neighboring position with an 80% chance.
             Optional<Vector2d> neighbouringPosition = getRandomNeighbouringPosition(carcassPosition);
 
             if (neighbouringPosition.isPresent() && canGrowAt(neighbouringPosition.get())) {
@@ -31,7 +31,7 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
             }
         }
 
-        // Step 3: If all prioritized carcasses are exhausted, fallback to random generation.
+        //random generation if all prioritised exhausted
         return generateRandomPosition();
     }
 

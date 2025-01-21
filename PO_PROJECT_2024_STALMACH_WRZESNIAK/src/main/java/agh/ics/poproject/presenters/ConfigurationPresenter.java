@@ -20,6 +20,10 @@ import java.util.List;
 public class ConfigurationPresenter {
 
     @FXML
+    public Spinner<Integer> corpseDecompositionSpinner;
+    @FXML
+    public Spinner<Integer> simulationSpeedSpinner;
+    @FXML
     private RadioButton yesSaveStatsButton;
     @FXML
     public RadioButton noSaveStatsButton;
@@ -88,12 +92,16 @@ public class ConfigurationPresenter {
         forestedEquatorButton.setToggleGroup(plantGrowthVariant);
         zyciodajneTruchlaButton.setToggleGroup(plantGrowthVariant);
 
+        corpseDecompositionSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, Integer.MAX_VALUE, 15));
+
         ToggleGroup mutationVariant = new ToggleGroup();
         fullRandomButton.setToggleGroup(mutationVariant);
         slightCorrectionButton.setToggleGroup(mutationVariant);
 
         ToggleGroup animalBehaviourVariant = new ToggleGroup();  // in case any other variant adds
         fullPredestinationButton.setToggleGroup(animalBehaviourVariant);
+
+        simulationSpeedSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(200, Integer.MAX_VALUE, 1500));
 
         ToggleGroup saveStats = new ToggleGroup();
         yesSaveStatsButton.setToggleGroup(saveStats);
@@ -128,6 +136,7 @@ public class ConfigurationPresenter {
         int minMutations = minNumberOfMutationsSpinner.getValue();
         int maxMutations = maxNumberOfMutationsSpinner.getValue();
         int genomeLength = lengthOfGenome.getValue();
+        int corpseDecomposition = corpseDecompositionSpinner.getValue();
 
         boolean isGlobeMap = globeMapButton.isSelected();
         boolean isForestedEquator = forestedEquatorButton.isSelected();
@@ -137,11 +146,13 @@ public class ConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveStats = yesSaveStatsButton.isSelected();
 
+        int simulationSpeed = simulationSpeedSpinner.getValue();
+
         return new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
-                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
-                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
+                minMutations, maxMutations, genomeLength, corpseDecomposition, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats, simulationSpeed
         );
     }
 
@@ -157,7 +168,7 @@ public class ConfigurationPresenter {
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SimulationPresenter presenter = SetApp.startSimulationStage();
+            SimulationPresenter presenter = SetApp.startSimulationStage(simulation, engine);
             presenter.setSimulationParameters(simulation);
         }
     }

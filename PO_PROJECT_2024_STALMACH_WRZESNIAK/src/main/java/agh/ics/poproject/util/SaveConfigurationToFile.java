@@ -20,7 +20,10 @@ public class SaveConfigurationToFile {
                     String.valueOf(config.isGlobeMap()), String.valueOf(config.isForestedEquator()),
                     String.valueOf(config.isZyciodajneTruchla()), String.valueOf(config.isFullRandomMutation()),
                     String.valueOf(config.isSlightCorrectionMutation()), String.valueOf(config.isFullPredestination()),
-                    String.valueOf(config.saveStats())
+                    String.valueOf(config.corpseDecompostion()),
+                    String.valueOf(config.saveStats()),
+                    String.valueOf(config.simulationSpeed())
+
             };
 
             writer.write(String.join(",", values));
