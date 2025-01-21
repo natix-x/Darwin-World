@@ -20,4 +20,11 @@ public class SimulationEngine {
         }
         System.out.println("debugging: finished engine calculations");
     }
+
+    public void stopAllSimulations() {
+        for (Simulation simulation : simulations) {
+            simulation.stop(); //stop all simulations
+        }
+        System.out.println("All simulations have been stopped.");
+    }
 }

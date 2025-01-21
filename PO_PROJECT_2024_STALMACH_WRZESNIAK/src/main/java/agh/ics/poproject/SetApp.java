@@ -47,6 +47,11 @@ public class SetApp extends Application {
         primaryStage.setMaxHeight(600);
 
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(event -> {
+            System.out.println("Shutting down the application.");
+            System.exit(0);
+        });
     }
 
     private static void setNewStage(BorderPane viewRoot, String title) {
@@ -68,12 +73,26 @@ public class SetApp extends Application {
         setNewStage(viewRoot, "New Configuration");
     }
 
-    public static SimulationPresenter startSimulationStage() throws IOException {
+    public static SimulationPresenter startSimulationStage(SimulationEngine engine) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(SetApp.class.getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
-        setNewStage(viewRoot, "New Simulation");
+
+        Stage stage = new Stage();
+        var scene = new Scene(viewRoot);
+        stage.setScene(scene);
+        stage.setTitle("New Simulation");
+
+        stage.setOnCloseRequest(_ -> {
+            System.out.println("Shutting down simulation...");
+            engine.stopAllSimulations(); //if window is closed, simulations are shut down
+            stage.close();
+        });
+
+        stage.show();
+
         return loader.getController();
+
     }
 
     public void loadFileWithConfig(ActionEvent actionEvent) {
@@ -96,7 +115,7 @@ public class SetApp extends Application {
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SimulationPresenter presenter = startSimulationStage();
+            SimulationPresenter presenter = startSimulationStage(engine);
             presenter.setSimulationParameters(simulation);
         }
     }
