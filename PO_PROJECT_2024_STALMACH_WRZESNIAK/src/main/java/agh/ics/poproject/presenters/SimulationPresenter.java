@@ -58,7 +58,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     @FXML
-    private Label animalPositionLabel;
+    private Label animalPositionTitleLabel;
     @FXML
     private Label animalPositionValueLabel;
 
@@ -163,15 +163,7 @@ public class SimulationPresenter implements MapChangeListener {
                 } else {
                     highlightAnimalEnergy(animal, cellLabel);
                 }
-                cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> {
-                    trackedAnimal = animal;
-                    getCurrentAnimalStats(trackedAnimal);
-                    if (selectedCellLabel != null) {
-                        selectedCellLabel.getStyleClass().remove("cell-selected");
-                    }
-                    cellLabel.getStyleClass().add("cell-selected");
-                    selectedCellLabel = cellLabel;
-                });
+                cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> handleAnimalSelection(animal, cellLabel));
             } else if (objectAtPosition instanceof Plant) {
                 cellLabel.getStyleClass().add("cell-plant");
             }
@@ -180,6 +172,27 @@ public class SimulationPresenter implements MapChangeListener {
             cellLabel.getStyleClass().add("cell");
         }
         return cellLabel;
+    }
+
+    private void handleAnimalSelection(Animal animal, Label cellLabel) {
+        //selectedCellLabel = cellLabel;
+        if (animal.equals(trackedAnimal)) {
+            selectedCellLabel = cellLabel;
+            clearAnimalStats();
+            trackedAnimal = null;
+            selectedCellLabel.getStyleClass().remove("cell-tracked-animal");
+            highlightAnimalEnergy(animal, cellLabel);
+            selectedCellLabel = null;
+        } else {
+            trackedAnimal = animal;
+            getCurrentAnimalStats(trackedAnimal);
+            if (selectedCellLabel != null) {
+                selectedCellLabel.getStyleClass().remove("cell-selected");
+                highlightAnimalEnergy(animal, cellLabel);
+            }
+            cellLabel.getStyleClass().add("cell-selected");
+            selectedCellLabel = cellLabel;
+        }
     }
 
     private void getCurrentSimulationStats() {
@@ -191,6 +204,29 @@ public class SimulationPresenter implements MapChangeListener {
         averageAnimalEnergyLabel.setText(String.valueOf(stats.countAverageEnergyOfAliveAnimals()));
         averageAnimalLifespanLabel.setText(String.valueOf(stats.countAverageAnimalLifeSpan()));
         averageChildrenNumberLabel.setText(String.format("%.2f", stats.countAverageNumberOfChildrenForAliveAnimals()));
+    }
+
+    private void clearAnimalStats() {
+        isAnimalAliveLabel.setText("");
+        isAnimalAliveLabel.setText("");
+        animalGenomeTitleLabel.setText("");
+        animalGenomeValueLabel.setText("");
+        animalActiveGeneTitleLabel.setText("");
+        animalActiveGeneValueLabel.setText("");
+        animalEnergyTitleLabel.setText("");
+        animalEnergyValueLabel.setText("");
+        animalEnergyTitleLabel.setText("");
+        animalEnergyValueLabel.setText("");
+        animalPlantsConsumedTitleLabel.setText("");
+        animalPlantsConsumedValueLabel.setText("");
+        animalChildrenNumberTitleLabel.setText("");
+        animalChildrenNumberValueLabel.setText("");
+        animalAncestorsNumberTitleLabel.setText("");
+        animalAncestorsNumberValueLabel.setText("");
+        animalAgeTitleLabel.setText("");
+        animalAgeValueLabel.setText("");
+        animalPositionTitleLabel.setText("");
+        animalPositionValueLabel.setText("");
     }
 
     /**
@@ -216,9 +252,7 @@ public class SimulationPresenter implements MapChangeListener {
         // TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
         animalAgeTitleLabel.setText("Age:");
         animalAgeValueLabel.setText(String.valueOf(animal.getAge()));
-
-
-        animalPositionLabel.setText("Animal position");
+        animalPositionTitleLabel.setText("Animal position");
         animalPositionValueLabel.setText(String.valueOf(animal.getPosition()));
 
     }
@@ -263,7 +297,6 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void highlightAnimalEnergy(Animal animal, Label cellLabel) {
-        Stats stats = simulation.getStats();
         if (animal.getRemainingEnergy() < 10) {
             cellLabel.getStyleClass().add("cell-energy-lowest");
         } else if (animal.getRemainingEnergy() < 30) {

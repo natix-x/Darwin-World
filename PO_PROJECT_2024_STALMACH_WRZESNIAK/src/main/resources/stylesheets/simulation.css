@@ -39,7 +39,6 @@
     -fx-text-fill: #32CD32;
 }
 
-/* Energia - najwyższa */
 .cell-energy-highest {
     -fx-background-color: white;
     -fx-border-color: black;
