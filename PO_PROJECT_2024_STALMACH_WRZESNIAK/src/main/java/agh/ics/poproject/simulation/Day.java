@@ -111,6 +111,7 @@ public class Day {
                 Animal parent2 = animalsAtPosition.get(1);
 
                 Animal offspring = reproduction.reproduce(parent1, parent2);
+                simulation.addDescendant(offspring);
                 simulation.addAliveAnimal(offspring);
                 System.out.println("babyMade" + offspring.getRemainingEnergy());
                 worldMap.placeWorldElement(offspring);
