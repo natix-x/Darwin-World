@@ -22,6 +22,8 @@ public class ConfigurationPresenter {
     @FXML
     public Spinner<Integer> corpseDecompositionSpinner;
     @FXML
+    public Spinner<Integer> simulationSpeedSpinner;
+    @FXML
     private RadioButton yesSaveStatsButton;
     @FXML
     public RadioButton noSaveStatsButton;
@@ -99,6 +101,8 @@ public class ConfigurationPresenter {
         ToggleGroup animalBehaviourVariant = new ToggleGroup();  // in case any other variant adds
         fullPredestinationButton.setToggleGroup(animalBehaviourVariant);
 
+        simulationSpeedSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(200, Integer.MAX_VALUE, 1500));
+
         ToggleGroup saveStats = new ToggleGroup();
         yesSaveStatsButton.setToggleGroup(saveStats);
         noSaveStatsButton.setToggleGroup(saveStats);
@@ -142,11 +146,13 @@ public class ConfigurationPresenter {
         boolean isFullPredestination = fullPredestinationButton.isSelected();
         boolean saveStats = yesSaveStatsButton.isSelected();
 
+        int simulationSpeed = simulationSpeedSpinner.getValue();
+
         return new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, corpseDecomposition, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
-                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats, simulationSpeed
         );
     }
 

@@ -88,6 +88,10 @@
                 <RadioButton fx:id="fullPredestinationButton" text="Full predestination" selected="true"/>
             </HBox>
             <HBox>
+                <Label text="Simulation speed in ms: "/>
+                <Spinner fx:id="simulationSpeedSpinner" editable="true"/>
+            </HBox>
+            <HBox>
                 <Label text="Do you want to save simulation statistics? "/>
                 <RadioButton fx:id="yesSaveStatsButton" text="Yes" selected="true"/>
                 <RadioButton fx:id="noSaveStatsButton" text="No"/>

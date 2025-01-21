@@ -19,7 +19,9 @@ public record Configuration( int mapHeight,
                              boolean isFullRandomMutation,
                              boolean isSlightCorrectionMutation,
                              boolean isFullPredestination,
-                             boolean saveStats
+                             boolean saveStats,
+
+                             int simulationSpeed
 )
 { }
 

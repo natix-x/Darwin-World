@@ -12,7 +12,7 @@ public class LoadConfigurationFromFile {
             if (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] configSettings = line.split(",");
-                if (configSettings.length != 20) {
+                if (configSettings.length != 21) {
                     throw new RuntimeException("Invalid configuration file. Expected 19 fields.");
                 }
 
@@ -37,11 +37,13 @@ public class LoadConfigurationFromFile {
                 boolean isFullPredestination = Boolean.parseBoolean(configSettings[18].trim());
                 boolean saveStats = Boolean.parseBoolean(configSettings[19].trim());
 
+                int simulationSpeed = Integer.parseInt(configSettings[20].trim());
+
                 return new Configuration(
                         mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                         initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                         minMutations, maxMutations, genomeLength, corpseDecomposition, isGlobeMap, isForestedEquator,
-                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
+                        isZyciodajneTruchla, isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats, simulationSpeed
                 );
             }
         } catch (IOException e) {

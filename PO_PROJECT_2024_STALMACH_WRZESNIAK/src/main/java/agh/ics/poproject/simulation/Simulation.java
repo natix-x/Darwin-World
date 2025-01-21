@@ -96,14 +96,12 @@ public class Simulation {
                 dayCount++;
                 // Wait for 1 second
                 System.out.println(dayCount);
-                Thread.sleep(1000);
-            } catch (IncorrectPositionException e) {
+                Thread.sleep(config.simulationSpeed());
+            } catch (IncorrectPositionException | IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Restore interrupt status
                 throw new RuntimeException("Thread was interrupted", e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
     }
