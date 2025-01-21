@@ -1,4 +1,4 @@
-package agh.ics.poproject.statistics;
+package agh.ics.poproject.simulation.statistics;
 
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
@@ -33,7 +33,6 @@ public class Stats {
         return allPositions - occupiedPositionsByAnimals;
     }
 
-    // ile??
     public Genome getMostPopularGenotype() {
         ArrayList<Animal> allAnimals = simulation.getAliveAnimals();
 
@@ -53,11 +52,6 @@ public class Stats {
         }
         return mostPopularGenotype;
     }
-
-
-
-
-
 
     // TODO: refaktoryzacja powtarzającego się kodu
     /**

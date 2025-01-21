@@ -3,81 +3,66 @@ package agh.ics.poproject.presenters;
 import agh.ics.poproject.SetApp;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.SaveConfigurationToFile;
 import agh.ics.poproject.util.SimulationEngine;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurationPresenter {
 
-    ArrayList<Configuration> configurationList = new ArrayList<>();
-
+    @FXML
+    private RadioButton yesSaveStatsButton;
+    @FXML
+    public RadioButton noSaveStatsButton;
     @FXML
     public Button startSimulationButton;
-
     @FXML
     private Spinner<Integer> lengthOfGenome;
-
     @FXML
     private RadioButton fullPredestinationButton;
-
     @FXML
     private RadioButton globeMapButton;
-
-    @FXML
-    private RadioButton noSaveConfigButton;
-
-    @FXML
-    private RadioButton yesSaveConfigButton;
-
     @FXML
     private RadioButton slightCorrectionButton;
-
     @FXML
     private RadioButton fullRandomButton;
-
     @FXML
     private Spinner<Integer> maxNumberOfMutationsSpinner;
-
     @FXML
     private Spinner<Integer> minNumberOfMutationsSpinner;
-
     @FXML
     private Spinner<Integer> reproductionEnergyLostSpinner;
-
     @FXML
     private Spinner<Integer> neededEnergyForReproductionSpinner;
-
     @FXML
     private Spinner<Integer> initialEnergyOfAnimalsSpinner;
-
     @FXML
     private Spinner<Integer> initialNumberOfAnimalsSpinner;
-
     @FXML
     private Spinner<Integer> initialNumberOfPlantsSpinner;
-
     @FXML
     private Spinner<Integer> energyPerPlantsSpinner;
-
     @FXML
     private Spinner<Integer> dailyPlantGrowthSpinner;
-
     @FXML
     private RadioButton forestedEquatorButton;
-
     @FXML
     private RadioButton zyciodajneTruchlaButton;
-
     @FXML
     private Spinner<Integer> mapWidthSpinner;
-
     @FXML
     private Spinner<Integer> mapHeightSpinner;
+
+    ArrayList<Configuration> configurationList = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -110,15 +95,27 @@ public class ConfigurationPresenter {
         ToggleGroup animalBehaviourVariant = new ToggleGroup();  // in case any other variant adds
         fullPredestinationButton.setToggleGroup(animalBehaviourVariant);
 
-        ToggleGroup saveConfig = new ToggleGroup();
-        yesSaveConfigButton.setToggleGroup(saveConfig);
-        noSaveConfigButton.setToggleGroup(saveConfig);
+        ToggleGroup saveStats = new ToggleGroup();
+        yesSaveStatsButton.setToggleGroup(saveStats);
+        noSaveStatsButton.setToggleGroup(saveStats);
+
     }
 
 
     @FXML
     public void startSimulationOnClick() throws IOException { //save config params
         // Fetch values from the UI
+        Configuration newConfiguration = getConfigurationFromUser();
+
+        this.configurationList.add(newConfiguration);
+
+        System.out.println("Simulation config:");
+        System.out.println(newConfiguration);
+
+        startSimulation();
+    }
+
+    private Configuration getConfigurationFromUser() {
         int mapHeight = mapHeightSpinner.getValue();
         int mapWidth = mapWidthSpinner.getValue();
         int initialPlants = initialNumberOfPlantsSpinner.getValue();
@@ -138,40 +135,42 @@ public class ConfigurationPresenter {
         boolean isFullRandomMutation = fullRandomButton.isSelected();
         boolean isSlightCorrectionMutation = slightCorrectionButton.isSelected();
         boolean isFullPredestination = fullPredestinationButton.isSelected();
-        boolean saveConfig = yesSaveConfigButton.isSelected();
+        boolean saveStats = yesSaveStatsButton.isSelected();
 
-        Configuration configuration = new Configuration(
+        return new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
                 minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
-                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveConfig
+                isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
         );
-
-        this.configurationList.add(configuration); //dodanie do listy
-
-        System.out.println("Simulation config:");
-        System.out.println(configuration);
-
-        startSimulation();
     }
 
     /**
     Sets up the UI and the engine.
     Gets the most recent config and concurrently runs the Simulation and the SimulationUI.
      */
-    //TODO: try catch do tego asyncha coś tu pewnie, zastanowić się bo race condition?
     public void startSimulation() throws IOException {
         if (!configurationList.isEmpty()) {
             Configuration configuration = configurationList.getLast();
-            Simulation simulation = new Simulation(configuration); //symulacja teraz ma wszystkie param config
+            Simulation simulation = new Simulation(configuration);
 
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
             SimulationPresenter presenter = SetApp.startSimulationStage();
-            presenter.setSimulationParameters(simulation); //wyswietlamy okienko symulacji
-
+            presenter.setSimulationParameters(simulation);
         }
     }
 
+    public void saveConfigOnClick(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save configuration");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Save your file (*.csv)", "*.csv*"));
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            SaveConfigurationToFile saveConfig = new SaveConfigurationToFile();
+            saveConfig.saveConfig(getConfigurationFromUser(), file);
+        }
+
+    }
 }

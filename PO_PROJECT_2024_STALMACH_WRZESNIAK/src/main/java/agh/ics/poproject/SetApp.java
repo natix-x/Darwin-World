@@ -1,6 +1,10 @@
 package agh.ics.poproject;
 
 import agh.ics.poproject.presenters.SimulationPresenter;
+import agh.ics.poproject.simulation.Simulation;
+import agh.ics.poproject.util.Configuration;
+import agh.ics.poproject.util.LoadConfigurationFromFile;
+import agh.ics.poproject.util.SimulationEngine;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,15 +12,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SetApp extends Application {
 
+    private final LoadConfigurationFromFile loadConfiguration = new LoadConfigurationFromFile();
+
     @FXML
     private Button startSimulationButton;
+    ArrayList<Configuration> configurationList = new ArrayList<>();
 
     public void initialize() {
         startSimulationButton.setDisable(true);
@@ -49,7 +60,6 @@ public class SetApp extends Application {
         stage.show();
     }
 
-    // TODO: to comment xd
     @FXML
     public void startConfigStage(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -65,6 +75,32 @@ public class SetApp extends Application {
         setNewStage(viewRoot, "New Simulation");
         return loader.getController();
     }
+
+    public void loadFileWithConfig(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter fileExtension = new FileChooser.ExtensionFilter("Select your file(*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(fileExtension);
+        File configFile = fileChooser.showOpenDialog(new Stage());
+        if (configFile != null) {
+            Configuration configuration = loadConfiguration.loadToConfig(configFile.toPath());
+            startSimulationButton.setDisable(false);
+            this.configurationList.add(configuration);
+        }
+    }
+
+    public void startSimulation() throws IOException {
+        if (!configurationList.isEmpty()) {
+            Configuration configuration = configurationList.getLast();
+            Simulation simulation = new Simulation(configuration);
+
+            SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
+            engine.runAsync();
+
+            SimulationPresenter presenter = startSimulationStage();
+            presenter.setSimulationParameters(simulation);
+        }
+    }
+
 }
 
 

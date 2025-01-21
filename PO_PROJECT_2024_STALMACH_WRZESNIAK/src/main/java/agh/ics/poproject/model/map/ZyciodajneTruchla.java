@@ -1,24 +1,25 @@
 package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
+import agh.ics.poproject.simulation.Carcasses;
 
 import java.util.*;
 
 public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
 
-    protected Map<Vector2d, Integer> carcasses;
-    protected Random random = new Random();
+    private Carcasses carcasses;
 
-    public ZyciodajneTruchla(WorldMap worldMap) {
+    public ZyciodajneTruchla(WorldMap worldMap, Carcasses carcasses) {
         super(worldMap);
-        this.carcasses = worldMap.getCarcasses();
+        this.carcasses = carcasses;
+        carcasses.subscribe(this);
     }
 
     @Override
     public Vector2d calculatePositionWithParetoPrinciple() {
-        List<Map.Entry<Vector2d, Integer>> sortedCarcasses = new ArrayList<>(carcasses.entrySet());
+        List<Map.Entry<Vector2d, Integer>> sortedCarcasses = new ArrayList<>(carcasses.getCarcasses().entrySet());
         sortedCarcasses.sort(Comparator.comparingInt(Map.Entry::getValue));
-
+        System.out.println(carcasses.getCarcasses());
         for (Map.Entry<Vector2d, Integer> entry : sortedCarcasses) {
             Vector2d carcassPosition = entry.getKey();
 
@@ -84,24 +85,8 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
         return new Vector2d(x, y);
     }
 
-
-    /**
-     * To prioritise recently deceased carcasses, priority is set. With each simulation day the carcass
-     * on which a plant hasn't grown yet has less of a priority. Those older than 5 days old are removed from
-     * the priority list.
-     *
-     * @param carcasses map of deceased animals with their priorities
-     */
-    public void changeCarcassPriority(Map<Vector2d, Integer> carcasses) {
-        Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Vector2d, Integer> entry = iterator.next();
-            if (entry.getValue() > 8) {
-                iterator.remove();
-            } else {
-                carcasses.put(entry.getKey(), entry.getValue() + 1);
-            }
-        }
+    public void updateCarcasses(Carcasses carcasses) {
+        this.carcasses = carcasses;
     }
 }
 

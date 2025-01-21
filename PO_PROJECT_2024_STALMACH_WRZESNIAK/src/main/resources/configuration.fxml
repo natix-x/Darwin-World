@@ -84,11 +84,12 @@
                 <RadioButton fx:id="fullPredestinationButton" text="Full predestination" selected="true"/>
             </HBox>
             <HBox>
-                <Label text="Do you want to save configuration? "/>
-                <RadioButton fx:id="yesSaveConfigButton" text="Yes" selected="true"/>
-                <RadioButton fx:id="noSaveConfigButton" text="No"/>
+                <Label text="Do you want to save simulation statistics? "/>
+                <RadioButton fx:id="yesSaveStatsButton" text="Yes" selected="true"/>
+                <RadioButton fx:id="noSaveStatsButton" text="No"/>
             </HBox>
             <HBox>
+                <Button fx:id="saveConfigButton" text="Save configuration" onAction="#saveConfigOnClick"/>
                 <Button fx:id="startSimulationButton" text="Start Simulation" onAction="#startSimulationOnClick"/>
             </HBox>
 

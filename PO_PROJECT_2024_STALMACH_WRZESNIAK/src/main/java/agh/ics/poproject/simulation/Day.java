@@ -20,11 +20,13 @@ public class Day {
     private final GlobeMap worldMap;
     private Reproduction reproduction;
     private PlantGrowthMethod plantGrowthMethod;
+    private final Carcasses carcasses;
 
     public Day(Simulation simulation) {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
+        this.carcasses = new Carcasses(10);  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
         setReproductionParameters();
         setPlantGrowthParameters();
     }
@@ -46,7 +48,7 @@ public class Day {
 
         this.plantGrowthMethod = switch (plantGrowthMethodType) {
             case FORESTED_EQUATOR -> new ForestedEquator(worldMap);
-            case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap);
+            case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap, carcasses);
         };
     }
 
@@ -69,6 +71,7 @@ public class Day {
         reproduceAnimals();
         ageAllAnimals();
         growNewPlants(config.dailyPlantGrowth());
+        carcasses.changeCarcassPriority();
     }
 
 
@@ -156,13 +159,10 @@ public class Day {
                 aliveAnimalsIterator.remove();
                 simulation.addDeadAnimal(animal);
                 worldMap.removeElement(animal, animal.getPosition());
+                carcasses.addCarcass(animal.getPosition());
             }
         }
 
-        //TODO: brzydko fuj
-        if (plantGrowthMethod instanceof ZyciodajneTruchla) {
-            ((ZyciodajneTruchla) plantGrowthMethod).changeCarcassPriority(worldMap.getCarcasses());
-        }
     }
 
     public void generateInitialAnimals() throws IncorrectPositionException {

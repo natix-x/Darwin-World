@@ -20,8 +20,6 @@ public class GlobeMap implements WorldMap {
     private final int topEdge;
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
 
-    private Map<Vector2d, Integer> carcasses = new HashMap<>();
-
     private final Map<Vector2d, Plant> plants = new HashMap<>();
     private final List<MapChangeListener> mapChangeListeners = new ArrayList<>();
     private final UUID mapID = UUID.randomUUID();
@@ -52,12 +50,6 @@ public class GlobeMap implements WorldMap {
     public UUID getId() {
         return mapID;
     }
-
-    @Override
-    public Map<Vector2d, Integer> getCarcasses() {
-        return carcasses;
-    }
-
 
 
     @Override
@@ -140,7 +132,7 @@ public class GlobeMap implements WorldMap {
 
             animal.setPosition(animalNewPosition);
 
-            animals.computeIfAbsent(animalNewPosition, _ -> new ArrayList<>()).add(animal);
+            animals.computeIfAbsent(animalNewPosition, k -> new ArrayList<>()).add(animal);
             mapChanged("Animal moved to the position " + animal.getPosition());
         } else {
             throw new IllegalArgumentException("Animal not found at position " + currentPosition);
@@ -160,7 +152,7 @@ public class GlobeMap implements WorldMap {
 
     private void placeAnimal(Vector2d position, Animal animal) throws IncorrectPositionException {
         if (canMoveTo(position)) {
-            animals.computeIfAbsent(position, _ -> new ArrayList<>()).add(animal);
+            animals.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
             mapChanged("Animal placed at position " + position);
         }
         else

@@ -5,6 +5,7 @@ import agh.ics.poproject.model.map.IncorrectPositionException;
 import agh.ics.poproject.util.Configuration;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,9 +30,12 @@ class DayTest {
                                                 true,
                                                 false,
                                                 true,
-                                                true);
+            true);
     Simulation simulation = new Simulation(config);
     Day day = new Day(simulation);
+
+    DayTest() throws IOException {
+    }
 
     @Test
     void checkIfAnimalsGenerateCorrectly() throws IncorrectPositionException {

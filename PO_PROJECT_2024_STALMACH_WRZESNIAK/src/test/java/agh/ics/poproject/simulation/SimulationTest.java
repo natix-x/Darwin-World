@@ -10,6 +10,8 @@ import agh.ics.poproject.util.Configuration;
 import org.junit.jupiter.api.Test;
 
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationTest {
@@ -35,6 +37,9 @@ Configuration config = new Configuration(   10,
                                             true);
     Simulation simulation = new Simulation(config);
     Day day1 = new Day(simulation);
+
+    SimulationTest() throws IOException {
+    }
 
     @Test
     void checkGetAnimals() throws IncorrectPositionException {
