@@ -73,7 +73,7 @@ public class SetApp extends Application {
         setNewStage(viewRoot, "New Configuration");
     }
 
-    public static SimulationPresenter startSimulationStage(SimulationEngine engine) throws IOException {
+    public static SimulationPresenter startSimulationStage(Simulation simulation, SimulationEngine engine) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(SetApp.class.getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -84,8 +84,8 @@ public class SetApp extends Application {
         stage.setTitle("New Simulation");
 
         stage.setOnCloseRequest(_ -> {
-            System.out.println("Shutting down simulation...");
-            engine.stopAllSimulations(); //if window is closed, simulations are shut down
+            System.out.println("Shutting down simulation, id: " + simulation.getWorldMap().getId());
+            simulation.stop();
             stage.close();
         });
 
@@ -115,7 +115,7 @@ public class SetApp extends Application {
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SimulationPresenter presenter = startSimulationStage(engine);
+            SimulationPresenter presenter = startSimulationStage(simulation, engine);
             presenter.setSimulationParameters(simulation);
         }
     }

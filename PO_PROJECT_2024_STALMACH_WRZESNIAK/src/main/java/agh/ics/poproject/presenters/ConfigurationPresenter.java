@@ -157,7 +157,7 @@ public class ConfigurationPresenter {
             SimulationEngine engine = new SimulationEngine(List.of(simulation)); //engine jest run
             engine.runAsync();
 
-            SimulationPresenter presenter = SetApp.startSimulationStage(engine);
+            SimulationPresenter presenter = SetApp.startSimulationStage(simulation, engine);
             presenter.setSimulationParameters(simulation);
         }
     }
