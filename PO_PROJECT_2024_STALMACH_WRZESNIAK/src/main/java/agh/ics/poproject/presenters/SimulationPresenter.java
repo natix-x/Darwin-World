@@ -178,12 +178,12 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void handleAnimalSelection(Animal animal, Label cellLabel) {
-        //selectedCellLabel = cellLabel;
         if (animal.equals(trackedAnimal)) {
             selectedCellLabel = cellLabel;
             clearAnimalStats();
             trackedAnimal = null;
             selectedCellLabel.getStyleClass().remove("cell-tracked-animal");
+            selectedCellLabel.getStyleClass().remove("cell-selected");
             highlightAnimalEnergy(animal, cellLabel);
             selectedCellLabel = null;
         } else {
@@ -251,8 +251,8 @@ public class SimulationPresenter implements MapChangeListener {
         animalPlantsConsumedValueLabel.setText(String.valueOf(animal.getConsumedPlants()));
         animalChildrenNumberTitleLabel.setText("Number of children:");
         animalChildrenNumberValueLabel.setText(String.valueOf(animal.getAmountOfChildren()));
-        animalAncestorsNumberTitleLabel.setText("Number of ancestors:");
-        animalAncestorsNumberValueLabel.setText(String.valueOf(animal.countDescendants(simulation.getGenealogicalTree())));
+        animalAncestorsNumberTitleLabel.setText("Number of descendants:");
+        animalAncestorsNumberValueLabel.setText(String.valueOf(animal.countDescendants()));
 
         animalAgeTitleLabel.setText("Age:");
         animalAgeValueLabel.setText(String.valueOf(animal.getAge()));

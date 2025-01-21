@@ -27,7 +27,6 @@ public class Simulation {
     private SaveStats saveStats;
 
     private int dayCount = 0;
-//    private Day currentDayState;
     private final Map<UUID, Animal> animalGenealogicalTree = new HashMap<>(); //to store animals
 
     public Simulation(Configuration config) throws IOException {
@@ -78,7 +77,6 @@ public class Simulation {
         try {
             simulationDay.firstDayActivities();
             dayCount++;
-//            this.currentDayState = simulationDay;
             System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
@@ -94,7 +92,6 @@ public class Simulation {
                     saveStats.saveDayStats();
                 }
                 dayCount++;
-//                this.currentDayState = simulationDay;
                 System.out.println(dayCount);
                 Thread.sleep(config.simulationSpeed());
             } catch (IncorrectPositionException | IOException e) {
@@ -134,9 +131,6 @@ public class Simulation {
         return animalGenealogicalTree;
     }
 
-//    public Day getDay() {
-//        return currentDayState;
-//    }
 
     public void stop() {
         this.stopped.set(true);

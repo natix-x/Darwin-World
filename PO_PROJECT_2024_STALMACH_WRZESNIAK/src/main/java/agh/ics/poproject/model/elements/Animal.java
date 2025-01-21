@@ -19,8 +19,7 @@ public class Animal implements WorldElement {
     private int remainingEnergy;
     private int consumedPlants;
     private int age;
-    private int amountOfChildren;
-    private Set<UUID> children;
+    private Set<Animal> children;
 
     private final UUID animalId = UUID.randomUUID();
 
@@ -51,7 +50,7 @@ public class Animal implements WorldElement {
     }
 
     public int getAmountOfChildren() {
-        return amountOfChildren;
+        return children.size();
     }
 
     public int getAge() {
@@ -119,8 +118,7 @@ public class Animal implements WorldElement {
      * @param baby
      */
     public void addAChild (Animal baby) {
-        this.amountOfChildren++;
-        this.children.add(baby.getAnimalId());
+        this.children.add(baby);
     }
 
     public void ageAnimal() {
@@ -129,17 +127,14 @@ public class Animal implements WorldElement {
 
     /**
      * Traverses through sets of UUIDs to count non-direct descendants
-     * @param genealogicalTree
-     * @return
+     *
      */
-    public int countDescendants(Map<UUID, Animal> genealogicalTree) {
-        int count = 0;
-
-        for (UUID childId : this.children) {
-            Animal child = genealogicalTree.get(childId);
+    public int countDescendants() {
+    int count =0;
+        for (Animal child : this.children) {
             if (child != null) {
                 count++; //count the child
-                count += child.countDescendants(genealogicalTree); //count all its descendants
+                count += child.countDescendants(); //count all its descendants
             }
         }
         return count;
