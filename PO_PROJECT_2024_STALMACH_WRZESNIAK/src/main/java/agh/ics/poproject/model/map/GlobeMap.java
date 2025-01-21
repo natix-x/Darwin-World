@@ -57,10 +57,6 @@ public class GlobeMap implements WorldMap {
         mapChangeListeners.add(listener);
     }
 
-    public void unsubscribe(MapChangeListener listener) {
-        mapChangeListeners.remove(listener);
-    }
-
     @Override
     public String toString() {
         MapVisualizer map = new MapVisualizer(this);
@@ -208,21 +204,4 @@ public class GlobeMap implements WorldMap {
         }
         return null;
     }
-
-
-
-
-//    /**
-//     * Sorts animals according to requirements to resolve reproduction and plant consumption conflicts
-//     * @param simulation chosen simulation
-//     * @return List of sorted animals
-//     */
-//    private List<Animal> getSortedAnimals(Simulation simulation) {
-//        return simulation.getAliveAnimals().stream()
-//                .filter(animal -> animal.getRemainingEnergy() >= simulation.getConfig().neededEnergyForReproduction())
-//                .sorted(Comparator.comparingInt(Animal::getRemainingEnergy).reversed()
-//                        .thenComparingInt(Animal::getAge))
-//                .toList();
-//    }
-}
-
+};

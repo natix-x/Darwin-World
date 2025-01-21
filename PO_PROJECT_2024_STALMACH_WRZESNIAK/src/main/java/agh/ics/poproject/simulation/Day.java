@@ -172,6 +172,7 @@ public class Day {
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
+            simulation.addDescendant(animal); //first animals on map are added to the base of genealogical tree
             simulation.addAliveAnimal(animal);
             simulation.getWorldMap().placeWorldElement(animal);
         }
@@ -201,4 +202,9 @@ public class Day {
         }
         return uniquePositions;
     }
+
+//    public Carcasses getCarcasses() {
+//        return this.carcasses;
+//    }
+
 }

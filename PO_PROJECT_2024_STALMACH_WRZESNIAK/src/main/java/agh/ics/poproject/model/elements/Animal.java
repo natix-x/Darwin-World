@@ -5,6 +5,9 @@ import agh.ics.poproject.model.map.MapDirection;
 import agh.ics.poproject.model.map.MoveValidator;
 import agh.ics.poproject.model.Vector2d;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 // TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
@@ -17,6 +20,8 @@ public class Animal implements WorldElement {
     private int consumedPlants;
     private int age;
     private int amountOfChildren;
+    private Set<UUID> children;
+
     private final UUID animalId = UUID.randomUUID();
 
     public Animal(Vector2d position, Genome genome, int amountOfEnergy) {
@@ -25,6 +30,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.remainingEnergy = amountOfEnergy;
         this.age = 1; //age: 1 when animal is created/born
+        this.children = new HashSet<>();
     }
 
     public MapDirection getDirection() {
@@ -108,12 +114,35 @@ public class Animal implements WorldElement {
         this.consumedPlants ++;
     }
 
-    public void addAChild () {
-        this.amountOfChildren ++;
+    /**
+     * Tracks the count of children for an animal. Tracks UUID of a baby for descendant tracking
+     * @param baby
+     */
+    public void addAChild (Animal baby) {
+        this.amountOfChildren++;
+        this.children.add(baby.getAnimalId());
     }
 
     public void ageAnimal() {
         this.age++;
+    }
+
+    /**
+     * Traverses through sets of UUIDs to count non-direct descendants
+     * @param genealogicalTree
+     * @return
+     */
+    public int countDescendants(Map<UUID, Animal> genealogicalTree) {
+        int count = 0;
+
+        for (UUID childId : this.children) {
+            Animal child = genealogicalTree.get(childId);
+            if (child != null) {
+                count++; //count the child
+                count += child.countDescendants(genealogicalTree); //count all its descendants
+            }
+        }
+        return count;
     }
 
 }

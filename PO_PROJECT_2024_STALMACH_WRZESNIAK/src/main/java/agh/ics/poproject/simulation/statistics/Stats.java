@@ -71,7 +71,6 @@ public class Stats {
         return energySum / aliveAnimals.size();
     }
 
-
     /**
      * Counts average lifespan for dead animals.
      * If there are no dead animals count average energy of alive animals.

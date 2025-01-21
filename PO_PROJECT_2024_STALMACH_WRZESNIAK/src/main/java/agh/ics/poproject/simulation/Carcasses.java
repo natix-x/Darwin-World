@@ -29,10 +29,6 @@ public class Carcasses {
         listeners.add(listener);
     }
 
-    public void unsubscribe(ZyciodajneTruchla listener) {
-        listeners.remove(listener);
-    }
-
     private void notifyListenersAboutCarcassesUpdate() {
         listeners.forEach(listener -> listener.updateCarcasses(this));
     }
@@ -40,7 +36,6 @@ public class Carcasses {
     /**
      * To prioritise recently deceased carcasses. Those older than 8 days old are removed from
      * the priority list.
-     *
      */
     public void changeCarcassPriority() {
         Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();

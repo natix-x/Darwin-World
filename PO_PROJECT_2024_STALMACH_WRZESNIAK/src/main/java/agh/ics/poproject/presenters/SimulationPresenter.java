@@ -5,6 +5,7 @@ import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.simulation.Carcasses;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.simulation.statistics.Stats;
 import javafx.application.Platform;
@@ -17,6 +18,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.Map;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -249,7 +252,8 @@ public class SimulationPresenter implements MapChangeListener {
         animalChildrenNumberTitleLabel.setText("Number of children:");
         animalChildrenNumberValueLabel.setText(String.valueOf(animal.getAmountOfChildren()));
         animalAncestorsNumberTitleLabel.setText("Number of ancestors:");
-        // TODO: implementacja śledzenia potomków niekoniecznie będących bezpośrednio dziećmi
+        animalAncestorsNumberValueLabel.setText(String.valueOf(animal.countDescendants(simulation.getGenealogicalTree())));
+
         animalAgeTitleLabel.setText("Age:");
         animalAgeValueLabel.setText(String.valueOf(animal.getAge()));
         animalPositionTitleLabel.setText("Animal position");
@@ -270,13 +274,15 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     /**
-     * Stops simulation. Disables Stop Button. Enables Resume Button. Maks map clickable (for selecting animal for tracking process)
+     * Stops simulation. Disables Stop Button. Enables Resume Button.
+     * Makes map clickable (for selecting animal for tracking process)
      */
     public void onStoppedClicked() {
         simulation.stop();
         stopButton.setDisable(true);
         resumeButton.setDisable(false);
         makeAnimalsClickable();
+//        displayHotspots();
     }
 
     public void onResumeClicked() {
@@ -310,4 +316,22 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
+    //tu była próba displayu hotspotów trupów on pause
+//    private void displayHotspots() {
+//        clearMapGrid();
+//        Map<Vector2d, Integer> carcasses = simulation.getDay().getCarcasses().getCarcasses();
+//
+//        Vector2d lowerBound = worldMap.getCurrentBounds().LowerBound();
+//        Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
+//        createNewMapGrid(lowerBound, upperBound);
+//
+//        carcasses.forEach((position, value) -> {
+//            Label cellLabel = new Label();
+//            cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
+//            cellLabel.setAlignment(Pos.CENTER);
+//            cellLabel.getStyleClass().add("cell-carcass");
+//            cellLabel.setText("C:" + value);
+//            mapGrid.add(cellLabel, position.x() - lowerBound.x(), position.y() - lowerBound.y());
+//        });
+//    }
 }

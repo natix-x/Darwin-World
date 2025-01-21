@@ -12,10 +12,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 // TODO: obsłużyć to że jak zamykamy okno to symulacja się kończy (tak to nadal działa)
 public class Simulation {
@@ -30,6 +27,8 @@ public class Simulation {
     private SaveStats saveStats;
 
     private int dayCount = 0;
+//    private Day currentDayState;
+    private final Map<UUID, Animal> animalGenealogicalTree = new HashMap<>(); //to store animals
 
     public Simulation(Configuration config) throws IOException {
         this.config = config;
@@ -79,6 +78,7 @@ public class Simulation {
         try {
             simulationDay.firstDayActivities();
             dayCount++;
+//            this.currentDayState = simulationDay;
             System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
@@ -94,13 +94,13 @@ public class Simulation {
                     saveStats.saveDayStats();
                 }
                 dayCount++;
-                // Wait for 1 second
+//                this.currentDayState = simulationDay;
                 System.out.println(dayCount);
                 Thread.sleep(config.simulationSpeed());
             } catch (IncorrectPositionException | IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // Restore interrupt status
+                Thread.currentThread().interrupt(); //restore interrupt status
                 throw new RuntimeException("Thread was interrupted", e);
             }
         }
@@ -121,6 +121,22 @@ public class Simulation {
     public void removePlant(Plant plant) {
         plants.remove(plant);
     }
+
+    /**
+     * Adds an animal to a genealogical tree. Key: UUID
+     * @param animal
+     */
+    public void addDescendant(Animal animal) {
+        animalGenealogicalTree.put(animal.getAnimalId(), animal);
+    }
+
+    public Map<UUID, Animal> getGenealogicalTree() {
+        return animalGenealogicalTree;
+    }
+
+//    public Day getDay() {
+//        return currentDayState;
+//    }
 
     public void stop() {
         this.stopped.set(true);
