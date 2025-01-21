@@ -44,7 +44,11 @@
             <HBox>
                 <Label text="Plant growth variant: "/>
                 <RadioButton fx:id="forestedEquatorButton" text="Forested equator" selected="true"/>
-                <RadioButton fx:id="zyciodajneTruchlaButton" text="Życiodajne truchła"/>
+                <RadioButton fx:id="zyciodajneTruchlaButton" text="Life sustaining carcasses"/>
+            </HBox>
+            <HBox>
+                <Label text="Corpse decomposition duration"/>
+                <Spinner fx:id="corpseDecompositionSpinner" editable="true"/>
             </HBox>
             <HBox>
                 <Label text="Initial number of animals: "/>

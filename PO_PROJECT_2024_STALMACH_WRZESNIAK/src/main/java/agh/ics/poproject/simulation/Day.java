@@ -26,7 +26,7 @@ public class Day {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
-        this.carcasses = new Carcasses(10);  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
+        this.carcasses = new Carcasses(config.corpseDecompostion());  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
         setReproductionParameters();
         setPlantGrowthParameters();
     }

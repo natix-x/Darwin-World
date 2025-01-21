@@ -20,6 +20,8 @@ import java.util.List;
 public class ConfigurationPresenter {
 
     @FXML
+    public Spinner<Integer> corpseDecompositionSpinner;
+    @FXML
     private RadioButton yesSaveStatsButton;
     @FXML
     public RadioButton noSaveStatsButton;
@@ -88,6 +90,8 @@ public class ConfigurationPresenter {
         forestedEquatorButton.setToggleGroup(plantGrowthVariant);
         zyciodajneTruchlaButton.setToggleGroup(plantGrowthVariant);
 
+        corpseDecompositionSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, Integer.MAX_VALUE, 15));
+
         ToggleGroup mutationVariant = new ToggleGroup();
         fullRandomButton.setToggleGroup(mutationVariant);
         slightCorrectionButton.setToggleGroup(mutationVariant);
@@ -128,6 +132,7 @@ public class ConfigurationPresenter {
         int minMutations = minNumberOfMutationsSpinner.getValue();
         int maxMutations = maxNumberOfMutationsSpinner.getValue();
         int genomeLength = lengthOfGenome.getValue();
+        int corpseDecomposition = corpseDecompositionSpinner.getValue();
 
         boolean isGlobeMap = globeMapButton.isSelected();
         boolean isForestedEquator = forestedEquatorButton.isSelected();
@@ -140,7 +145,7 @@ public class ConfigurationPresenter {
         return new Configuration(
                 mapHeight, mapWidth, initialPlants, energyPerPlant, dailyPlantGrowth,
                 initialAnimals, initialEnergy, neededEnergyForReproduction, reproductionEnergyLost,
-                minMutations, maxMutations, genomeLength, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
+                minMutations, maxMutations, genomeLength, corpseDecomposition, isGlobeMap, isForestedEquator, isZyciodajneTruchla,
                 isFullRandomMutation, isSlightCorrectionMutation, isFullPredestination, saveStats
         );
     }

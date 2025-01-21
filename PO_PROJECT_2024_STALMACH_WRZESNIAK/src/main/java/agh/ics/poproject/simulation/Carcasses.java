@@ -9,10 +9,10 @@ public class Carcasses {
 
     private final Map<Vector2d, Integer> carcasses = new HashMap<>();  // positionOfCarcass
     private final List<ZyciodajneTruchla> listeners = new ArrayList<>();
-    private final int numberOfDaysAfterCarcassIsRemoved;
+    private final int carcassDecomposition;
 
-    public Carcasses(int numberOfDaysAfterCarcassIsRemoved) {
-        this.numberOfDaysAfterCarcassIsRemoved = numberOfDaysAfterCarcassIsRemoved;
+    public Carcasses(int carcassDecomposition) {
+        this.carcassDecomposition = carcassDecomposition;
     }
 
     /**
@@ -46,7 +46,7 @@ public class Carcasses {
         Iterator<Map.Entry<Vector2d, Integer>> iterator = carcasses.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Vector2d, Integer> entry = iterator.next();
-            if (entry.getValue() >= numberOfDaysAfterCarcassIsRemoved) {
+            if (entry.getValue() >= carcassDecomposition) {
                 iterator.remove();
             } else {
                 carcasses.put(entry.getKey(), entry.getValue() + 1);
