@@ -11,4 +11,6 @@ public interface PlantGrowthMethod extends PlantGrowthValidator {
      */
     public Set<Vector2d> generatePlantPositions(int numberOfPlants);
 
+    public Set<Vector2d> getPreferredPositions();
+
 }

@@ -16,8 +16,8 @@ public class LoadConfigurationFromFile {
                     throw new RuntimeException("Invalid configuration file. Expected 19 fields.");
                 }
 
-                int mapHeight = Integer.parseInt(configSettings[0].trim());
-                int mapWidth = Integer.parseInt(configSettings[1].trim());
+                int mapHeight = Integer.parseInt(configSettings[0].trim()) - 1;
+                int mapWidth = Integer.parseInt(configSettings[1].trim()) - 1;
                 int initialPlants = Integer.parseInt(configSettings[2].trim());
                 int energyPerPlant = Integer.parseInt(configSettings[3].trim());
                 int dailyPlantGrowth = Integer.parseInt(configSettings[4].trim());

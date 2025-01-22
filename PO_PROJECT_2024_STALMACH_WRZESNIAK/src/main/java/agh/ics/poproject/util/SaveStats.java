@@ -1,7 +1,6 @@
 package agh.ics.poproject.util;
 
-import agh.ics.poproject.simulation.Simulation;
-import agh.ics.poproject.simulation.statistics.Stats;
+import agh.ics.poproject.simulation.Stats;
 
 import java.io.FileWriter;
 import java.io.IOException;

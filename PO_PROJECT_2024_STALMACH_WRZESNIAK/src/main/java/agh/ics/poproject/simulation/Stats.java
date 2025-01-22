@@ -1,8 +1,7 @@
-package agh.ics.poproject.simulation.statistics;
+package agh.ics.poproject.simulation;
 
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
-import agh.ics.poproject.simulation.Simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.Map;
 
 public class Stats {
 
-    private Simulation simulation;
+    private final Simulation simulation;
 
     public Stats(Simulation simulation) {
         this.simulation = simulation;
@@ -26,7 +25,6 @@ public class Stats {
         return simulation.getPlants().size();
     }
 
-    // liczba wolnych pól to chyba liczba niezajętych przez zwierzaki? rośliny nie mają znaczenia? można dopytać
     public int countNumberOfPositionsUnoccupiedByAnyAnimal() {
         int allPositions = simulation.getWorldMap().calculateCurrentSurface();
         int occupiedPositionsByAnimals = simulation.getWorldMap().getAnimals().size();

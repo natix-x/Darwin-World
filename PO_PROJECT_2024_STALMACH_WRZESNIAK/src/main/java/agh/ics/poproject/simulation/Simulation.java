@@ -1,11 +1,10 @@
 package agh.ics.poproject.simulation;
 
-import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.model.map.IncorrectPositionException;
-import agh.ics.poproject.simulation.statistics.Stats;
+import agh.ics.poproject.model.map.PlantGrowthMethod;
 import agh.ics.poproject.util.Configuration;
 import agh.ics.poproject.util.SaveStats;
 import javafx.beans.property.BooleanProperty;
@@ -23,12 +22,9 @@ public class Simulation {
     private ArrayList<Animal> aliveAnimals = new ArrayList<>();
     private ArrayList<Animal> deadAnimals = new ArrayList<>();
     private ArrayList<Plant> plants = new ArrayList<>();
-    private final UUID simulationId = UUID.randomUUID();
     private SaveStats saveStats;
-
     private int dayCount = 0;
-//    private Day currentDayState;
-    private final Map<UUID, Animal> animalGenealogicalTree = new HashMap<>(); //to store animals
+    private PlantGrowthMethod plantGrowthMethod;
 
     public Simulation(Configuration config) throws IOException {
         this.config = config;
@@ -38,6 +34,7 @@ public class Simulation {
         }
         this.stats = new Stats(this);
         if (config.saveStats()) {
+            UUID simulationId = UUID.randomUUID();
             saveStats = new SaveStats(stats, simulationId);
         }
     }
@@ -70,6 +67,14 @@ public class Simulation {
         return stats;
     }
 
+    public PlantGrowthMethod getPlantGrowthMethod() {
+        return plantGrowthMethod;
+    }
+
+    public void setPlantGrowthMethod(PlantGrowthMethod plantGrowthMethod) {
+        this.plantGrowthMethod = plantGrowthMethod;
+    }
+
     // TODO: osbługa errorów
 
     public void run() {
@@ -78,7 +83,6 @@ public class Simulation {
         try {
             simulationDay.firstDayActivities();
             dayCount++;
-//            this.currentDayState = simulationDay;
             System.out.println(dayCount);
         } catch (IncorrectPositionException e) {
             throw new RuntimeException(e);
@@ -94,7 +98,6 @@ public class Simulation {
                     saveStats.saveDayStats();
                 }
                 dayCount++;
-//                this.currentDayState = simulationDay;
                 System.out.println(dayCount);
                 Thread.sleep(config.simulationSpeed());
             } catch (IncorrectPositionException | IOException e) {
@@ -122,21 +125,6 @@ public class Simulation {
         plants.remove(plant);
     }
 
-    /**
-     * Adds an animal to a genealogical tree. Key: UUID
-     * @param animal
-     */
-    public void addDescendant(Animal animal) {
-        animalGenealogicalTree.put(animal.getAnimalId(), animal);
-    }
-
-    public Map<UUID, Animal> getGenealogicalTree() {
-        return animalGenealogicalTree;
-    }
-
-//    public Day getDay() {
-//        return currentDayState;
-//    }
 
     public void stop() {
         this.stopped.set(true);

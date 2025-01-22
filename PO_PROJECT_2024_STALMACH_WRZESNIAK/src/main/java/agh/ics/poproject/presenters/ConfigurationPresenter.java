@@ -124,8 +124,8 @@ public class ConfigurationPresenter {
     }
 
     private Configuration getConfigurationFromUser() {
-        int mapHeight = mapHeightSpinner.getValue();
-        int mapWidth = mapWidthSpinner.getValue();
+        int mapHeight = mapHeightSpinner.getValue() - 1;
+        int mapWidth = mapWidthSpinner.getValue() - 1;
         int initialPlants = initialNumberOfPlantsSpinner.getValue();
         int energyPerPlant = energyPerPlantsSpinner.getValue();
         int dailyPlantGrowth = dailyPlantGrowthSpinner.getValue();

@@ -19,8 +19,7 @@ public class Animal implements WorldElement {
     private int remainingEnergy;
     private int consumedPlants;
     private int age;
-    private int amountOfChildren;
-    private Set<UUID> children;
+    private Set<Animal> children;
 
     private final UUID animalId = UUID.randomUUID();
 
@@ -51,19 +50,19 @@ public class Animal implements WorldElement {
     }
 
     public int getAmountOfChildren() {
-        return amountOfChildren;
+        return children.size();
     }
 
     public int getAge() {
         return age;
     }
 
-    public UUID getAnimalId() {
-        return animalId;
-    }
-
     public Genome getGenome() {
         return genome;
+    }
+
+    public Set<Animal> getChildren() {
+        return children;
     }
 
     public void setPosition(Vector2d position) {
@@ -119,30 +118,26 @@ public class Animal implements WorldElement {
      * @param baby
      */
     public void addAChild (Animal baby) {
-        this.amountOfChildren++;
-        this.children.add(baby.getAnimalId());
+        this.children.add(baby);
     }
 
     public void ageAnimal() {
         this.age++;
     }
 
-    /**
-     * Traverses through sets of UUIDs to count non-direct descendants
-     * @param genealogicalTree
-     * @return
-     */
-    public int countDescendants(Map<UUID, Animal> genealogicalTree) {
-        int count = 0;
 
-        for (UUID childId : this.children) {
-            Animal child = genealogicalTree.get(childId);
+    public Set<Animal> getDescendants() {
+    Set<Animal> descendants = new HashSet<>(this.getChildren());
+        for (Animal child : this.children) {
             if (child != null) {
-                count++; //count the child
-                count += child.countDescendants(genealogicalTree); //count all its descendants
+                descendants.addAll(child.getDescendants());
             }
         }
-        return count;
+        return descendants;
+    }
+
+    public int countDescendants() {
+        return this.getDescendants().size();
     }
 
 }

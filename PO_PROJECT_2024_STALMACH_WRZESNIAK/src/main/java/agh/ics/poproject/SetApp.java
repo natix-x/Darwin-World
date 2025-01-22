@@ -83,7 +83,7 @@ public class SetApp extends Application {
         stage.setScene(scene);
         stage.setTitle("New Simulation");
 
-        stage.setOnCloseRequest(_ -> {
+        stage.setOnCloseRequest(k -> {
             System.out.println("Shutting down simulation, id: " + simulation.getWorldMap().getId());
             simulation.stop();
             stage.close();

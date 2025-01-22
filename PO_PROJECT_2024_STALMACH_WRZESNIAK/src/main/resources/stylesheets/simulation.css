@@ -58,11 +58,15 @@
     -fx-font-size: 12px;
 }
 
-.cell-carcass {
-    -fx-background-color: brown;
-    -fx-text-fill: white;
-    -fx-border-color: black;
-    -fx-border-width: 1;
+.cell-preferred {
+    -fx-border-color: #05301c;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+}
+
+.cell-animal-most-popular-genotype {
+    -fx-border-color: ea371d;
+    -fx-border-width: 3;
     -fx-border-style: solid;
 }
 

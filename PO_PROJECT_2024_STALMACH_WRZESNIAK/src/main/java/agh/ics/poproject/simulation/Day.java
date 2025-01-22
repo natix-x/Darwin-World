@@ -50,13 +50,14 @@ public class Day {
             case FORESTED_EQUATOR -> new ForestedEquator(worldMap);
             case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap, carcasses);
         };
+        simulation.setPlantGrowthMethod(plantGrowthMethod);
     }
 
     /**
      * Generates all necessary elements for simulation launch
      */
     void firstDayActivities() throws IncorrectPositionException {
-        generateInitialAnimals();  // TODO zastanowic sie czy powinno sie tu przekazywac cala symulacje
+        generateInitialAnimals();
         growNewPlants(config.initialPlants());
     }
 
@@ -111,7 +112,7 @@ public class Day {
                 Animal parent2 = animalsAtPosition.get(1);
 
                 Animal offspring = reproduction.reproduce(parent1, parent2);
-                simulation.addDescendant(offspring);
+                //simulation.addDescendant(offspring);
                 simulation.addAliveAnimal(offspring);
                 System.out.println("babyMade" + offspring.getRemainingEnergy());
                 worldMap.placeWorldElement(offspring);
@@ -136,8 +137,6 @@ public class Day {
                         .max(Comparator.comparingInt(Animal::getRemainingEnergy)
                                 .thenComparingInt(Animal::getAge))
                         .orElse(null);
-
-
 
                 if (highestPriorityAnimal != null) {
                     highestPriorityAnimal.eat(energyPerPlant);
@@ -173,7 +172,6 @@ public class Day {
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
-            simulation.addDescendant(animal); //first animals on map are added to the base of genealogical tree
             simulation.addAliveAnimal(animal);
             simulation.getWorldMap().placeWorldElement(animal);
         }
@@ -203,9 +201,4 @@ public class Day {
         }
         return uniquePositions;
     }
-
-//    public Carcasses getCarcasses() {
-//        return this.carcasses;
-//    }
-
 }
