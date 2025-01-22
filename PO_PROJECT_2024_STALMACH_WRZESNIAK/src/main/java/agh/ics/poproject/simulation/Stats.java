@@ -31,7 +31,7 @@ public class Stats {
         return allPositions - occupiedPositionsByAnimals;
     }
 
-    public Genome getMostPopularGenotype() {
+    public synchronized Genome getMostPopularGenotype() {
         ArrayList<Animal> allAnimals = simulation.getAliveAnimals();
 
         Map<Genome, Integer> genotypeCounts = new HashMap<>();

@@ -108,7 +108,7 @@ public class SimulationPresenter implements MapChangeListener {
         drawMap();
     }
 
-    private void drawMap() {
+    private synchronized void drawMap() {
         clearMapGrid();
 
         Vector2d lowerBound = worldMap.getCurrentBounds().LowerBound();
@@ -142,7 +142,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private void fillTheMap(Vector2d lowerBound, Vector2d upperBound) {
+    private synchronized void fillTheMap(Vector2d lowerBound, Vector2d upperBound) {
         int width = Math.abs(lowerBound.x() - upperBound.x());
         int height = Math.abs(lowerBound.y() - upperBound.y());
 
@@ -155,7 +155,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private Label createCellLabel(Vector2d position) {
+    private synchronized Label createCellLabel(Vector2d position) {
         Label cellLabel = new Label();
         cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
         cellLabel.setAlignment(Pos.CENTER);
@@ -204,7 +204,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private void getCurrentSimulationStats() {
+    private synchronized void getCurrentSimulationStats() {
         Stats stats = simulation.getStats();
         numberOfAnimalsLabel.setText(String.valueOf(stats.countAnimalsNumber()));
         numberOfPlantsLabel.setText(String.valueOf(stats.countPlantsNumber()));
@@ -269,7 +269,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     @Override
-    public void mapChange(WorldMap worldMap, String message) {
+    public synchronized void mapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             positionsOfAnimalsWithMostPopularGenotype.removeAll(positionsOfAnimalsWithMostPopularGenotype);
             drawMap();
