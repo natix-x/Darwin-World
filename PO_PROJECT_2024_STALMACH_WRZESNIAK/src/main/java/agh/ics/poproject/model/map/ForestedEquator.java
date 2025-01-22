@@ -5,7 +5,6 @@ import agh.ics.poproject.model.Vector2d;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO: refaktoryzacja
 public class ForestedEquator extends AbstractPlantGrowthMethod {
 
     int equatorBottom;

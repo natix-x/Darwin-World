@@ -18,14 +18,16 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 
 public class SimulationPresenter implements MapChangeListener {
 
     // TODO: rozmiary komórek dostosowane do rozmiaru okna
-    private static final double CELL_HEIGHT = 25.0;
-    private static final double CELL_WIDTH = 25.0;
+    private static final double CELL_HEIGHT = 30.0;
+    private static final double CELL_WIDTH = 30.0;
 
     @FXML
     private Label isAnimalAliveLabel;
@@ -92,6 +94,7 @@ public class SimulationPresenter implements MapChangeListener {
     private WorldMap worldMap;
     private Animal trackedAnimal;
     private Label selectedCellLabel;
+    private Set<Vector2d> positionsOfAnimalsWithMostPopularGenotype = new HashSet<>();
 
     @FXML
     public void initialize() {
@@ -164,6 +167,9 @@ public class SimulationPresenter implements MapChangeListener {
                     cellLabel.getStyleClass().add("cell-tracked-animal");
                 } else {
                     highlightAnimalEnergy(animal, cellLabel);
+                }
+                if (animal.getGenome().getGenesSequence().equals(simulation.getStats().getMostPopularGenotype().getGenesSequence())) {
+                    positionsOfAnimalsWithMostPopularGenotype.add(animal.getPosition());
                 }
                 cellLabel.addEventHandler(MouseEvent.MOUSE_CLICKED, actionEvent -> handleAnimalSelection(animal, cellLabel));
             } else if (objectAtPosition instanceof Plant) {
@@ -265,6 +271,7 @@ public class SimulationPresenter implements MapChangeListener {
     @Override
     public void mapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
+            positionsOfAnimalsWithMostPopularGenotype.removeAll(positionsOfAnimalsWithMostPopularGenotype);
             drawMap();
             getCurrentSimulationStats();
             if (trackedAnimal != null) {
@@ -283,6 +290,7 @@ public class SimulationPresenter implements MapChangeListener {
         resumeButton.setDisable(false);
         makeAnimalsClickable();
         highlightPositionsPreferredByPlants();
+        highlightPositionsWithAnimalsWithMostPopularGenotype();
     }
 
     public void onResumeClicked() {
@@ -330,4 +338,18 @@ private void highlightPositionsPreferredByPlants() {
             }
         }
     }
+    private void highlightPositionsWithAnimalsWithMostPopularGenotype() {
+        for (Vector2d position : positionsOfAnimalsWithMostPopularGenotype) {
+            for (Node node : mapGrid.getChildren()) {
+                if (node instanceof Label cellLabel) {
+                    int columnIndex = GridPane.getColumnIndex(cellLabel);
+                    int rowIndex = GridPane.getRowIndex(cellLabel);
+                    if (columnIndex == position.x() && rowIndex == position.y()) {
+                        cellLabel.getStyleClass().add("cell-animal-most-popular-genotype");
+                    }
+                }
+            }
+        }
+    }
+
 }
