@@ -91,7 +91,10 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
 
     @Override
     public Set<Vector2d> getPreferredPositions() {
-        return carcasses.getCarcasses().keySet();
+        Set<Vector2d> allPreferredPositions = new HashSet<>();
+        for (Vector2d carcassPosition : carcasses.getCarcasses().keySet())
+            {allPreferredPositions.addAll(getNeighbouringPositions(carcassPosition)); };
+        return allPreferredPositions;
     }
 }
 
