@@ -57,12 +57,12 @@ public class Animal implements WorldElement {
         return age;
     }
 
-    public UUID getAnimalId() {
-        return animalId;
-    }
-
     public Genome getGenome() {
         return genome;
+    }
+
+    public Set<Animal> getChildren() {
+        return children;
     }
 
     public void setPosition(Vector2d position) {
@@ -125,19 +125,19 @@ public class Animal implements WorldElement {
         this.age++;
     }
 
-    /**
-     * Traverses through sets of UUIDs to count non-direct descendants
-     *
-     */
-    public int countDescendants() {
-    int count =0;
+
+    public Set<Animal> getDescendants() {
+    Set<Animal> descendants = new HashSet<>(this.getChildren());
         for (Animal child : this.children) {
             if (child != null) {
-                count++; //count the child
-                count += child.countDescendants(); //count all its descendants
+                descendants.addAll(child.getDescendants());
             }
         }
-        return count;
+        return descendants;
+    }
+
+    public int countDescendants() {
+        return this.getDescendants().size();
     }
 
 }

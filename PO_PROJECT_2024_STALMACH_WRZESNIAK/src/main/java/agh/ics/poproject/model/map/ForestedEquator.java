@@ -2,6 +2,9 @@ package agh.ics.poproject.model.map;
 
 import agh.ics.poproject.model.Vector2d;
 
+import java.util.HashSet;
+import java.util.Set;
+
 // TODO: refaktoryzacja
 public class ForestedEquator extends AbstractPlantGrowthMethod {
 
@@ -33,7 +36,7 @@ public class ForestedEquator extends AbstractPlantGrowthMethod {
     }
 
     /**
-     Positions within calculated bounds will be most desired by plants in defined growth method.
+     * Positions within calculated bounds will be most desired by plants in defined growth method.
      */
     private void calculateEquatorBorders() {
         Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
@@ -41,4 +44,17 @@ public class ForestedEquator extends AbstractPlantGrowthMethod {
         equatorTop = (int) (upperBound.y() * 0.7);
     }
 
+    @Override
+    public Set<Vector2d> getPreferredPositions() {
+        Set<Vector2d> preferredPositions = new HashSet<>();
+        Vector2d lowerBound = worldMap.getCurrentBounds().LowerBound();
+        Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
+
+        for (int y = equatorBottom; y <= equatorTop; y++) {
+            for (int x = lowerBound.x(); x <= upperBound.x(); x++) {
+                preferredPositions.add(new Vector2d(x, y));
+            }
+        }
+        return preferredPositions;
+    }
 }

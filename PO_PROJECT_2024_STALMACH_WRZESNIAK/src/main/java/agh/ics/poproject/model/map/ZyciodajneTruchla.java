@@ -88,5 +88,10 @@ public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
     public void updateCarcasses(Carcasses carcasses) {
         this.carcasses = carcasses;
     }
+
+    @Override
+    public Set<Vector2d> getPreferredPositions() {
+        return carcasses.getCarcasses().keySet();
+    }
 }
 

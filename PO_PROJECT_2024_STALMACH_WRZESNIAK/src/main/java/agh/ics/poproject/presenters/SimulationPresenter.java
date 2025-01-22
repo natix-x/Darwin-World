@@ -5,9 +5,8 @@ import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
 import agh.ics.poproject.model.map.WorldMap;
-import agh.ics.poproject.simulation.Carcasses;
 import agh.ics.poproject.simulation.Simulation;
-import agh.ics.poproject.simulation.statistics.Stats;
+import agh.ics.poproject.simulation.Stats;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -19,7 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-import java.util.Map;
+import java.util.Set;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -191,6 +190,7 @@ public class SimulationPresenter implements MapChangeListener {
             getCurrentAnimalStats(trackedAnimal);
             if (selectedCellLabel != null) {
                 selectedCellLabel.getStyleClass().remove("cell-selected");
+                selectedCellLabel.getStyleClass().remove("cell-tracked-animal");
                 highlightAnimalEnergy(animal, cellLabel);
             }
             cellLabel.getStyleClass().add("cell-selected");
@@ -282,7 +282,7 @@ public class SimulationPresenter implements MapChangeListener {
         stopButton.setDisable(true);
         resumeButton.setDisable(false);
         makeAnimalsClickable();
-//        displayHotspots();
+        highlightPositionsPreferredByPlants();
     }
 
     public void onResumeClicked() {
@@ -316,22 +316,18 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    //tu była próba displayu hotspotów trupów on pause
-//    private void displayHotspots() {
-//        clearMapGrid();
-//        Map<Vector2d, Integer> carcasses = simulation.getDay().getCarcasses().getCarcasses();
-//
-//        Vector2d lowerBound = worldMap.getCurrentBounds().LowerBound();
-//        Vector2d upperBound = worldMap.getCurrentBounds().UpperBound();
-//        createNewMapGrid(lowerBound, upperBound);
-//
-//        carcasses.forEach((position, value) -> {
-//            Label cellLabel = new Label();
-//            cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
-//            cellLabel.setAlignment(Pos.CENTER);
-//            cellLabel.getStyleClass().add("cell-carcass");
-//            cellLabel.setText("C:" + value);
-//            mapGrid.add(cellLabel, position.x() - lowerBound.x(), position.y() - lowerBound.y());
-//        });
-//    }
+private void highlightPositionsPreferredByPlants() {
+        Set<Vector2d> preferredPositions = simulation.getPlantGrowthMethod().getPreferredPositions();
+        for (Vector2d position : preferredPositions) {
+            for (Node node : mapGrid.getChildren()) {
+                if (node instanceof Label cellLabel) {
+                    int columnIndex = GridPane.getColumnIndex(cellLabel);
+                    int rowIndex = GridPane.getRowIndex(cellLabel);
+                    if (columnIndex == position.x() && rowIndex == position.y()) {
+                        cellLabel.getStyleClass().add("cell-preferred");
+                    }
+                }
+            }
+        }
+    }
 }

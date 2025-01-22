@@ -50,6 +50,7 @@ public class Day {
             case FORESTED_EQUATOR -> new ForestedEquator(worldMap);
             case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap, carcasses);
         };
+        simulation.setPlantGrowthMethod(plantGrowthMethod);
     }
 
     /**
@@ -137,8 +138,6 @@ public class Day {
                                 .thenComparingInt(Animal::getAge))
                         .orElse(null);
 
-
-
                 if (highestPriorityAnimal != null) {
                     highestPriorityAnimal.eat(energyPerPlant);
                     worldMap.getPlants().remove(plantPosition);
@@ -173,7 +172,6 @@ public class Day {
         for (Vector2d position : generatedAnimalsRandomPositions) {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
-            //simulation.addDescendant(animal); //first animals on map are added to the base of genealogical tree
             simulation.addAliveAnimal(animal);
             simulation.getWorldMap().placeWorldElement(animal);
         }

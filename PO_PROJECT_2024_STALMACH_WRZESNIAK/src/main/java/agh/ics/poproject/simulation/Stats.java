@@ -1,8 +1,7 @@
-package agh.ics.poproject.simulation.statistics;
+package agh.ics.poproject.simulation;
 
 import agh.ics.poproject.inheritance.Genome;
 import agh.ics.poproject.model.elements.Animal;
-import agh.ics.poproject.simulation.Simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
