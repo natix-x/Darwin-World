@@ -272,7 +272,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
 
-    public synchronized void mapChange(WorldMap worldMap, String message) {
+    public synchronized void mapChange(GlobeMap worldMap, String message) {
         Platform.runLater(() -> {
             positionsOfAnimalsWithMostPopularGenotype.removeAll(positionsOfAnimalsWithMostPopularGenotype);
             drawMap();

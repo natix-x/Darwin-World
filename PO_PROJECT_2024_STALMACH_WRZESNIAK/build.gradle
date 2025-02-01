@@ -26,7 +26,7 @@ test {
 }
 
 application {
-    getMainClass().set('agh.ics.oop.Main')
+    getMainClass().set('agh.ics.poproject.Main')
 }
 
 java {

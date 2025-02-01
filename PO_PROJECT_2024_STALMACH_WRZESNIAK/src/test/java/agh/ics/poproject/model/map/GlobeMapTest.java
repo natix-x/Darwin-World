@@ -35,8 +35,8 @@ class GlobeMapTest {
         // then
         assertEquals(4, worldMap.getAnimals().size());
         assertEquals(3, worldMap.getPlants().size());
-        assertEquals(animal1, worldMap.objectAt(new Vector2d(2,2)));
-        assertEquals(plant1, worldMap.objectAt(new Vector2d(4,7)));
+        assertEquals(animal1, worldMap.objectAt(new Vector2d(2,2)).get());
+        assertEquals(plant1, worldMap.objectAt(new Vector2d(4,7)).get());
     }
 
     @Test
@@ -45,7 +45,7 @@ class GlobeMapTest {
         GlobeMap worldMap = new GlobeMap(10, 10);
         Genome genome = new Genome(List.of(0, 5, 7, 4, 0, 1));
         Animal animal1 = new Animal(new Vector2d(2, 2), genome, 50);
-        Animal animal2 = new Animal(new Vector2d(11, 2), genome, 50);
+        Animal animal2 = new Animal(new Vector2d(2, 11), genome, 50);
         // when & then
         assertDoesNotThrow(() -> worldMap.placeAnimal(animal1));
         assertThrows(IncorrectPositionException.class, () -> worldMap.placeAnimal(animal2));
