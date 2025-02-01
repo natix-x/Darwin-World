@@ -2,7 +2,7 @@
 ## Table of contents:
 * [General info](#general-info)
 * [Description](#description)
-* [App functionalities](#app-functionalities-&-Demo)
+* [App functionalities](#app-functionalities--demo)
 * [Project structure](#project-structure)
 * [Requirements](#requirements)
 * [Setup](#setup)
