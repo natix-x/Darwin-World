@@ -25,13 +25,13 @@ class GlobeMapTest {
         Plant plant2 = new Plant(new Vector2d(5,7));
         Plant plant3 = new Plant(new Vector2d(2,7));
         // when
-        worldMap.placeWorldElement(animal1);
-        worldMap.placeWorldElement(animal2);
-        worldMap.placeWorldElement(animal3);
-        worldMap.placeWorldElement(animal4);
-        worldMap.placeWorldElement(plant1);
-        worldMap.placeWorldElement(plant2);
-        worldMap.placeWorldElement(plant3);
+        worldMap.placeAnimal(animal1);
+        worldMap.placeAnimal(animal2);
+        worldMap.placeAnimal(animal3);
+        worldMap.placeAnimal(animal4);
+        worldMap.placePlant(plant1);
+        worldMap.placePlant(plant2);
+        worldMap.placePlant(plant3);
         // then
         assertEquals(4, worldMap.getAnimals().size());
         assertEquals(3, worldMap.getPlants().size());
@@ -47,8 +47,8 @@ class GlobeMapTest {
         Animal animal1 = new Animal(new Vector2d(2, 2), genome, 50);
         Animal animal2 = new Animal(new Vector2d(11, 2), genome, 50);
         // when & then
-        assertDoesNotThrow(() -> worldMap.placeWorldElement(animal1));
-        assertThrows(IncorrectPositionException.class, () -> worldMap.placeWorldElement(animal2));
+        assertDoesNotThrow(() -> worldMap.placeAnimal(animal1));
+        assertThrows(IncorrectPositionException.class, () -> worldMap.placeAnimal(animal2));
     }
 
     @Test
@@ -57,10 +57,10 @@ class GlobeMapTest {
         GlobeMap worldMap = new GlobeMap(10, 10);
         Genome genome = new Genome(List.of(0, 5, 7, 4, 0, 1));
         Animal animal1 = new Animal(new Vector2d(2, 2), genome, 50);
-        worldMap.placeWorldElement(animal1);
+        worldMap.placeAnimal(animal1);
         Animal animal2 = new Animal(new Vector2d(2, 2), genome, 50);
         // when & then
-        assertDoesNotThrow(() -> worldMap.placeWorldElement(animal2));
+        assertDoesNotThrow(() -> worldMap.placeAnimal(animal2));
     }
 
     @Test
@@ -81,8 +81,8 @@ class GlobeMapTest {
         Plant plant1 = new Plant(new Vector2d(2, 3));
         Plant plant2 = new Plant(new Vector2d(2, 3));
         // when & then
-        assertDoesNotThrow(() -> worldMap.placeWorldElement(plant1));
-        assertThrows(IncorrectPositionException.class, () -> worldMap.placeWorldElement(plant2));
+        assertDoesNotThrow(() -> worldMap.placePlant(plant1));
+        assertThrows(IncorrectPositionException.class, () -> worldMap.placePlant(plant2));
     }
 
     @Test
@@ -95,7 +95,7 @@ class GlobeMapTest {
         GlobeMap worldMap = new GlobeMap(8, 10);
         Animal animal1 = new Animal(animalPosition, genome, 50);
         MapDirection currentDirection = animal1.getDirection();
-        worldMap.placeWorldElement(animal1);
+        worldMap.placeAnimal(animal1);
 
         // when
         worldMap.move(animal1);

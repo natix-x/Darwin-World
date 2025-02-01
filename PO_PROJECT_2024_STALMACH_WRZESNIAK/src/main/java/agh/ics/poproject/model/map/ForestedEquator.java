@@ -7,10 +7,10 @@ import java.util.Set;
 
 public class ForestedEquator extends AbstractPlantGrowthMethod {
 
-    int equatorBottom;
-    int equatorTop;
+    private int equatorBottom;
+    private int equatorTop;
 
-    public ForestedEquator(WorldMap world) {
+    public ForestedEquator(GlobeMap world) {
         super(world);
         calculateEquatorBorders();
     }

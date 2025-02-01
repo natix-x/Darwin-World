@@ -26,7 +26,7 @@ public class Day {
         this.simulation = simulation;
         this.config = simulation.getConfig();
         this.worldMap = simulation.getWorldMap();
-        this.carcasses = new Carcasses(config.corpseDecompostion());  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
+        this.carcasses = new Carcasses(config.corpseDecompositionTime());  // harcodowane, ale kiedyś mogłoby być ustalane przez usera:)
         setReproductionParameters();
         setPlantGrowthParameters();
     }
@@ -44,11 +44,11 @@ public class Day {
     }
 
     private void setPlantGrowthParameters() {
-        PlantGrowthMethodType plantGrowthMethodType = config.isForestedEquator() ? PlantGrowthMethodType.FORESTED_EQUATOR : PlantGrowthMethodType.ZYCIODAJNE_TRUCHLA;
+        PlantGrowthMethodType plantGrowthMethodType = config.isForestedEquator() ? PlantGrowthMethodType.FORESTED_EQUATOR : PlantGrowthMethodType.CEMETERY;
 
         this.plantGrowthMethod = switch (plantGrowthMethodType) {
             case FORESTED_EQUATOR -> new ForestedEquator(worldMap);
-            case ZYCIODAJNE_TRUCHLA -> new ZyciodajneTruchla(worldMap, carcasses);
+            case CEMETERY -> new Cemetery(worldMap, carcasses);
         };
         simulation.setPlantGrowthMethod(plantGrowthMethod);
     }
@@ -59,6 +59,7 @@ public class Day {
     void firstDayActivities() throws IncorrectPositionException {
         generateInitialAnimals();
         growNewPlants(config.initialPlants());
+        worldMap.mapChanged("Day passed.");
     }
 
     // TODO refaktoryzacja metod - wszystkie wywoływane z Day a później aktualizowane w GLobe (jak moveAndRotate)
@@ -73,6 +74,7 @@ public class Day {
         ageAllAnimals();
         growNewPlants(config.dailyPlantGrowth());
         carcasses.changeCarcassPriority();
+        worldMap.mapChanged("Day passed.");
     }
 
 
@@ -115,7 +117,7 @@ public class Day {
                 //simulation.addDescendant(offspring);
                 simulation.addAliveAnimal(offspring);
                 System.out.println("babyMade" + offspring.getRemainingEnergy());
-                worldMap.placeWorldElement(offspring);
+                worldMap.placeAnimal(offspring);
             }
         }
     }
@@ -173,7 +175,7 @@ public class Day {
             Genome genome = new Genome(config.genomeLength());
             Animal animal = new Animal(position, genome, config.initialEnergy());
             simulation.addAliveAnimal(animal);
-            simulation.getWorldMap().placeWorldElement(animal);
+            simulation.getWorldMap().placeAnimal(animal);
         }
     }
 
@@ -182,7 +184,7 @@ public class Day {
         for (Vector2d position : plantsPositions) {
             Plant plant = new Plant(position);
             simulation.addPlant(plant);
-            worldMap.placeWorldElement(plant);
+            worldMap.placePlant(plant);
         }
     }
 

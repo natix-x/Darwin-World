@@ -28,13 +28,15 @@ Configuration config = new Configuration(   10,
                                             2,
                                             8,
                                             16,
+                                            8,
                                             true,
                                             true,
                                             true,
                                             true,
                                             false,
                                             true,
-                                            true);
+                                            true,
+                                500);
     Simulation simulation = new Simulation(config);
     Day day1 = new Day(simulation);
 

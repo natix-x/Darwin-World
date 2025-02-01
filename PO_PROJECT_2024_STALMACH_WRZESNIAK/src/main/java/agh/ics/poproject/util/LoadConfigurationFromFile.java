@@ -13,7 +13,7 @@ public class LoadConfigurationFromFile {
                 String line = scanner.nextLine();
                 String[] configSettings = line.split(",");
                 if (configSettings.length != 21) {
-                    throw new RuntimeException("Invalid configuration file. Expected 19 fields.");
+                    throw new RuntimeException("Invalid configuration file. Expected 21 fields.");
                 }
 
                 int mapHeight = Integer.parseInt(configSettings[0].trim()) - 1;

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,6 +181,10 @@ public class ConfigurationPresenter {
         File file = fileChooser.showSaveDialog(new Stage());
         if (file != null) {
             SaveConfigurationToFile saveConfig = new SaveConfigurationToFile();
+            String absolutePath = file.getAbsolutePath();
+            if (! absolutePath.endsWith(".csv")) {
+               file = new File(absolutePath + ".csv");
+            }
             saveConfig.saveConfig(getConfigurationFromUser(), file);
         }
 

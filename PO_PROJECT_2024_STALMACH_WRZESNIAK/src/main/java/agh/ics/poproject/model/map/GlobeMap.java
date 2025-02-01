@@ -11,7 +11,7 @@ import agh.ics.poproject.model.util.MapVisualizer;
 import java.util.*;
 
 // TODO: refaktoryzacja zgodna ze wzoracami projektowymi - niesprawdzanie istance of itp
-public class GlobeMap implements WorldMap {
+public class GlobeMap implements MoveValidator {
     private static final Vector2d LOWER_BOUND = new Vector2d(0, 0);
     private static final int LEFT_EDGE = LOWER_BOUND.x();
     private static final int BOTTOM_EDGE = LOWER_BOUND.y();
@@ -30,7 +30,7 @@ public class GlobeMap implements WorldMap {
         this.topEdge = upperBound.y();
     }
 
-    @Override
+
     public List<WorldElement> getElements() {
         List<WorldElement> elements = new ArrayList<>();
         animals.values().forEach(elements::addAll);
@@ -46,34 +46,30 @@ public class GlobeMap implements WorldMap {
         return plants;
     }
 
-    @Override
+
     public UUID getId() {
         return mapID;
     }
 
-
-    @Override
     public void subscribe(MapChangeListener listener) {
         mapChangeListeners.add(listener);
     }
 
-    @Override
+
     public String toString() {
         MapVisualizer map = new MapVisualizer(this);
         Boundary currentBounds = getCurrentBounds();
         return map.draw(currentBounds.LowerBound(), currentBounds.UpperBound());
     }
 
-    protected void mapChanged(String message){
+    public void mapChanged(String message){
         mapChangeListeners.forEach(listener -> listener.mapChange(this, message));
     }
 
-    @Override
     public boolean canMoveTo(Vector2d position) {
         return !isBeyondTopOrBottomEdge(position);
     }
 
-    @Override
     public Boundary getCurrentBounds() {
         return new Boundary(LOWER_BOUND, upperBound);
     }
@@ -110,7 +106,7 @@ public class GlobeMap implements WorldMap {
      Throws an exception if the animal is not found at its current position.
      @param animal animal that will be moved
      */
-    @Override
+
     public void move(Animal animal) {
         Vector2d currentPosition = animal.getPosition();
         List<Animal> animalsAtSelectedPosition = animals.get(currentPosition);
@@ -129,37 +125,25 @@ public class GlobeMap implements WorldMap {
             animal.setPosition(animalNewPosition);
 
             animals.computeIfAbsent(animalNewPosition, k -> new ArrayList<>()).add(animal);
-            mapChanged("Animal moved to the position " + animal.getPosition());
         } else {
             throw new IllegalArgumentException("Animal not found at position " + currentPosition);
         }
     }
 
-    @Override
-    public void placeWorldElement(WorldElement element) throws IncorrectPositionException {
-        Vector2d position = element.getPosition();
-        if (element instanceof Animal) {
-            placeAnimal(position, (Animal) element);
-        }
-        else if (element instanceof Plant) {
-            placePlant(position, (Plant) element);
-        }
-    }
-
-    private void placeAnimal(Vector2d position, Animal animal) throws IncorrectPositionException {
+    public void placeAnimal(Animal animal) throws IncorrectPositionException {
+        Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
             animals.computeIfAbsent(position, k -> new ArrayList<>()).add(animal);
-            mapChanged("Animal placed at position " + position);
         }
         else
             throw new IncorrectPositionException(position);
     }
 
 
-    private void placePlant(Vector2d position, Plant plant) throws IncorrectPositionException {
+    public void placePlant(Plant plant) throws IncorrectPositionException {
+        Vector2d position = plant.getPosition();
         if (canPlantGrow(position)) {
             plants.put(position, plant);
-            mapChanged("Plant placed at position " + position);
         }
         else
             throw new IncorrectPositionException(position);
@@ -177,7 +161,7 @@ public class GlobeMap implements WorldMap {
     /**
      Removes element from world map, first checking if its type is animal or plant
      */
-    @Override
+
     public void removeElement(WorldElement element, Vector2d position) {
         if (element instanceof Animal) {
             List<Animal> animalsAtPosition = animals.get(element.getPosition());
@@ -185,23 +169,31 @@ public class GlobeMap implements WorldMap {
                 if (animalsAtPosition.isEmpty()) {
                     animals.remove(element.getPosition());
                 }
-                mapChanged("Removed animal at " + element.getPosition());
         }
         else if (element instanceof Plant) {
             plants.remove(position);
-            mapChanged("Added plant at " + element.getPosition());
         }
     }
 
-    // TODO zastanowić się później co ta metoda ma zwracać w przypadku kiedy na jednym polu jest wiele zwierząt / zwierząt i roślina
-    @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional <WorldElement> objectAt(Vector2d position) {
         if (animals.containsKey(position)) {
-            return animals.get(position).getFirst();  // for test purposes, pewnie trzeba zwrocic wszytsko?
+            return Optional.of(animals.get(position).getFirst());
         }
         else if (plants.containsKey(position)) {
-            return plants.get(position);
+            return Optional.of(plants.get(position));
         }
-        return null;
+        return Optional.empty();
+    }
+
+    public boolean isOccupied(Vector2d position) {
+        return objectAt(position).isPresent();
+    }
+
+    public int calculateCurrentSurface() {
+        Vector2d upperBound = getCurrentBounds().UpperBound();
+        Vector2d lowerBound = getCurrentBounds().LowerBound();
+        int width = upperBound.x() - lowerBound.x() + 1;
+        int height = upperBound.y() - lowerBound.y() + 1;
+        return width * height;
     }
 };

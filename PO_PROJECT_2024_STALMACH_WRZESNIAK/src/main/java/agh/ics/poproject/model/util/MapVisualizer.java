@@ -1,10 +1,10 @@
 package agh.ics.poproject.model.util;
 
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.model.map.GlobeMap;
 
 /**
- * The map visualizer converts the {@link WorldMap} map into a string
+ * The map visualizer converts the {@link GlobeMap} map into a string
  * representation.
  *
  * @author apohllo, idzik
@@ -13,14 +13,14 @@ public class MapVisualizer {
     private static final String EMPTY_CELL = " ";
     private static final String FRAME_SEGMENT = "-";
     private static final String CELL_SEGMENT = "|";
-    private final WorldMap map;
+    private final GlobeMap map;
 
     /**
      * Initializes the MapVisualizer with an instance of map to visualize.
      *
      * @param map
      */
-    public MapVisualizer(WorldMap map) {
+    public MapVisualizer(GlobeMap map) {
         this.map = map;
     }
 
@@ -82,4 +82,6 @@ public class MapVisualizer {
         }
         return EMPTY_CELL;
     }
+
+
 }
