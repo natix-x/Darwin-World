@@ -46,12 +46,6 @@ agh.ics.poproject/
 │   ├── elements/        # Defines world elements like animals & plants
 │   │   
 │   ├── map/             # Contains classes connected with world map & plant growth methods
-│   │   ├── AbstractPlantGrowthMethod.java
-│   │   ├── Cemetery.java
-│   │   ├── ForestedEquator.java
-│   │   ├── GlobeMap.java
-│   │   ├── MoveValidator.java
-│   │   ├── IncorrectPositionException.java
 │   ├── util/            # Utility classes for visualization
 │   
 ├── presenters/          # UI logic 
@@ -70,15 +64,19 @@ agh.ics.poproject/
 ### Setup
 1. First, clone this repository.
    ```sh
-   git clone https://github.com/MaruStalmach/PO_proj_MS_NW.git
+   git clone https://github.com/MaruStalmach/Darwin-World.git
+   ```
+2. Go to project directory.
+   ```sh
+   cd DarwinWorld/PO_PROJECT_2024_STALMACH_WRZESNIAK/
    ```
 2. Build the project.
     ```sh
-   ./gradlew build
+   gradlew build
    ```
 3. Run the application
     ```sh
-   ./gradlew run
+   gradlew run
    ```
 ### Project Source
 [Click here](https://github.com/Soamid/obiektowe-lab/tree/master/proj)
