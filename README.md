@@ -1,8 +1,8 @@
 # Darwin World
 ## Table of contents:
 * [General info](#general-info)
-* [Usage](#usage)
-* [App functionalities](#app-functionalities)
+* [Description](#description)
+* [App functionalities](#app-functionalities--demo)
 * [Project structure](#project-structure)
 * [Requirements](#requirements)
 * [Setup](#setup)
