@@ -64,7 +64,7 @@ agh.ics.poproject/
 ### Setup
 1. First, clone this repository.
    ```sh
-   git clone https://github.com/MaruStalmach/Darwin-World.git
+   git clone https://github.com/natix-x/Darwin-World.git
    ```
 2. Go to project directory.
    ```sh
