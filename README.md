@@ -68,7 +68,7 @@ agh.ics.poproject/
    ```
 2. Go to project directory.
    ```sh
-   cd DarwinWorld/PO_PROJECT_2024_STALMACH_WRZESNIAK/
+   cd Darwin-World/PO_PROJECT_2024_STALMACH_WRZESNIAK/
    ```
 2. Build the project.
     ```sh
