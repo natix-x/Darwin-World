@@ -11,8 +11,7 @@ public class Genome {
 
     // for generated animals
     public Genome(int genesNumber) {
-        this.genesSequence = generateRandomGenome(genesNumber);
-        activeGene = activateRandomGene();
+        this(generateRandomGenome(genesNumber));
     }
     // for babies
     public Genome(List<Integer> genomes) {
@@ -40,7 +39,7 @@ public class Genome {
     /**
      Generates random genome (for animals generated at the begging of simulation).
      */
-    private ArrayList<Integer> generateRandomGenome(int size) {
+    private static ArrayList<Integer> generateRandomGenome(int size) {
         Random random = new Random();
         ArrayList<Integer> randomGenome = new ArrayList<>();
         for (int i = 0; i < size; i++) {

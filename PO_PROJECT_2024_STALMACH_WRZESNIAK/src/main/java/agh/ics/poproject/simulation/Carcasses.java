@@ -1,14 +1,14 @@
 package agh.ics.poproject.simulation;
 
 import agh.ics.poproject.model.Vector2d;
-import agh.ics.poproject.model.map.ZyciodajneTruchla;
+import agh.ics.poproject.model.map.Cemetery;
 
 import java.util.*;
 
 public class Carcasses {
 
     private final Map<Vector2d, Integer> carcasses = new HashMap<>();  // positionOfCarcass
-    private final List<ZyciodajneTruchla> listeners = new ArrayList<>();
+    private final List<Cemetery> listeners = new ArrayList<>();
     private final int carcassDecomposition;
 
     public Carcasses(int carcassDecomposition) {
@@ -24,7 +24,7 @@ public class Carcasses {
         notifyListenersAboutCarcassesUpdate();
     }
 
-    public void subscribe(ZyciodajneTruchla listener) {
+    public void subscribe(Cemetery listener) {
 
         listeners.add(listener);
     }

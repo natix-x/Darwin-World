@@ -12,16 +12,16 @@ public record Configuration( int mapHeight,
                              int minMutations,
                              int maxMutations,
                              int genomeLength,
-                             int corpseDecompostion,
+                             int corpseDecompositionTime,
                              boolean isGlobeMap,
                              boolean isForestedEquator,
-                             boolean isZyciodajneTruchla,
+                             boolean isCemetery,
                              boolean isFullRandomMutation,
                              boolean isSlightCorrectionMutation,
                              boolean isFullPredestination,
                              boolean saveStats,
-
                              int simulationSpeed
+
 )
 { }
 

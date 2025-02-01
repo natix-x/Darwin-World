@@ -6,10 +6,10 @@ import agh.ics.poproject.model.elements.Plant;
 import java.util.*;
 
 public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
-    protected WorldMap worldMap;
+    protected GlobeMap worldMap;
     protected Random random = new Random();
 
-    AbstractPlantGrowthMethod(WorldMap worldMap) {
+    AbstractPlantGrowthMethod(GlobeMap worldMap) {
         this.worldMap = worldMap;
     }
 
@@ -48,8 +48,7 @@ public abstract class AbstractPlantGrowthMethod implements PlantGrowthMethod {
 
     @Override
     public boolean canGrowAt(Vector2d position) {
-        return worldMap.getElements().stream()
-                .filter(element -> element instanceof Plant)
+        return worldMap.getPlants().values().stream()
                 .noneMatch(element -> element.getPosition().equals(position));
     }
 

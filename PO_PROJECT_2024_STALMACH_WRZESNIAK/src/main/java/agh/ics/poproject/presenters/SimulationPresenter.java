@@ -4,7 +4,8 @@ import agh.ics.poproject.model.MapChangeListener;
 import agh.ics.poproject.model.Vector2d;
 import agh.ics.poproject.model.elements.Animal;
 import agh.ics.poproject.model.elements.Plant;
-import agh.ics.poproject.model.map.WorldMap;
+import agh.ics.poproject.model.elements.WorldElement;
+import agh.ics.poproject.model.map.GlobeMap;
 import agh.ics.poproject.simulation.Simulation;
 import agh.ics.poproject.simulation.Stats;
 import javafx.application.Platform;
@@ -20,6 +21,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -91,7 +93,7 @@ public class SimulationPresenter implements MapChangeListener {
     private Button stopButton;
 
     private Simulation simulation;
-    private WorldMap worldMap;
+    private GlobeMap worldMap;
     private Animal trackedAnimal;
     private Label selectedCellLabel;
     private Set<Vector2d> positionsOfAnimalsWithMostPopularGenotype = new HashSet<>();
@@ -160,8 +162,8 @@ public class SimulationPresenter implements MapChangeListener {
         cellLabel.setMinSize(CELL_WIDTH, CELL_HEIGHT);
         cellLabel.setAlignment(Pos.CENTER);
 
-        Object objectAtPosition = worldMap.objectAt(position);
-        if (objectAtPosition != null) {
+        if (worldMap.objectAt(position).isPresent()) {
+            WorldElement objectAtPosition = worldMap.objectAt(position).get();
             if (objectAtPosition instanceof Animal animal) {
                 if (animal.equals(trackedAnimal)) {
                     cellLabel.getStyleClass().add("cell-tracked-animal");
@@ -268,7 +270,8 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
-    @Override
+
+
     public synchronized void mapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             positionsOfAnimalsWithMostPopularGenotype.removeAll(positionsOfAnimalsWithMostPopularGenotype);

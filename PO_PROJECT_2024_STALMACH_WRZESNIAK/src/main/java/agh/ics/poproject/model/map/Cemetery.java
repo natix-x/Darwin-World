@@ -5,11 +5,11 @@ import agh.ics.poproject.simulation.Carcasses;
 
 import java.util.*;
 
-public class ZyciodajneTruchla extends AbstractPlantGrowthMethod {
+public class Cemetery extends AbstractPlantGrowthMethod {
 
     private Carcasses carcasses;
 
-    public ZyciodajneTruchla(WorldMap worldMap, Carcasses carcasses) {
+    public Cemetery(GlobeMap worldMap, Carcasses carcasses) {
         super(worldMap);
         this.carcasses = carcasses;
         carcasses.subscribe(this);
